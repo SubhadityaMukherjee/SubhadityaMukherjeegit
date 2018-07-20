@@ -43,8 +43,10 @@ nav ul li, footer ul li {
     background: #4d4d4d;
 }
 a {
+	display: block;
   font-weight: bold;
-  color: #fb0819;
+  color: #fb0819; 
+  padding: 8px;
   font-size: 20px;
 }
 
