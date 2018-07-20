@@ -22,6 +22,7 @@ img {
 width:30%;
 height:30%;
 padding: 0px;
+padding-left: 5px;
 }
 ul {
     list-style-type: none;
@@ -31,6 +32,7 @@ ul {
 nav ul, footer ul {
     font-family:'Helvetica Neue', 'Arial', 'Sans-Serif';
     padding: 0px;
+    padding-left: 5px;
     list-style: none;
     font-weight: bold;
 }
@@ -53,7 +55,7 @@ header h1 {
   font-size: 48px;
   font-weight: bold;
   line-height: 1.2;
-  color: #303030;
+  color: #838181;
   letter-spacing: -1px;
 }
 
@@ -125,4 +127,8 @@ ul.posts {
 
 ul.posts li {
     list-style: none;
+}
+li a:hover {
+    background-color: #000000;
+    color: white;
 }
