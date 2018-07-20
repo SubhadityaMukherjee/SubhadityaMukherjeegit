@@ -15,12 +15,13 @@ body {
   font-size: 15px;
   line-height: 1.5;
   color: #000;
+  margin: 60px auto; width: 70%;
 }
 
 img {
 width:30%;
 height:30%;
-padding: 16px;
+padding: 0px;
 }
 nav ul, footer ul {
     font-family:'Helvetica Neue', 'Arial', 'Sans-Serif';
