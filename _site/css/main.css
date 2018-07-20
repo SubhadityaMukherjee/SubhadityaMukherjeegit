@@ -11,6 +11,7 @@ table {
   border-collapse: collapse;
 }
 body {
+text-align: center;
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 15px;
   line-height: 1.5;
@@ -22,7 +23,7 @@ img {
 width:30%;
 height:30%;
 padding: 0px;
-padding-left: 5px;
+
 }
 ul {
     list-style-type: none;
@@ -32,19 +33,18 @@ ul {
 nav ul, footer ul {
     font-family:'Helvetica Neue', 'Arial', 'Sans-Serif';
     padding: 10px;
-    background: #4d4d4d;
+
     list-style: none;
     font-weight: bold;
 }
 nav ul li, footer ul li {
     display: inline;
     margin-right: 20px;
-    padding: 10px;
-    background: #4d4d4d;
+
 }
 a {
   font-weight: bold;
-  color: #fb0819;
+  color: #000000;
   font-size: 20px;
 }
 
@@ -131,6 +131,6 @@ ul.posts li {
     list-style: none;
 }
 li a:hover {
-    background-color: #000000;
-    color: #fb0819;
+	text-decoration: underline;
+    padding=9px: 
 }
