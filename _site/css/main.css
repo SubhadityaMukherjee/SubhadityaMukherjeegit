@@ -23,6 +23,11 @@ width:30%;
 height:30%;
 padding: 0px;
 }
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
 nav ul, footer ul {
     font-family:'Helvetica Neue', 'Arial', 'Sans-Serif';
     padding: 0px;
@@ -36,6 +41,7 @@ nav ul li, footer ul li {
 a {
   font-weight: bold;
   color: #d5000d;
+  font-size: 20px;
 }
 
 header {
@@ -96,6 +102,7 @@ h6 {
 p {
   margin-bottom: 20px;
   font-weight: 300;
+  font-size: 18px;
 }
 
 a {

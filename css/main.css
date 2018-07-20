@@ -32,27 +32,26 @@ nav ul, footer ul {
     font-family:'Helvetica Neue', 'Arial', 'Sans-Serif';
     padding: 0px;
     list-style: none;
-    background-color: #333;
-    font-weight: normal;
+    font-weight: bold;
 }
 nav ul li, footer ul li {
     display: inline;
     margin-right: 20px;
 }
 a {
-  font-weight: normal;
-  color: #ffffff;
+  font-weight: bold;
+  color: #d5000d;
   font-size: 20px;
 }
 
 header {
   padding-top: 35px;
-  padding-bottom: 30px;
+  padding-bottom: 10px;
 }
 
 header h1 {
   font-size: 48px;
-  font-weight: normal;
+  font-weight: bold;
   line-height: 1.2;
   color: #303030;
   letter-spacing: -1px;
