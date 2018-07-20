@@ -39,7 +39,7 @@ nav ul, footer ul {
 nav ul li, footer ul li {
     display: inline;
     margin-right: 20px;
-    padding: 10px;
+
     background: #4d4d4d;
 }
 a {
