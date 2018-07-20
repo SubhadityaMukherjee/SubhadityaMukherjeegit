@@ -17,7 +17,7 @@ text-align: center;
   line-height: 1.5;
   color: #000;
   margin: 60px auto; width: 70%;
-  background-image: url("/images/bk.jpeg");
+  background-image: url(/images/bk.jpeg);
 }
 
 img {
