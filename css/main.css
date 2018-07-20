@@ -31,8 +31,7 @@ ul {
 }
 nav ul, footer ul {
     font-family:'Helvetica Neue', 'Arial', 'Sans-Serif';
-    padding: 0px;
-    padding-left: 10px;
+    padding: 10px;
     background: #4d4d4d;
     list-style: none;
     font-weight: bold;
