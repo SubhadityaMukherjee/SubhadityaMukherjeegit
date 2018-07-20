@@ -27,7 +27,7 @@ padding-left: 5px;
 ul {
     list-style-type: none;
     margin: 0;
-    padding: 0;
+    padding: 10px;
 }
 nav ul, footer ul {
     font-family:'Helvetica Neue', 'Arial', 'Sans-Serif';
@@ -39,7 +39,6 @@ nav ul, footer ul {
 nav ul li, footer ul li {
     display: inline;
     margin-right: 20px;
-
     padding: 10px;
     background: #4d4d4d;
 }
@@ -50,8 +49,7 @@ a {
 }
 
 header {
-  padding-top: 35px;
-  padding-bottom: 10px;
+  padding: 10px;
 }
 
 header h1 {
