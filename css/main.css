@@ -32,20 +32,21 @@ ul {
 nav ul, footer ul {
     font-family:'Helvetica Neue', 'Arial', 'Sans-Serif';
     padding: 10px;
-    background: #4d4d4d;
+    background: #ffffff;
     list-style: none;
     font-weight: bold;
 }
 nav ul li, footer ul li {
     display: block;
     margin-right: 20px;
+    list-style: none;
 
-    background: #4d4d4d;
+    background: #ffffff;
 }
 a {
-	display: block;
+	display: inline;
   font-weight: bold;
-  color: #fb0819; 
+  color: #000000; 
   padding: 8px;
   font-size: 20px;
 }
@@ -133,7 +134,6 @@ ul.posts li {
     list-style: none;
 }
 li a:hover {
-    background-color: #000000;
+    text-decoration: underline;
     padding: 10px;
-    color: #fb0819;
 }
