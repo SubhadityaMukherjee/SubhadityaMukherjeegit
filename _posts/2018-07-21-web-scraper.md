@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Web Scraper"
-date: 2018-07-20
+date: 2018-07-21
 ---
 
 Today I made an application which would be more commonly known as a Web Scraper. Using python and a few modules like Beautiful soup and urllib. 
