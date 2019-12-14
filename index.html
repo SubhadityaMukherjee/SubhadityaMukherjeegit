@@ -8,6 +8,7 @@
 </head>
 <body>
   <!-- About me -->
+  <section id = "sec1">
   <div align="center" id="namb">
     <img id="prof" src="images/prof.jpg" />
     <p id="sp">Subhaditya Mukherjee</p>
@@ -16,10 +17,13 @@
     <p><a href="https://www.deviantart.com/daolord/gallery/all">Deviantart</a></p>
   </div><!-- Projects -->
   <br />
-  <div align="center" id="proj">
-    <a href="#projl">Go to Projects</a>
-  </div>
-
+  </section>
+  <div align="center" id="proj" class="demo">
+  <a data-scroll href="#sec2">
+    <div class="arrow"></div>
+  </a>
+</div>
+<section id = "sec2">
   <div align="center" id="projl">
     <p>Invisibility Cloak</p>
     <p>Invisibility Cloak</p>
@@ -28,31 +32,14 @@
     <p>Invisibility Cloak</p>
     <p>Invisibility Cloak</p>
   </div>
+</section>
 </body>
 
 <script>
-$(document).ready(function(){
-  // Add smooth scrolling to all links
-  $("a").on('click', function(event) {
-
-    // Make sure this.hash has a value before overriding default behavior
-    if (this.hash !== "") {
-      // Prevent default anchor click behavior
-      event.preventDefault();
-
-      // Store hash
-      var hash = this.hash;
-
-      // Using jQuery's animate() method to add smooth page scroll
-      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top
-      }, 100, function(){
-
-        // Add hash (#) to URL when done scrolling (default click behavior)
-        window.location.hash = hash;
-      });
-    } // End if
+$(function() {
+  $('a[href*=#]').on('click', function(e) {
+    e.preventDefault();
+    $('html, body').animate({ scrollTop: $($(this).attr('href')).offset().top}, 500, 'linear');
   });
 });
 </script>

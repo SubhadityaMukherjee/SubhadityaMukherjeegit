@@ -11,13 +11,16 @@ box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 html {
-background: #DAE2F8;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #D6A4A4, #DAE2F8);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #D6A4A4, #DAE2F8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: #c2e59c;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #64b3f4, #c2e59c);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #64b3f4, #c2e59c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 scroll-behavior: smooth;
 }
 
+body{
+
+}
 div[id = "parta"]{
     height:100%;
     width:100%;
@@ -77,7 +80,7 @@ text-decoration:none;
 /*padding-top:20%;*/
 /*margin:auto;*/
 /*margin-left:50%;*/
-margin-top:20%;
+/*margin-top:20%;*/
 /*padding:20px;*/
 /*width:30%;*/
 /*box-shadow:0 10px 10px rgba(0,0,0,0.16), 0 10px 10px rgba(0,0,0,0.23);
@@ -94,7 +97,7 @@ text-decoration:none;
 line-height:5px;
 }
 div[id = proj] a{
-font-size:50px;
+font-size:25px;
 font-family: avenir;
 color:black;
 text-decoration:none;
@@ -112,12 +115,40 @@ text-decoration:none;
 /*padding-top:20%;*/
 /*margin:auto;*/
 /*margin-left:50%;*/
-margin-top:200%;
+margin-top:10%;
 /*padding:20px;*/
 /*width:30%;*/
 box-shadow:0 10px 10px rgba(0,0,0,0.16), 0 10px 10px rgba(0,0,0,0.23);
 background: #654ea3;
 background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
 background: linear-gradient(to right, #eaafc8, #654ea3);
+}
+
+section {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.arrow {
+  box-sizing: border-box;
+  height: 5vw;
+  width: 5vw;
+  border-style: solid;
+  border-color: black;
+  border-width: 0px 1px 1px 0px;
+  transform: rotate(45deg);
+  transition: border-width 150ms ease-in-out;
+}
+
+.arrow:hover {
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+}
+
+
+#full {
+  height: 100vh;
+  background-color: #256347;
 }
 
