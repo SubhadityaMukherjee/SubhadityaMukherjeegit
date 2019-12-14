@@ -111,7 +111,7 @@ line-height:5px;
 
 
 div[id = projl]{
-display: flex;
+display: grid;
 padding:20px;
 align-items: center;
 justify-content: center;
