@@ -76,6 +76,7 @@ div[id = proj]{
 border-radius: 30px;
 font-family: avenir;
 display: flex;
+height: 100vh;
 align-items: center;
 justify-content: center;
 text-decoration:none;
@@ -110,10 +111,12 @@ line-height:5px;
 
 
 div[id = projl]{
-
+    display: flex;
 align-items: center;
 justify-content: center;
 border-radius: 30px;
+height: 100vh;
+
 font-family: avenir;
 color:white;
 text-decoration:none;
@@ -129,8 +132,6 @@ background: #654ea3;
 background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
 background: linear-gradient(to right, #eaafc8, #654ea3);
 }
-
-
 
 section {
   position: relative;
