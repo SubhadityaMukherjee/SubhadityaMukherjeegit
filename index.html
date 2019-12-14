@@ -8,39 +8,51 @@
 </head>
 <body>
   <!-- About me -->
-  <section id = "sec1">
-  <div align="center" id="namb">
-    <img id="prof" src="images/prof.jpg" />
-    <p id="sp">Subhaditya Mukherjee</p>
-    <p><a href="https://github.com/SubhadityaMukherjee">Github</a></p>
-    <p><a href="https://www.linkedin.com/in/subhaditya-mukherjee-a36883100">Linkedin</a></p>
-    <p><a href="https://www.deviantart.com/daolord/gallery/all">Deviantart</a></p>
-  </div><!-- Projects -->
-  <br />
+  <section id="sec1">
+    <div align="center" id="namb">
+      <img id="prof" src="images/prof.jpg" />
+      <p id="sp">Subhaditya Mukherjee</p>
+      <p><a href="https://github.com/SubhadityaMukherjee">Github</a></p>
+      <p><a href="https://www.linkedin.com/in/subhaditya-mukherjee-a36883100">Linkedin</a></p>
+      <p><a href="https://www.deviantart.com/daolord/gallery/all">Deviantart</a></p>
+    </div><!-- Projects -->
+    <br />
   </section>
   <div align="center" id="proj" class="demo">
-  <a data-scroll href="#sec2">
-    <div class="arrow"></div>
-  </a>
-</div>
-<section id = "sec2">
-  <div align="center" id="projl">
-    <p>Invisibility Cloak</p><br>
-    <p>Invisibility Cloak</p><br>
-    <p>Invisibility Cloak</p><br>
-    <p>Invisibility Cloak</p><br>
-    <p>Invisibility Cloak</p><br>
-    <p>Invisibility Cloak</p><br>
-  </div>
-</section>
-</body>
+    <a data-scroll="" href="#sec2">
+    <div class="arrow"></div></a>
+  </div><br />
+  <section id="sec2">
+    <div align="center" id="projl">
+      <h1>PROJECTS</h1><br/>
+      <div class = "card">
+        <h2>Invisibility Cloak</h2>
+        <h5>This project aims to emulate an invisibilty cloak like in Harry Potter</h5>
+        <video width="320" height="240" controls=""><source src="projs/inv.mp4" type="video/mp4" /></video><br>
+        <a href="https://www.github.com/SubhadityaMukherjee/invisiblityCloak">Github Link</a>
+      </div>
 
-<script>
-$(function() {
+      <div class = "card">
+        <h2>Audio QR</h2>
+        <h5>This program is implements a form of Near Sound Data transfer</h5>
+        <img src="projs/gen_peak.png" width="200px" height="200px"><br>
+        <a href="https://www.github.com/SubhadityaMukherjee/audioQr">Github Link</a>
+      </div>
+
+
+
+
+    </div>
+  </section>
+  <script>
+  <![CDATA[
+  $(function() {
   $('a[href*=#]').on('click', function(e) {
     e.preventDefault();
     $('html, body').animate({ scrollTop: $($(this).attr('href')).offset().top}, 500, 'linear');
   });
-});
-</script>
+  });
+  ]]>
+  </script>
+</body>
 </html>
