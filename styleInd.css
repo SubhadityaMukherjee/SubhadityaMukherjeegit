@@ -73,10 +73,10 @@ transition:all .3s cubic-bezier(.25,.8,.25,1);
 }
 
 div[id = proj]{
-border-radius: 30px;
+/*border-radius: 30px;*/
 font-family: avenir;
 /*display: flex;*/
-height: 100vh;
+/*height: 100vh;*/
 align-items: center;
 justify-content: center;
 text-decoration:none;
@@ -127,7 +127,7 @@ text-decoration:none;
 margin-top:60%;
 /*padding:20px;*/
 /*width:30%;*/
-box-shadow:0 10px 10px rgba(0,0,0,0.16), 0 10px 10px rgba(0,0,0,0.23);
+box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 background: #654ea3;
 background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
 background: linear-gradient(to right, #eaafc8, #654ea3);
