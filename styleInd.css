@@ -75,7 +75,7 @@ transition:all .3s cubic-bezier(.25,.8,.25,1);
 div[id = proj]{
 border-radius: 30px;
 font-family: avenir;
-display: flex;
+/*display: flex;*/
 height: 100vh;
 align-items: center;
 justify-content: center;
@@ -112,7 +112,7 @@ line-height:5px;
 
 div[id = projl]{
 display: grid;
-padding:20px;
+
 align-items: center;
 justify-content: center;
 border-radius: 30px;
