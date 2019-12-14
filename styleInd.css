@@ -42,7 +42,6 @@ border-radius:60px;
 transition:all .3s cubic-bezier(.25,.8,.25,1);
 margin:auto;
 padding:15px;
-page-break-after: always;
 }
 
 div[id = namb] p[id="sp"]{
