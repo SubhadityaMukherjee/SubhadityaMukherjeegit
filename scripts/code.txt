@@ -1,0 +1,90 @@
+<div class="card2">
+
+            <h2>Taxi env</h2>
+
+            <h5>RL-taxi</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/RL-taxi">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Find shaky images</h2>
+
+            <h5>From gallery</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/shakyPicFinder">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Space Invaders</h2>
+
+            <h5>Genetic algorithm</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/Space-Invaders-Genetic-Algorithm">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Tag Stack overflow</h2>
+
+            <h5>Tag prediction kaggle</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/stackoverflowtag">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Story to Video</h2>
+
+            <h5>Identifies words from story and creates a video </h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/storyToVideo">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Text to figure plot</h2>
+
+            <h5>Basic NLP identifies shapes and dimensions from a sentence</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/textToFigure">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Twitter Sentiment analysis</h2>
+
+            <h5>Basic project</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/Twitter-Sentiment-Analysis">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Vehicle tracking and speed</h2>
+
+            <h5>vehicleTasks</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/vehicleTasks">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Loitering</h2>
+
+            <h5>Detection in videos</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/videoSecuritySystem">Github Link</a>
+
+          </div>
+<div class="card2">
+
+            <h2>Virtual keyboard</h2>
+
+            <h5>Click using thresholded color</h5>
+
+            <a href="https://www.github.com/SubhadityaMukherjee/virtual_keyboard">Github Link</a>
+
+          </div>

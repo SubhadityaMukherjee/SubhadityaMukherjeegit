@@ -5,6 +5,9 @@
   <link rel="stylesheet" type="text/css" href="styleInd.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="scroll.js"></script>
 </head>
 <body>
   <!-- About me -->
@@ -20,19 +23,18 @@
   </section>
   <section id="sec3">
     <div align="center" id="goto">
-        <h3>Reach out </h3>
-        <a href="mailto:someone@example.com?Subject=Hello%20again" target="_top">Email</a>
+      <h3>Reach out</h3><a href="mailto:someone@example.com?Subject=Hello%20again" target="_top">Email</a>
     </div>
-    </section>
-
-    <section id="sec4">
+  </section>
+  <section id="sec4">
     <div align="center" id="others">
-        <h3>Ideas</h3>
-        <a href="#ideas" target="_top">Project Ideas</a>
+      <h3>Project Ideas</h3><a href="ideas.html" target="_top">ALL</a><br />
+      <br />
+      <!-- <a href="justideas.html" target="_top">Not Implemeted</a> -->
     </div>
-    </section>
-
+  </section>
   <div align="center" id="proj" class="demo">
+    <h4>Scroll/Click for highlights</h4>
     <a data-scroll="" href="#sec2">
     <div class="arrow"></div></a>
   </div><br />
@@ -85,8 +87,10 @@
         <a href="https://www.github.com/SubhadityaMukherjee/audioQr">Github Link</a>
       </div>
     </div>
-  </section>
+  </section><button class="btn btn-primary scroll-top" data-scroll="up" type="button"><i class="fa fa-chevron-up"></i></button>
   <script>
+
+
   <![CDATA[
   $(function() {
   $('a[href*=#]').on('click', function(e) {
@@ -95,6 +99,7 @@
   });
   });
   ]]>
+
   </script>
 </body>
 </html>
