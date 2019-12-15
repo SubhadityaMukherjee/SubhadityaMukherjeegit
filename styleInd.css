@@ -111,7 +111,8 @@ line-height:5px;
 
 div[id = projl]{
 display: grid;
-
+left: 30%;
+transform: translateX(20%);
 align-items: center;
 justify-content: center;
 border-radius: 30px;
@@ -125,7 +126,7 @@ text-decoration:none;
 /*margin-left:50%;*/
 margin-top:60%;
 /*padding:20px;*/
-/*width:30%;*/
+width:70%;
 box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 background: #654ea3;
 background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
