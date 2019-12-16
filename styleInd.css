@@ -11,9 +11,10 @@ box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 html {
-background: #c2e59c;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #64b3f4, #c2e59c);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #64b3f4, #c2e59c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+/*background: #c2e59c;
+background: -webkit-linear-gradient(to right, #64b3f4, #c2e59c);
+background: linear-gradient(to right, #64b3f4, #c2e59c);*/
+background: #4C4C4C;
 
 scroll-behavior: smooth;
 }
@@ -30,11 +31,12 @@ div[id = namb] {
 position:relative;
 /*left: 50%;*/
 /*transform: translateX(-50%);*/
-box-shadow:0 10px 10px rgba(0,0,0,0.16), 0 10px 10px rgba(0,0,0,0.23);
+box-shadow:0 30px 30px rgba(0,0,0,0.50), 0 10px 10px rgba(0,0,0,0.23);
 
-background: #7F7FD5;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: #7F7FD5;
+background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+
 
 
 width:60%;
@@ -58,7 +60,8 @@ line-height:7px;
 
 div[id = namb] a:hover{
 font-size:17px;
-color:black;
+color:white
+;
 border-radius:30px;
 box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 transition:all .3s cubic-bezier(.25,.8,.25,1);
@@ -104,15 +107,37 @@ div[id = proj] a{
 
 font-size:25px;
 font-family: avenir;
-color:black;
+color:white;
+text-decoration:none;
+line-height:5px;
+}
+div[id = goto] h5{
+border: 2px solid white;
+border-radius: 30px;
+padding: 20px;
+width: 5%;
+font-size:15px;
+font-family: avenir;
+color:white;
+text-decoration:none;
+line-height:5px;
+}
+div[id = others] h5{
+border: 2px solid white;
+border-radius: 30px;
+padding: 20px;
+width: 5%;
+font-size:15px;
+font-family: avenir;
+color:white;
 text-decoration:none;
 line-height:5px;
 }
 
 
-
 div[id = projl]{
 display: grid;
+border: 1px solid white;
 align-items: center;
 justify-content: center;
 border-radius: 30px;
@@ -120,6 +145,7 @@ font-size:30px;
 font-family: avenir;
 color:white;
 text-decoration:none;
+padding:20px;
 /*float:center;*/
 /*padding-top:20%;*/
 /*margin:auto;*/
@@ -128,23 +154,28 @@ margin-top:60%;
 /*padding:20px;*/
 /*width:30%;*/
 box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-background: #654ea3;
+
+/*background: #654ea3;
 background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
-background: linear-gradient(to right, #eaafc8, #654ea3);
+background: linear-gradient(to right, #eaafc8, #654ea3);*/
+
+background: #7F7F7F;
 }
 
 div[id = projl] h1{
-color: black;
+color: #E6E6E6;
 }
 div[id = projl] h2,p{
-color: black;
+color: white;
 }
 
 div[id = projl] a{
-  border: 2px solid black;
+  /*border: 1px solid white;*/
+  background: black;
 border-radius: 30px;
   padding: 10px;
 font-family:avenir;
+box-shadow:0 30px 28px rgba(0,0,0,0.30), 0 10px 10px rgba(0,0,0,0.22);
 font-size:20px;
 
 }
@@ -154,7 +185,7 @@ border-radius:30px;
 font-family:avenir;
 font-size:30px;
 padding:10px;
-box-shadow:0 30px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+
 transition:all .3s cubic-bezier(.25,.8,.25,1);
 }
 
@@ -165,11 +196,12 @@ section {
 }
 
 .arrow {
+  box-shadow:0 30px 30px rgba(0,0,0,0.50), 0 30px 30px rgba(0,0,0,0.23);
   box-sizing: border-box;
   height: 5vw;
   width: 5vw;
   border-style: solid;
-  border-color: black;
+  border-color: white;
   border-width: 0px 1px 1px 0px;
   transform: rotate(45deg);
   transition: border-width 150ms ease-in-out;
@@ -193,7 +225,8 @@ div[id="goto"]{
     padding:10px;
 }
 div[id="goto"] h3{
-    color:black;
+    color:white;
+
     font-size: 20px;
     float:center;
     margin:auto;
@@ -201,18 +234,21 @@ div[id="goto"] h3{
 }
 div[id="goto"] a{
     color:white;
+
     font-size: 20px;
     margin:none;
     font-family:avenir;
     float:center;
 
 }
+
+
 div[id="others"]{
     padding:10px;
 
 }
-div[id="others"] h3{
-    color:black;
+div[id="others"] h3,h4{
+    color:white;
     font-size: 20px;
     float:center;
     margin:auto;
@@ -220,6 +256,7 @@ div[id="others"] h3{
 }
 div[id="others"] a{
     color:white;
+
     font-size: 20px;
     margin:none;
     font-family:avenir;
@@ -236,40 +273,42 @@ border-radius: 30px;
 font-size:30px;
 grid-column: 2 / -1;
 grid-row: 2 / span 4;
-
+border: 1px solid white;
 font-family: avenir;
 text-decoration:none;
 grid-template-columns:repeat(auto-fit, 4);
-/*float:center;*/
+/*float:center;
 /*padding:60px;*/
 /*margin:auto;*/
 /*margin-left:50%;*/
 margin-top:60%;
-
+color:white;
 padding: 20px;
 /*padding-left:30px;*/
 /*width:30%;*/
 box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-background: #CC95C0;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #7AA1D2, #DBD4B4, #CC95C0);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #7AA1D2, #DBD4B4, #CC95C0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+background: #7F7F7F;
+/*background: -webkit-linear-gradient(to right, #7AA1D2, #DBD4B4, #CC95C0);
+background: linear-gradient(to right, #7AA1D2, #DBD4B4, #CC95C0);
+*/
 }
 
 div[id= "donepr"] h2{
-color:white;
+color:#CCCCCC;
 }
 div[id= "donepr"] a{
   border:2px solid black;
+  box-shadow:0 30px 28px rgba(0,0,0,0.30), 0 10px 10px rgba(0,0,0,0.22);
   border-radius: 30px;
+  background:black;
   padding: 10px;
-color:black;
+color:#CCCCCC;
 font-weight:bold;
 }
 div[id= "donepr"] a:hover {
 border-radius:30px;
 font-family:avenir;
-font-size:30px;
+font-size:20px;
 padding:10px;
 box-shadow:0 30px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 transition:all .3s cubic-bezier(.25,.8,.25,1);
@@ -287,9 +326,7 @@ border-radius: 30px;
   position: fixed;
   bottom: 25px;
   box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-background: #8A2387;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #F27121, #E94057, #8A2387);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #F27121, #E94057, #8A2387); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background:red;
 
   left: 20px;
   display: none;
@@ -297,5 +334,5 @@ background: linear-gradient(to right, #F27121, #E94057, #8A2387); /* W3C, IE 10+
 .scroll-top i {
   display: inline-block;
 
-  color: black;
+  color: white;
 }
