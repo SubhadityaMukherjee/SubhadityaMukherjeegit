@@ -339,12 +339,13 @@ border-radius: 30px;
   bottom: 25px;
   box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   background:red;
+  color: white;
 
   left: 20px;
   display: none;
 }
 .scroll-top i {
   display: inline-block;
-
+background:red;
   color: white;
 }
