@@ -1,114 +1,214 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-  <title>Projects</title>
-  <link rel="stylesheet" type="text/css" href="styleInd.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="scroll.js"></script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-42561511-3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-42561511-3');
-</script>
-
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subhaditya's Portfolio</title>
+<link rel="stylesheet" type="text/css" id="applicationStylesheet" href="Design.css"/>
+<script id="applicationScript" type="text/javascript" src="Design.js"></script>
 </head>
 <body>
-  <!-- About me -->
-  <section id="sec1">
-    <div align="center" id="namb">
-      <img id="prof" src="images/prof.jpg" />
-      <p id="sp">Subhaditya Mukherjee</p>
-      <p><a href="https://github.com/SubhadityaMukherjee">Github</a></p>
-      <p><a href="https://www.linkedin.com/in/subhaditya-mukherjee-a36883100">Linkedin</a></p>
-      <p><a href="https://www.deviantart.com/daolord/gallery/all">Deviantart</a></p>
-    </div><!-- Projects -->
-    <br />
-  </section>
-  <section id="sec3">
-    <div align="center" id="goto">
-      <h3>Reach out</h3><a href="mailto:someone@example.com?Subject=Hello%20again" target="_top"><h5>EMAIL</h5></a>
-    </div>
-  </section>
-  <section id="sec4">
-    <div align="center" id="others">
-      <h3>Project Ideas</h3><a href="ideas.html" target="_top"><h5>ALL</h5></a><br />
-      <!-- <a href="justideas.html" target="_top">Not Implemeted</a> -->
-    </div>
-  </section>
-  <div align="center" id="proj" class="demo">
-    <h4>Scroll/Click for Highlights Or Click ALL for all projects</h4>
-    <a data-scroll="" href="#sec2">
-    <div class="arrow"></div></a>
-  </div><br />
-  <section id="sec2">
-    <div align="center" id="projl">
-      <h1>PROJECTS</h1><br />
-      <div class="card">
-        <h2>Invisibility Cloak</h2>
-        <h5>This project aims to emulate an invisibility cloak like in Harry Potter</h5><video width="320" height="240" controls=""><source src="projs/inv.mp4" type="video/mp4" /></video><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/invisiblityCloak">Github Link</a>
-      </div><br />
-      <div class="card">
-        <h2>Image Deblur</h2>
-        <h5>Uses a GAN architecture to deblur images to an extent</h5><img src="projs/deb.png" width="200px" height="400px" /><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/imageDeblur">Github Link</a>
-      </div>
-      <div class="card">
-        <h2>Code to README</h2>
-        <h5>This program converts all the comments in your code to a README.md file</h5><img src="projs/gen.jpeg" width="300px" height="300px" /><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/code_to_readme">Github Link</a>
-      </div>
-      <div class="card">
-        <h2>Web Pose Control</h2>
-        <h5>Steering wheel which rotates based on which hand is up using TensorflowJS</h5><video width="320" height="240" controls=""><source src="projs/steer.mp4" type="video/mp4" /></video><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/web-pose-control">Github Link</a>
-      </div>
-      <div class="card">
-        <h2>Hand Dino</h2>
-        <h5>Control chrome dino with gestures</h5><video width="360" height="400" controls=""><source src="projs/dino.mp4" type="video/mp4" /></video><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/hand-dino">Github Link</a>
-      </div>
-      <div class="card">
-        <h2>Pupil Control</h2>
-        <h5>Control your laptop with your eyes. Blink to click</h5><video width="352" height="400" controls=""><source src="projs/pupil.mp4" type="video/mp4" /></video><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/pupil_control">Github Link</a>
-      </div>
-      <div class="card">
-        <h2>Pokemon Generator</h2>
-        <h5>Using GANs to Generate ideas for new Pokemon</h5><img src="projs/poke.jpg" width="300px" height="300px" /><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/pokegan">Github Link</a>
-      </div>
-      <div class="card">
-        <h2>Not a Good Morning</h2>
-        <h5>Identify Good Morning messages from your Whatsapp</h5><img src="projs/good.png" width="300px" height="250px" /><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/notAGoodMorning">Github Link</a>
-      </div>
-      <div class="card">
-        <h2>Audio QR</h2>
-        <h5>This program implements a form of Near Sound Data transfer</h5><img src="projs/gen_peak.png" width="200px" height="200px" /><br />
-        <a href="https://www.github.com/SubhadityaMukherjee/audioQr">Github Link</a>
-      </div>
-    </div>
-  </section><button class="btn btn-primary scroll-top" data-scroll="up" type="button"><i class="fa fa-chevron-up"></i></button>
-  <script>
-
-
-  <![CDATA[
-  $(function() {
-  $('a[href*=#]').on('click', function(e) {
-    e.preventDefault();
-    $('html, body').animate({ scrollTop: $($(this).attr('href')).offset().top}, 500, 'linear');
-  });
-  });
-  ]]>
-
-  </script>
+<div id="Design" class="Design_Class">
+	<svg class="Rectangle_58_j">
+		<linearGradient id="Rectangle_58_j" spreadMethod="pad" x1="0.5" x2="0.5" y1="0" y2="1">
+			<stop offset="0" stop-color="#e9edf8" stop-opacity="0.482"></stop>
+			<stop offset="1" stop-color="#fff" stop-opacity="1"></stop>
+		</linearGradient>
+		<rect fill="url(#Rectangle_58_j)" class="Rectangle_58_j_Class" rx="0" ry="0" x="0" y="0" width="1645" height="3351">
+		</rect>
+	</svg>
+	<svg class="Rectangle_41">
+		<rect fill="rgba(94,91,199,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Rectangle_41_Class" rx="0" ry="0" x="0" y="0" width="695" height="327">
+		</rect>
+	</svg>
+	<div class="HOME_Class">
+		<span><a href="Design.html">Home</a></span>
+	</div>
+	<div class="Group_9_Class">
+		<div class="Blogs_Class">
+			<span>Blogs</span>
+		</div>
+		<div class="Github_Class">
+			<span><a href="https://github.com/SubhadityaMukherjee">Github</a></span>
+		</div>
+		<div class="Projects_Class">
+			<span><a href="ideas.html">Projects</a></span>
+		</div>
+		<div class="Resume_Class">
+			<span>Resume</span>
+		</div>
+	</div>
+	<div class="Reach_Out_Class">
+		<span>Reach Out</span>
+	</div>
+	<img class="Intersection_2_Class" src="Intersection_2.png" srcset="Intersection_2.png 1x, Intersection_2@2x.png 2x">
+	<div class="About_Me_Class">
+		<span>About Me</span>
+	</div>
+	<div class="I_am_a_coder__dreamer_and_a_re_Class">
+		<span>I am a coder, dreamer and a reader.<br/>I specialize in Machine Learning and <br/>I work on projects that will have <br/>some positive impact on society.<br/>I am always open to make new <br/>friends and learn from the people <br/>around me.</span>
+	</div>
+	<div class="Email_Class">
+		<a href="mailto:someone@example.com?Subject=Hello%20again" target="_top">Email</a>
+	</div>
+	<div class="LinkedIn__Class">
+		<a href="https://www.linkedin.com/in/subhaditya-mukherjee-a36883100">Linkedin</a>
+	</div>
+	<div class="DeviantArt_Class">
+		<a href="https://www.deviantart.com/daolord/gallery/all">Deviantart</a>
+	</div>
+	<svg class="Ellipse_1">
+		<ellipse fill="rgba(255,255,255,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Ellipse_1_Class" rx="21" ry="20" cx="21" cy="20">
+		</ellipse>
+	</svg>
+	<div class="Group_16_Class">
+		<svg class="Ellipse_2">
+			<ellipse fill="rgba(255,255,255,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Ellipse_2_Class" rx="21" ry="20" cx="21" cy="20">
+			</ellipse>
+		</svg>
+	</div>
+	<svg class="Ellipse_3">
+		<ellipse fill="rgba(255,255,255,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Ellipse_3_Class" rx="21" ry="20" cx="21" cy="20">
+		</ellipse>
+	</svg>
+	<div class="Spotlight_Class">
+		<span>Spotlight</span>
+	</div>
+	<svg class="Rectangle_43">
+		<rect fill="rgba(255,255,255,1)" class="Rectangle_43_Class" rx="41" ry="41" x="0" y="0" width="818" height="479">
+		</rect>
+	</svg>
+	<svg class="Rectangle_59">
+		<rect fill="rgba(255,255,255,1)" class="Rectangle_59_Class" rx="41" ry="41" x="0" y="0" width="818" height="479">
+		</rect>
+	</svg>
+	<svg class="Rectangle_62">
+		<rect fill="rgba(255,255,255,1)" class="Rectangle_62_Class" rx="41" ry="41" x="0" y="0" width="818" height="479">
+		</rect>
+	</svg>
+	<svg class="Rectangle_65">
+		<rect fill="rgba(255,255,255,1)" class="Rectangle_65_Class" rx="41" ry="41" x="0" y="0" width="818" height="479">
+		</rect>
+	</svg>
+	<svg class="Rectangle_68">
+		<rect fill="rgba(255,255,255,1)" class="Rectangle_68_Class" rx="41" ry="41" x="0" y="0" width="818" height="479">
+		</rect>
+	</svg>
+	<div class="Invisibility_Cloak_Class">
+		<span>Invisibility Cloak</span>
+	</div>
+	<div class="Invisibility_Cloak__Class">
+		<span>Image Deblur</span>
+	</div>
+	<div class="Invisibility_Cloak_ba_Class">
+		<span>Code to README</span>
+	</div>
+	<div class="Invisibility_Cloak_bb_Class">
+		<span>Web Pose Control</span>
+	</div>
+	<div class="Invisibility_Cloak_bc_Class">
+		<span>Hand Dino</span>
+	</div>
+	
+	<div class="Component_6___11 Component_6___11_Class">
+		<div class="This_project_aims_to_emulate_a_Class">
+			<span>This project aims to emulate an invisibility cloak like in Harry Potter</span>
+		</div>
+	</div>
+	<div class="Component_6___16 Component_6___16_Class">
+		<div class="This_project_aims_to_emulate_a_bg_Class">
+			<span>Uses a GAN architecture to deblur images to an extent</span>
+		</div>
+	</div>
+	<div class="Component_6___17 Component_6___17_Class">
+		<div class="This_project_aims_to_emulate_a_bi_Class">
+			<span>This program converts all the comments in your code to a README.md file</span>
+		</div>
+	</div>
+	<div class="Component_6___18 Component_6___18_Class">
+		<div class="This_project_aims_to_emulate_a_bk_Class">
+			<span>Steering wheel which rotates based on which hand is up using TensorflowJS</span>
+		</div>
+	</div>
+	<div class="Component_6___19 Component_6___19_Class">
+		<div class="This_project_aims_to_emulate_a_bm_Class">
+			<span>Control chrome dino with gestures</span>
+		</div>
+	</div>
+	<video width="320" height="240" controls="" class="Rectangle_44"><source src="projs/inv.mp4" type="video/mp4" /></video>
+	<img src="projs/deb.png" width="200px" height="400px" class="Rectangle_60"/>
+	<img src="projs/gen.jpeg" width="300px" height="300px" class="Rectangle_63"/>
+	<svg class="Rectangle_66">
+		<rect fill="rgba(255,255,255,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Rectangle_66_Class" rx="33" ry="33" x="0" y="0" width="305" height="175">
+		</rect>
+	</svg>
+  <video width="320" height="240" controls="" class="Rectangle_66"><source src="projs/steer.mp4" type="video/mp4" /></video>
+  
+	<div class="Group_11_Class">
+		<svg class="Rectangle_45">
+			<rect fill="rgba(82,79,186,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Rectangle_45_Class" rx="10" ry="10" x="0" y="0" width="107" height="31">
+			</rect>
+		</svg>
+		<div class="Github_bu_Class">
+			<span><a href="https://www.github.com/SubhadityaMukherjee/invisiblityCloak">Github</a></span>
+		</div>
+	</div>
+	<div class="Group_12_Class">
+		<svg class="Rectangle_45_bw">
+			<rect fill="rgba(82,79,186,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Rectangle_45_bw_Class" rx="10" ry="10" x="0" y="0" width="107" height="31">
+			</rect>
+		</svg>
+		<div class="Github_bx_Class">
+			<span><a href="https://www.github.com/SubhadityaMukherjee/imageDeblur">Github</a></span>
+		</div>
+	</div>
+	<div class="Group_13_Class">
+		<svg class="Rectangle_45_bz">
+			<rect fill="rgba(82,79,186,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Rectangle_45_bz_Class" rx="10" ry="10" x="0" y="0" width="107" height="31">
+			</rect>
+		</svg>
+		<div class="Github_b_Class">
+			<span><a href="https://www.github.com/SubhadityaMukherjee/code_to_readme">Github</a></span>
+		</div>
+	</div>
+	<div class="Group_14_Class">
+		<svg class="Rectangle_45_b">
+			<rect fill="rgba(82,79,186,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Rectangle_45_b_Class" rx="10" ry="10" x="0" y="0" width="107" height="31">
+			</rect>
+		</svg>
+		<div class="Github_ca_Class">
+			<span><a href="https://www.github.com/SubhadityaMukherjee/web-pose-control">Github</a></span>
+		</div>
+	</div>
+	<div class="Group_15_Class">
+		<svg class="Rectangle_45_ca">
+			<rect fill="rgba(82,79,186,1)" stroke="rgba(112,112,112,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" shape-rendering="auto" class="Rectangle_45_ca_Class" rx="10" ry="10" x="0" y="0" width="107" height="31">
+			</rect>
+		</svg>
+		<div class="Github_cb_Class">
+			<span><a href="https://www.github.com/SubhadityaMukherjee/hand-dino">Github</a></span>
+		</div>
+	</div>
+	<div class="Send_Icon Send_Icon_Class">
+		<svg class="Rectangle_20">
+			<rect fill="rgba(94,91,199,1)" class="Rectangle_20_Class" rx="0" ry="0" x="0" y="0" width="28" height="28">
+			</rect>
+		</svg>
+		<div class="send_2_Class">
+			<svg class="Path_8" viewBox="2 1.001 24.999 24.999">
+				<path fill="rgba(94,91,199,1)" class="Path_8_Class" d="M 17.47617530822754 26.00000381469727 C 17.02736282348633 26.00000381469727 16.61307525634766 25.74643135070801 16.41069221496582 25.34166526794434 L 12.87734127044678 18.27495574951172 C 12.68329238891602 17.88685607910156 12.71662521362305 17.42256736755371 12.96305465698242 17.06423187255859 L 18.66665649414063 9.333227157592773 L 10.93447589874268 15.03564548492432 C 10.57614040374756 15.28326606750488 10.11185264587402 15.31421756744385 9.723755836486816 15.12135887145996 L 2.658246278762817 11.58919429779053 C 2.234434843063354 11.37609767913818 1.976100444793701 10.93204689025879 2.002290725708008 10.45823574066162 C 2.027291059494019 9.984421730041504 2.333244800567627 9.570134162902832 2.778485059738159 9.407037734985352 L 25.39763832092285 1.073650002479553 C 25.8321647644043 0.9153157472610474 26.32145309448242 1.018887877464294 26.65121650695801 1.348651885986328 C 26.97978782653809 1.676034808158875 27.0869312286377 2.166514158248901 26.92621803283691 2.60223126411438 L 18.59284591674805 25.22142791748047 C 18.42855834960938 25.66666984558105 18.01546287536621 25.97262382507324 17.54164886474609 25.99762344360352 C 17.52022171020508 25.99881362915039 17.49760246276855 26.00000381469727 17.47617530822754 26.00000381469727 Z">
+				</path>
+			</svg>
+		</div>
+	</div>
+	<img class="Layer_1_Class" src="Layer_1.png" srcset="Layer_1.png 1x, Layer_1@2x.png 2x">
+	<div class="surface1530539_Class">
+		<svg class="Path_13" viewBox="6 2.286 23 28">
+			<path fill="rgba(94,91,199,1)" class="Path_13_Class" d="M 21 2.2860107421875 L 17 7.2860107421875 L 6.000000476837158 7.2860107421875 L 6.000000476837158 13.2860107421875 L 14 13.2860107421875 L 6.000000476837158 24.2860107421875 L 6.000000476837158 30.2860107421875 L 14 30.2860107421875 L 17 24.2860107421875 L 29 24.2860107421875 L 29 19.2860107421875 L 21 19.2860107421875 L 29 7.2860107421875 L 29 2.2860107421875 L 21 2.2860107421875 Z M 21 2.2860107421875">
+			</path>
+		</svg>
+	</div>
+</div>
 </body>
 </html>

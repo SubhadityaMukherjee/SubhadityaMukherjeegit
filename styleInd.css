@@ -2,44 +2,38 @@
   box-sizing: content-box;
 }
 img[id=prof] {
-border-radius:100px;
-width:60%;
-height:70%;
+border-radius:50px;
+width:20%;
+height:30%;
 float:center;
 /*padding:15px;*/
-box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+/* box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 }
 
 html {
 /*background: #c2e59c;
 background: -webkit-linear-gradient(to right, #64b3f4, #c2e59c);
 background: linear-gradient(to right, #64b3f4, #c2e59c);*/
-background: #4C4C4C;
+background:rgb(232, 248, 247);
 
 scroll-behavior: smooth;
 }
 
-body{
-
-}
 div[id = "parta"]{
     height:100%;
     width:100%;
 }
 
 div[id = namb] {
-position:relative;
+/* position:relative; */
 /*left: 50%;*/
 /*transform: translateX(-50%);*/
-box-shadow:0 30px 30px rgba(0,0,0,0.50), 0 10px 10px rgba(0,0,0,0.23);
+/* box-shadow:0 30px 30px rgba(0,0,0,0.50), 0 10px 10px rgba(0,0,0,0.23); */
+width: fit-content;
+background: rgb(126, 207, 231);
+/* background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); */
+/* background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); */
 
-background: #7F7FD5;
-background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
-background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
-
-
-
-width:60%;
 border-radius:60px;
 transition:all .3s cubic-bezier(.25,.8,.25,1);
 margin:auto;
@@ -48,23 +42,24 @@ padding:15px;
 
 div[id = namb] p[id="sp"]{
 font-size:25px;
+font-weight: bold;
 }
 div[id = namb] p,a{
 
 font-size:16px;
-font-family: avenir;
-color:white;
+font-family: 'Kulim Park';
+color:black;
 text-decoration:none;
 line-height:7px;
 }
 
 div[id = namb] a:hover{
 font-size:17px;
-color:white
+color:black
 ;
 border-radius:30px;
 padding:5px;
-box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+/* box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 transition:all .3s cubic-bezier(.25,.8,.25,1);
 text-decoration:none;
 }
@@ -72,13 +67,13 @@ text-decoration:none;
 
 div[id = namb]:hover {
 
-box-shadow:0 30px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+/* box-shadow:0 30px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 transition:all .3s cubic-bezier(.25,.8,.25,1);
 }
 
 div[id = proj]{
 /*border-radius: 30px;*/
-font-family: avenir;
+font-family: 'Kulim Park';
 /*display: flex;*/
 /*height: 100vh;*/
 align-items: center;
@@ -99,7 +94,7 @@ background: linear-gradient(to right, #eaafc8, #654ea3);*/
 
 div[id = proj] p{
 font-size:20px;
-font-family: avenir;
+font-family: 'Kulim Park';
 color:black;
 text-decoration:none;
 line-height:5px;
@@ -108,40 +103,41 @@ div[id = proj] a{
 justify-content: center;
 align-items: center;
 font-size:25px;
-font-family: avenir;
-color:white;
+font-family: 'Kulim Park';
+color:black;
 
 text-decoration:none;
 line-height:5px;
 }
 div[id = goto] h5{
-border: 1px solid white;
-box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+border: 1px solid black;
+/* box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 border-radius: 30px;
 padding: 20px;
 /*width: 5%;*/
-width:7%;
+width:fit-content;
 /*justify-content: center;
 align-items: center;*/
 font-size:15px;
-font-family: avenir;
-background:black;
-color:white;
+font-family: 'Kulim Park';
+background:rgb(126, 207, 231);
+color:black;
 text-decoration:none;
 line-height:5px;
 }
 div[id = others] h5{
-border: 1px solid white;
-box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+/* border: 1px solid white; */
+border: 1px solid black;
+/* box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 border-radius: 30px;
-background:black;
+background:rgb(126, 207, 231);
 padding: 20px;
-width: 7%;
+width:fit-content;
 /*justify-content: center;
 align-items: center;*/
 font-size:15px;
-font-family: avenir;
-color:white;
+font-family: 'Kulim Park';
+color:black;
 text-decoration:none;
 line-height:5px;
 }
@@ -154,8 +150,8 @@ align-items: center;
 justify-content: center;
 border-radius: 30px;
 font-size:30px;
-font-family: avenir;
-color:white;
+font-family: 'Kulim Park';
+color:black;
 text-decoration:none;
 padding:20px;
 /*float:center;*/
@@ -165,7 +161,7 @@ padding:20px;
 margin-top:60%;
 /*padding:20px;*/
 /*width:30%;*/
-box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+/* box-shadow:0 50px 40px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 
 /*background: #654ea3;
 background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
@@ -175,19 +171,20 @@ background: #7F7F7F;
 }
 
 div[id = projl] h1{
-color: #E6E6E6;
+color: black;
 }
 div[id = projl] h2,p{
-color: white;
+color:black;
 }
 
 div[id = projl] a{
   /*border: 1px solid white;*/
-  background: black;
+  background: rgb(164, 247, 250);
 border-radius: 30px;
+width:fit-content;
   padding: 10px;
 font-family:avenir;
-box-shadow:0 30px 28px rgba(0,0,0,0.30), 0 10px 10px rgba(0,0,0,0.22);
+/* box-shadow:0 30px 28px rgba(0,0,0,0.30), 0 10px 10px rgba(0,0,0,0.22); */
 font-size:20px;
 
 }
@@ -208,7 +205,7 @@ section {
 }
 
 .arrow {
-  box-shadow:0 30px 30px rgba(0,0,0,0.50), 0 30px 30px rgba(0,0,0,0.23);
+  /* box-shadow:0 30px 30px rgba(0,0,0,0.50), 0 30px 30px rgba(0,0,0,0.23); */
   box-sizing: border-box;
   height: 5vw;
   width: 5vw;
@@ -224,11 +221,6 @@ section {
   border-right-width: 4px;
 }
 
-#card{
-
- box-shadow:0 30px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-transition:all .3s cubic-bezier(.25,.8,.25,1);
-}
 
 div[id="projl"] img, video{
     border-radius: 30px;
@@ -237,7 +229,7 @@ div[id="goto"]{
     padding:10px;
 }
 div[id="goto"] h3{
-    color:white;
+    color:black;
 
     font-size: 20px;
     float:center;
@@ -245,7 +237,7 @@ div[id="goto"] h3{
     font-family:avenir;
 }
 div[id="goto"] a{
-    color:white;
+    color:black;
 
     font-size: 20px;
     margin:none;
@@ -260,14 +252,14 @@ div[id="others"]{
 
 }
 div[id="others"] h3,h4{
-    color:white;
+    color:black;
     font-size: 20px;
     float:center;
     margin:auto;
     font-family:avenir;
 }
 div[id="others"] a{
-    color:white;
+    color:black;
 
     font-size: 20px;
     margin:none;
@@ -286,7 +278,7 @@ font-size:30px;
 grid-column: 2 / -1;
 grid-row: 2 / span 4;
 border: 1px solid white;
-font-family: avenir;
+font-family: 'Kulim Park';
 text-decoration:none;
 grid-template-columns:repeat(auto-fit, 4);
 /*float:center;
