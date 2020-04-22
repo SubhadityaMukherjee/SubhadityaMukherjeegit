@@ -29,13 +29,13 @@ function setup()
             let l_conf = temp.pose.leftWrist.confidence;
             document.getElementById("test").innerHTML = ("no",r_conf, r_wrist);
             console.log("right- ",r_wrist,r_conf);
-            if ((r_wrist >0)&&(r_conf>=.1))
+            if (r_conf>=.2)
             {
                 console.log("yay");
-                document.getElementById("test").innerHTML = ("yaya",r_conf, r_wrist);
-                
-               
-            //   simulateKey(38);
+                document.getElementById("test").innerHTML = ("yaya",r_conf, r_wrist);  
+                document.getElementById("test").click();
+            
+              simulateKey(38);
               simulateKey(27);
               
 
