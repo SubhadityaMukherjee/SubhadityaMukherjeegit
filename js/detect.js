@@ -14,7 +14,7 @@ function setup() {
 
 
 function modelReady(){
-  console.log('model loaded')
+  document.getElementById("vis").innerHTML = "Model loaded";
   detect();
 }
 
