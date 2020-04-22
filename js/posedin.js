@@ -27,8 +27,8 @@ function setup()
             let l_elbow = temp.pose.leftElbow.x;
             let r_conf = temp.pose.rightWrist.confidence;
             let l_conf = temp.pose.leftWrist.confidence;
-            document.getElementById("test").innerHTML = ("no",r_conf, r_wrist);
-            console.log("right- ",r_wrist,r_conf);
+            document.getElementById("test").innerHTML = String("no")+" "+String(r_conf)+" "+String(r_wrist);
+            // console.log("right- ",r_wrist,r_conf);
             if ((r_wrist > 0 )&& (r_conf >= .4))
             {
                 console.log("yay");
