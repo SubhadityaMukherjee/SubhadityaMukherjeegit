@@ -21,7 +21,6 @@ function setup()
         {
             let temp = results[0];
             // console.log(temp);
-            console.log(temp.pose.leftWrist.y);
             let r_wrist = temp.pose.rightWrist.y;
             let l_wrist = temp.pose.leftWrist.y;
             let r_elbow = temp.pose.rightElbow.x;
@@ -29,21 +28,24 @@ function setup()
             let r_conf = temp.pose.rightWrist.confidence;
             let l_conf = temp.pose.leftWrist.confidence;
             let x = document.getElementById("wh");
-            if ((r_wrist > 0 )&& (r_conf >= .4))
+            console.log(l_wrist,l_conf);
+            if ((r_wrist < 380))
             {
-              console.log("right");
-              simulateKey(38);
+                console.log("right");
+                
+               
+            //   simulateKey(38);
               simulateKey(27);
               
 
             }
-            if((l_wrist > 0 )&& (l_conf >= .4))
-            {
-              console.log("left");
-              simulateKey(38);
-              simulateKey(27);  
+            // if((l_wrist > 0 )&& (l_conf >= .2))
+            // {
+            //   console.log("left");
+            // //   simulateKey(38);
+            //   simulateKey(27);  
       
-            }
+            // }
 
 
 
