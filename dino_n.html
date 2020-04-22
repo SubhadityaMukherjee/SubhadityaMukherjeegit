@@ -1,27 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
+<html>
 
-<head >
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
-  <script src="https://unpkg.com/ml5@0.2.3/dist/ml5.min.js" type="text/javascript"></script>
-
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Portfolio</title>
-
-    <link href='http://fonts.googleapis.com/css?family=Righteous&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
-
-     <script src="scripts/modernizr.js"></script>
-     <link rel="stylesheet" href="index.css">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
+    <title >chrome easter egg: t-rex runner</title>
+    <link rel="stylesheet" href="index.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
+    <script src="https://unpkg.com/ml5@0.2.3/dist/ml5.min.js" type="text/javascript"></script>>
+    <link href='http://fonts.googleapis.com/css?family=Righteous&subset=latin,latin-ext' rel='stylesheet'
+        type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
     <script src="index.js"></script>
-    
 </head>
 
 <body id="t" class="offline">
-    <h3>This only works on phones for now.</h3>
+    <div class="site-container">
+
+        <header class="site-header cf">
+            <div class="site-tagline">
+                <h3><a href="index.html">Home</a></h3>
+                <h3><a href="https://github.com/SubhadityaMukherjee">all Projects</a></h3>
+                <h3><a href="interact.html">Interactive</a></h3>
+                <h3><a href="blogs.html">Blogs</a></h3>
+                <h3><a href="contact.html">Contact Me</a></h3>
+
+            </div>
+            </header>
+    </div>
     <div id="messageBox" class="sendmessage">
          <div class="niokbutton" onclick="okbuttonsend()"></div>
     </div>
@@ -39,15 +47,14 @@
             </template>
         </div>
     </div>
+    <div class="card mx-auto">
+        <div class="card-body">
+            <div id = "vis"></div>
+            <div id="videoContainer" class="mx-auto"></div><br>
+            <script type="text/javascript" src="js/posedin.js"></script>
+        </div>
 
-
-  <div class="card-body">
-    <p id="status">Raise your right hand to jump.</p>
-    <div id = "test"></div>
-    <div id="videoContainer" class="mx-auto"></div><br>
-    <script type="text/javascript" src="js/posedin.js"></script>
-
-  </div>
+    </div>
 </body>
 
 <script>

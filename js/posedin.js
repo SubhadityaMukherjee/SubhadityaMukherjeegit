@@ -13,17 +13,7 @@ function setup()
     video.hide();
 
     poseNet = ml5.poseNet(video, modelReady);
-    const touch = new Touch({
-        identifier: "123",
-        target: target,
-      });
-      
-      const touchEvent = new TouchEvent("touchstart", {
-        touches: [touch],
-        view: window,
-        cancelable: true,
-        bubbles: true,
-      });
+
     poseNet.on('pose', function (results)
     {
         poses = results;
@@ -37,16 +27,17 @@ function setup()
             let l_elbow = temp.pose.leftElbow.x;
             let r_conf = temp.pose.rightWrist.confidence;
             let l_conf = temp.pose.leftWrist.confidence;
-            document.getElementById("test").innerHTML = "no";
             // console.log("right- ",r_wrist,r_conf);
-            if ((r_wrist > 0 )&& (r_conf >= .4))
+            if ((r_wrist > 0 )&& (r_conf >= .2))
             {
                 console.log("yay");
-                document.getElementById("test").innerHTML = "yes";
-                // document.getElementById("test").click();
-
                   
-                  target.dispatchEvent(touchEvent);
+                issueKeyPress('keydown', 38);
+                timeout = 85;
+                setTimeout(function() {
+                    issueKeyPress('keyup', 38);
+                }, timeout);
+                
             //   simulateKey(38);
             //   simulateKey(27);
               
@@ -76,19 +67,19 @@ function setup()
         select('#status').html('Raise right hand to jump')
     }
 }
-function simulateKey (keyCode, type, modifiers) {
-	var evtName = (typeof(type) === "string") ? "key" + type : "keydown";	
-	var modifier = (typeof(modifiers) === "object") ? modifier : {};
+function issueKeyPress(type, keycode) {
+    var eventObj = document.createEventObject ?
+        document.createEventObject() : document.createEvent("Events");
 
-	var event = document.createEvent("HTMLEvents");
-	event.initEvent(evtName, true, false);
-	event.keyCode = keyCode;
-	
-	for (var i in modifiers) {
-		event[i] = modifiers[i];
-	}
+    if(eventObj.initEvent){
+        eventObj.initEvent(type, true, true);
+    }
 
-	document.dispatchEvent(event);
+    eventObj.keyCode = keycode;
+    eventObj.which = keycode;
+
+    document.dispatchEvent ? document.dispatchEvent(eventObj) : el.fireEvent("onkeydown", eventObj);
+
 }
 
 function drawKeypoints()
