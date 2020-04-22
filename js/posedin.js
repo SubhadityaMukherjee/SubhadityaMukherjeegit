@@ -28,17 +28,13 @@ function setup() {
       let x = document.getElementById("wh");
       if (r_wrist > 0 && r_conf >= 0.4) {
         console.log("right");
-        // document.addEventListener("keydown", function (event) {
-        //   console.log(event.which);
-        // });
-        // var evt = new KeyboardEvent("keydown", { keyCode: 32, which: 32 });
-        // document.dispatchEvent(evt);
-        this.running = true;
+        okbuttonsend();
         
 
       }
       if (l_wrist > 0 && l_conf >= 0.4) {
         console.log("left");
+        okbuttonsend();
       }
     } catch (e) {
       console.log(e);
