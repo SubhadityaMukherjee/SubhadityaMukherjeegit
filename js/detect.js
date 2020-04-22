@@ -45,7 +45,7 @@ function draw() {
       lab = detection.label;
       console.log(lab);
 
-      if((lab=="cell phone")||(lab= "book")){
+      if(lab=="cell phone"){
         
         document.getElementById("vis").innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 203 148.27">
