@@ -32,15 +32,14 @@ function setup()
             if ((r_wrist > 0 )&& (r_conf >= .4))
             {
               console.log("right");
-              document.getElementById('status').click();
+              simulateKey(38);
               
 
             }
             if((l_wrist > 0 )&& (l_conf >= .4))
             {
               console.log("left");
-              document.getElementById('status').click();
-              
+              simulateKey(38);
       
             }
 
@@ -59,6 +58,20 @@ function setup()
     {
         select('#status').html('Put your left hand up to go left and right to go right.')
     }
+}
+function simulateKey (keyCode, type, modifiers) {
+	var evtName = (typeof(type) === "string") ? "key" + type : "keydown";	
+	var modifier = (typeof(modifiers) === "object") ? modifier : {};
+
+	var event = document.createEvent("HTMLEvents");
+	event.initEvent(evtName, true, false);
+	event.keyCode = keyCode;
+	
+	for (var i in modifiers) {
+		event[i] = modifiers[i];
+	}
+
+	document.dispatchEvent(event);
 }
 
 function drawKeypoints()
