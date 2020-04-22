@@ -35,8 +35,8 @@ function setup()
                 document.getElementById("test").innerHTML = ("yaya",r_conf, r_wrist);  
                 document.getElementById("test").click();
             
-              simulateKey(38);
-              simulateKey(27);
+            //   simulateKey(38);
+            //   simulateKey(27);
               
 
             }
