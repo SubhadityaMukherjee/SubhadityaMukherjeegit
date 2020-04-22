@@ -32,7 +32,7 @@ function setup()
             if ((r_wrist > 0 )&& (r_conf >= .4))
             {
                 console.log("yay");
-                document.getElementById("test").innerHTML = ("yaya",r_conf, r_wrist);  
+                document.getElementById("test").innerHTML = String("no")+" "+String(r_conf)+" "+String(r_wrist);
                 document.getElementById("test").click();
             
             //   simulateKey(38);
