@@ -9,7 +9,7 @@ function setup()
     canvas.parent('videoContainer');
 
     video = createCapture(VIDEO);
-    // video.size(width, height);
+    video.size(width, height);
     video.hide();
 
     poseNet = ml5.poseNet(video, modelReady);
