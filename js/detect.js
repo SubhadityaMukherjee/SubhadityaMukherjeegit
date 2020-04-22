@@ -50,7 +50,7 @@ function draw() {
         document.getElementById("vis").innerHTML = "cup";
       }else if(lab=="couch"){
         document.getElementById("vis").innerHTML = "couch";
-
+      }
       
         // noFill();
         // strokeWeight(3);
