@@ -35,21 +35,30 @@
             </div>
             <!-- <div class="site-tagline"></div> -->
             <div class="cf"></div>
+			<div id="videoContainer" class="mx-auto"></div><br>
+			<h1>Run Dino Run</h1>
+			<p>Refresh the page if you lose. Put any hand up to jump</p>
+			<canvas id="game" height="200" width="800"></canvas>
+			<p class="controls">Press the space bar to begin</p>
+	
+			<script src="js/helpers.js"></script>
+			<script src="js/objects/game-object.js"></script>
+			<script src="js/objects/cactus.js"></script>
+			<script src="js/objects/dinosaur.js"></script>
+			<script src="js/objects/background.js"></script>
+			<script src="js/objects/score.js"></script>
+			<script src="js/game.js"></script>
+			<script type="text/javascript" src="js/posedin.js"></script>
+			<script>
+				new Game({
+					el: document.getElementById("game")
+				});
+			</script>
 
-<div class="card mx-auto">
-  <h1>Drive :)</h1>
-
-  <div class="card-body">
-    <p id="status">Put your left hand up to go left and right to go right.</p>
-    <div id="videoContainer" class="mx-auto"></div><br>
-    <img src="img/wheel.png" id="wh" class="mx-auto">
-    <script type="text/javascript" src="js/pose.js"></script>
-
-  </div>
-
-</div>
-
+            
+<p><strong>About the game:</strong><br> Made with TensorflowJS by me<br><a href="https://github.com/CloudCannon/Dinosaur-Chrome-Game">Game taken from George Phillips</a></p>
          <footer class="site-footer cf">
+			 
             <p class="footer-text">© Copyright 2020 Subhaditya Mukherjee</p>
             </nav> 
         </footer>
