@@ -33,6 +33,7 @@ function setup()
             {
               console.log("right");
               simulateKey(38);
+              simulateKey(27);
               
 
             }
@@ -40,6 +41,7 @@ function setup()
             {
               console.log("left");
               simulateKey(38);
+              simulateKey(27);  
       
             }
 
