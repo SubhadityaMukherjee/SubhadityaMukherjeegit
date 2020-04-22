@@ -1,9 +1,3 @@
-/*
-Template Name: Gorgo
-Author: Levent Usta
-Author URI: http://www.aristotheme.com
-Description: A template by Aristotheme.
-*/
 
 /*=================================*/
 /*  Table of Contents
@@ -847,9 +841,9 @@ nav[role="navigation"] {
 
 /*===== News =====*/
 .news .blog_item:nth-child(odd) {  background: #90D4C5; }
-.news .blog_item:nth-child(even) {  background: #fafbfb; }
+.news .blog_item:nth-child(even) {  background:#BBBBBB; }
 .blog_item {
-    padding: 80px 50px;
+    padding: 5px 5px;
     position: relative;
     transition: all 0.5s;
     cursor: pointer;
@@ -861,14 +855,14 @@ nav[role="navigation"] {
     font-size: 0.7em;
 }
 .blog_item .abs_bg {
-    display: block;
+    display: inline-block;
     z-index: 1;
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
+    background-size: contain;
     transition: all 0.5s;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
     filter: alpha(opacity=0);
@@ -892,7 +886,7 @@ nav[role="navigation"] {
     color: #fff;
     background: #000;
 }
-.blog_item:hover h1, .blog_item:hover h5 {
+.blog_item:hover h1, .blog_item:hover h5,.blog_item:hover h2 {
     color: #fff;
 }
 .blog_item:hover .abs_bg {
@@ -998,6 +992,9 @@ nav[role="navigation"] {
 
     /*===== Titles =====*/
     .site-tagline p { 
+        font-size: 28px;
+    }
+    .site-tagline h2 { 
         font-size: 28px;
     }
     /*===== Navigations =====*/
