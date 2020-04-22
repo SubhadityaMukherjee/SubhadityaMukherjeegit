@@ -33,10 +33,10 @@ function setup()
             {
                 console.log("yay");
                 document.getElementById("test").innerHTML = "yes";
-                document.getElementById("test").click();
+                // document.getElementById("test").click();
             
             //   simulateKey(38);
-            //   simulateKey(27);
+              simulateKey(27);
               
 
             }
