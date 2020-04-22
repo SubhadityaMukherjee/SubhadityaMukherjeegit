@@ -59,7 +59,7 @@ function setup()
 
     function modelReady()
     {
-        select('#status').html('model Loaded')
+        select('#status').html('Put your left hand up to go left and right to go right.')
     }
 }
 
