@@ -32,7 +32,7 @@ function setup()
             if ((r_wrist > 0 )&& (r_conf >= .4))
             {
               console.log("right");
-
+              
                 let turn = 60;
                 x.style.transform = "rotate(" + (turn % 360) + "deg)";
                 x.style.transform = "rotate(" + (turn % 360) + "deg)";
@@ -41,6 +41,7 @@ function setup()
             if((l_wrist > 0 )&& (l_conf >= .4))
             {
               console.log("left");
+              
                 let turn = -120;
                 x.style.transform = "rotate(" + (turn % 360) + "deg)";
                 x.style.transform = "rotate(" + (turn % 360) + "deg)";
