@@ -13,7 +13,17 @@ function setup()
     video.hide();
 
     poseNet = ml5.poseNet(video, modelReady);
-
+    const touch = new Touch({
+        identifier: "123",
+        target: target,
+      });
+      
+      const touchEvent = new TouchEvent("touchstart", {
+        touches: [touch],
+        view: window,
+        cancelable: true,
+        bubbles: true,
+      });
     poseNet.on('pose', function (results)
     {
         poses = results;
@@ -34,8 +44,10 @@ function setup()
                 console.log("yay");
                 document.getElementById("test").innerHTML = "yes";
                 // document.getElementById("test").click();
-            
-              simulateKey(38);
+
+                  
+                  target.dispatchEvent(touchEvent);
+            //   simulateKey(38);
             //   simulateKey(27);
               
 
