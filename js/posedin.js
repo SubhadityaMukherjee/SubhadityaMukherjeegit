@@ -28,7 +28,7 @@ function setup()
             let r_conf = temp.pose.rightWrist.confidence;
             let l_conf = temp.pose.leftWrist.confidence;
             // console.log("right- ",r_wrist,r_conf);
-            if ((r_wrist > 0 )&& (r_conf >= .4))
+            if ((r_wrist > 0 )&& (r_conf >= .2))
             {
                 console.log("yay");
                   
