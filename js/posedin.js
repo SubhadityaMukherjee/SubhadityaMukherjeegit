@@ -31,7 +31,7 @@ function setup()
             console.log("right- ",r_wrist,r_conf);
             if ((r_wrist >0)&&(r_conf>=.1))
             {
-                console.log("right");
+                console.log("yay");
                 
                
             //   simulateKey(38);
