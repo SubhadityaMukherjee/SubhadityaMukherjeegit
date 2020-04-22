@@ -35,8 +35,8 @@ function setup()
                 document.getElementById("test").innerHTML = "yes";
                 // document.getElementById("test").click();
             
-            //   simulateKey(38);
-              simulateKey(27);
+              simulateKey(38);
+            //   simulateKey(27);
               
 
             }
@@ -61,7 +61,7 @@ function setup()
 
     function modelReady()
     {
-        select('#status').html('Put your left hand up to go left and right to go right.')
+        select('#status').html('Raise right hand to jump')
     }
 }
 function simulateKey (keyCode, type, modifiers) {
