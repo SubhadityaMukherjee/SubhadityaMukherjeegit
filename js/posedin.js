@@ -29,7 +29,7 @@ function setup()
             let l_conf = temp.pose.leftWrist.confidence;
             document.getElementById("test").innerHTML = ("no",r_conf, r_wrist);
             console.log("right- ",r_wrist,r_conf);
-            if (r_conf>=.2)
+            if ((r_wrist > 0 )&& (r_conf >= .4))
             {
                 console.log("yay");
                 document.getElementById("test").innerHTML = ("yaya",r_conf, r_wrist);  
