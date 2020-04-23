@@ -12,7 +12,6 @@ function setup() {
     detector = ml5.objectDetector('cocossd', modelReady)
 }
 
-
 function modelReady(){
   document.getElementById("vis").innerHTML = "<h4>Done! Now show me.</h4>";
   detect();
