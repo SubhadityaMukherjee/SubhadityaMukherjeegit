@@ -1,10 +1,10 @@
 <html>
 
 <head>
-<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
-    <title >Portfolio</title>
-    <link rel="stylesheet" href="index.css">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
+	<title>Portfolio</title>
+	<link rel="stylesheet" href="index.css">
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
@@ -16,42 +16,44 @@
 			transform: scale(-1, 1);
 		}
 	</style>
-<link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
-    <script src="index.js"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-122655566-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+	<link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
+	<script src="index.js"></script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-122655566-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
 
-  gtag('config', 'UA-122655566-1');
-</script>
+		gtag('config', 'UA-122655566-1');
+	</script>
 </head>
 
 <body>
-	  <div class="site-container">
+	<div class="site-container">
 
-        <header class="site-header cf">
-            <div class="site-tagline">
-                <h3><a href="index.html">Home</a></h3>
-                <h3><a href="https://github.com/SubhadityaMukherjee">all Projects</a></h3>
-                <h3><a href="interact.html">Interactive</a></h3>
-                <h3><a href="blogs.html">Blogs</a></h3>
-                <h3><a href="contact.html">Contact Me</a></h3>
+		<header class="site-header cf">
+			<div class="site-tagline">
+				<h3><a href="index.html">Home</a></h3>
+				<h3><a href="https://github.com/SubhadityaMukherjee">all Projects</a></h3>
+				<h3><a href="interact.html">Interactive</a></h3>
+				<h3><a href="blogs.html">Blogs</a></h3>
+				<h3><a href="contact.html">Contact Me</a></h3>
 
-            </div>
-            </header>
-	<video width=640 height=480 autoplay muted id="camera" class="img-hor-vert">
-	</video>
-
+			</div>
+		</header>
+	</div>
 	<canvas width=640 height=480 id="augmented_canvas" class="img-hor-vert"> </canvas>
 
 	<video autoplay muted loop id="movie" style="visibility: hidden">
 		<source src="img/frozen.mp4" type="video/mp4">
 		</source>
 	</video>
-  
+	<video width=640 height=480 autoplay muted id="camera" class="img-hor-vert">
+	</video>
+
+
+
 	<script>
 
 		// hand tracking to move objects in Virtual / Augmented world
