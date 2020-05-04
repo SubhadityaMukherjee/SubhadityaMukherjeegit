@@ -1,0 +1,146 @@
+<html>
+
+<head>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
+    <title >Portfolio</title>
+    <link rel="stylesheet" href="index.css">
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
+	<style>
+		.img-hor-vert {
+			-moz-transform: scale(-1, 1);
+			-o-transform: scale(-1, 1);
+			-webkit-transform: scale(-1, 1);
+			transform: scale(-1, 1);
+		}
+	</style>
+<link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
+    <script src="index.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-122655566-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-122655566-1');
+</script>
+</head>
+
+<body>
+	  <div class="site-container">
+
+        <header class="site-header cf">
+            <div class="site-tagline">
+                <h3><a href="index.html">Home</a></h3>
+                <h3><a href="https://github.com/SubhadityaMukherjee">all Projects</a></h3>
+                <h3><a href="interact.html">Interactive</a></h3>
+                <h3><a href="blogs.html">Blogs</a></h3>
+                <h3><a href="contact.html">Contact Me</a></h3>
+
+            </div>
+            </header>
+	<video width=640 height=480 autoplay muted id="camera" class="img-hor-vert">
+	</video>
+
+	<canvas width=640 height=480 id="augmented_canvas" class="img-hor-vert"> </canvas>
+
+	<video autoplay muted loop id="movie" style="visibility: hidden">
+		<source src="img/frozen.mp4" type="video/mp4">
+		</source>
+	</video>
+  
+	<script>
+
+		// hand tracking to move objects in Virtual / Augmented world
+		async function track_hand() {
+			// load camera stream
+			const frame = document.getElementById("camera");
+
+			// load movie stream
+			const movie = document.getElementById("movie");
+
+
+			// prepare canvas
+			const canvas = document.getElementById("augmented_canvas");
+			const draw = canvas.getContext("2d");
+
+			// load hand-pose model
+			const model = await handpose.load();
+
+			// size of media player
+			const w = 200;
+			const h = 150;
+			// default position : top right corner
+			var index_x = canvas.width - w - 10;
+			var index_y = 10;
+
+			while (1) {
+				// copy camera stream to canvas
+				draw.drawImage(frame, 0, 0, 640, 480);
+
+				// track hand position
+				const result = await model.estimateHands(frame);
+
+				// check if hand is detected
+				if (result.length > 0) {
+					movie.play();
+					// get hand co-ordinates
+					const hand = result[0];
+
+					// update index finger tip position
+					const index = hand.annotations.indexFinger;
+
+					index_x = Math.round(index[3][0]);
+					index_y = Math.round(index[3][1]);
+					// console.log(index_x,index_y)
+				} else {
+					movie.pause()
+				}
+
+				// display media player at assigned location
+				draw.drawImage(movie, index_x, index_y, w, h);
+
+				// loop to process the next frame
+				await tf.nextFrame();
+			}
+		}
+
+	</script>
+
+	<script>
+
+		function live_webcam() {
+			// capture live video stream from web camera
+			if (navigator.mediaDevices.getUserMedia) {
+				navigator.mediaDevices.getUserMedia({ video: true })
+					.then(function (stream) { video.srcObject = stream; });
+			}
+		}
+
+		function main() {
+			// check if the video is loaded and ready for processing
+			video = document.getElementById("camera");
+			if (video.readyState == 4) {
+				console.log("video is ready for processing..");
+				track_hand();
+			}
+			else {
+				console.log("nope, not ready yet..");
+				setTimeout(main, 1000 / 30);
+			}
+		}
+
+		// capture live camera stream
+		live_webcam();
+
+		// detect gestures once the video is ready
+		main();
+
+	</script>
+
+</body>
+
+</html>
