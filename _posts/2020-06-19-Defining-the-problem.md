@@ -4,6 +4,7 @@ title: "Defining the project and outlining what is to come in the future"
 author: Subhaditya Mukherjee
 tags: start defining post introduction
 ---
+An introduction to what I want to do and why.
 
 ## Why do I need to make a library from scratch when there are so many out there?
 Simply put, I want to learn. And what better way to learn then by making something from scratch?
