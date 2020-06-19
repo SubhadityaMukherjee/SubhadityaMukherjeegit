@@ -1,4 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-06-19T17:53:03+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Train Test Valid</title><link href="http://localhost:4000/2020/06/19/trainTest.html" rel="alternate" type="text/html" title="Train Test Valid" /><published>2020-06-19T17:52:02+04:00</published><updated>2020-06-19T17:52:02+04:00</updated><id>http://localhost:4000/2020/06/19/trainTest</id><content type="html" xml:base="http://localhost:4000/2020/06/19/trainTest.html">&lt;p&gt;Defining a function to split the dataset into train/test/validation bits.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-06-19T21:28:56+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">notebook2script</title><link href="http://localhost:4000/2020/06/19/notebook2script.html" rel="alternate" type="text/html" title="notebook2script" /><published>2020-06-19T19:10:30+04:00</published><updated>2020-06-19T19:10:30+04:00</updated><id>http://localhost:4000/2020/06/19/notebook2script</id><content type="html" xml:base="http://localhost:4000/2020/06/19/notebook2script.html">&lt;p&gt;I want to convert my work as a script. Selectively.&lt;/p&gt;
+
+&lt;h2 id=&quot;repository&quot;&gt;Repository&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/SubhadityaMukherjee/notebook2script.jl&quot;&gt;https://github.com/SubhadityaMukherjee/notebook2script.jl&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;what&quot;&gt;What?&lt;/h2&gt;
+&lt;p&gt;I like to do my development in jupyter notebooks. When I convert them to scripts I need to save the whole notebook as a script and then remove what I dont need. WHY -.-
+I want to make a script to save only the cells I finally want for my script by adding an #export to them.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-do-i-need&quot;&gt;What do I need?&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Understand JSON tags for the cells&lt;/li&gt;
+  &lt;li&gt;Find the cells with #export&lt;/li&gt;
+  &lt;li&gt;Save them separately.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;lets-goooo&quot;&gt;Lets goooo&lt;/h2&gt;
+&lt;p&gt;Let us first import JSON since jupyter notebooks are JSON files&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;JSON&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After that we allocate a dictionary and parse the notebook. Since JSONs are just pretty dictionaries, we convert the whole file into one.&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;dict2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Dict&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ARGS&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;r&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dict2&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dict2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now to identify the cells we need we have to add a #export to the start of the cell. Once we do that, we can go through all the cells and take the ones which have this #export in it. Then we filter this out so it does not appear in the end script. We add all this to a string.&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;gstr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dict2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;cells&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;#export&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;source&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;source&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filter!&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#export&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;gstr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;gstr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then we write the file and we are done :)&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;io&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ARGS&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;.jl&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;w&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gstr&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;julia notebook2script.jl “pathToInput.ipynb” “pathToOutput”&lt;/li&gt;
+  &lt;li&gt;No need to add a .jl&lt;/li&gt;
+  &lt;li&gt;Done :)&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="notebook" /><category term="script" /><category term="convert" /><category term="helper" /><summary type="html">I want to convert my work as a script. Selectively.</summary></entry><entry><title type="html">Train Test Valid</title><link href="http://localhost:4000/2020/06/19/trainTest.html" rel="alternate" type="text/html" title="Train Test Valid" /><published>2020-06-19T17:52:02+04:00</published><updated>2020-06-19T17:52:02+04:00</updated><id>http://localhost:4000/2020/06/19/trainTest</id><content type="html" xml:base="http://localhost:4000/2020/06/19/trainTest.html">&lt;p&gt;Defining a function to split the dataset into train/test/validation bits.&lt;/p&gt;
 
 &lt;h2 id=&quot;what-we-need-to-do-and-steps-we-will-try-to-follow&quot;&gt;What we need to do and steps we will try to follow.&lt;/h2&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="split" /><category term="tutorial" /><category term="dataset" /><summary type="html">Defining a function to split the dataset into train/test/validation bits.</summary></entry><entry><title type="html">Dataloader</title><link href="http://localhost:4000/2020/06/19/dataloader.html" rel="alternate" type="text/html" title="Dataloader" /><published>2020-06-19T16:53:45+04:00</published><updated>2020-06-19T16:53:45+04:00</updated><id>http://localhost:4000/2020/06/19/dataloader</id><content type="html" xml:base="http://localhost:4000/2020/06/19/dataloader.html">&lt;p&gt;The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.&lt;/p&gt;
 
