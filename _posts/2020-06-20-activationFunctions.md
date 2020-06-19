@@ -2,7 +2,7 @@
 layout: post
 title: Activation functions
 date:   2020-06-20 02:00:43 +0400
-tags: activation leaky swish sigmoid soft
+tags: activation leaky swish sigmoid soft elu
 ---
 
 Activation functions are an extremely important part of any neural network. But they are actually much simpler than we make them out to be. Here are some of them.
