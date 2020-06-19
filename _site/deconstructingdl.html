@@ -44,12 +44,38 @@
         
       </header>
       <section>
+      <!-- Html Elements for Search -->
+<div id="search-container">
+Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+<ul id="results-container"></ul>
+</div>
+
+<!-- Script pointing to search-script.js -->
+<script src="js/search-script.js" type="text/javascript"></script>
+
+<!-- Configuration -->
+<script>
+SimpleJekyllSearch({
+  searchInput: document.getElementById('search-input'),
+  resultsContainer: document.getElementById('results-container'),
+  json: '/search.json'
+})
+</script>
 
       <h1 id="posts-in-order">Posts in order</h1>
 <ul>
   <li>RSS feed link : <a href="https://subhadityamukherjee.github.io/feed.xml">Click</a></li>
+  <li>For anything you want to see the notebooks of. Please refer to the repository. Everything will be there. Link on the left.</li>
 </ul>
+
 <ul>
+  
+    <li>
+      <h2><a href="/2020/06/19/Vision.html">19 June 2020 - Vision</a></h2>
+	<p>A roadmap of modules I want to implement. Mostly as a todo list and a help if anyone decides they want to pitch in. (LOL)</p>
+
+
+    </li>
   
     <li>
       <h2><a href="/2020/06/19/notebook2script.html">19 June 2020 - notebook2script</a></h2>
@@ -59,8 +85,8 @@
     </li>
   
     <li>
-      <h2><a href="/2020/06/19/trainTest.html">19 June 2020 - Train Test Valid</a></h2>
-	<p>Defining a function to split the dataset into train/test/validation bits.</p>
+      <h2><a href="/2020/06/19/trainTest.html">19 June 2020 - Oversample and Split</a></h2>
+	<p>Defining a function to split the dataset into train/test bits and oversample it as well.</p>
 
 
     </li>

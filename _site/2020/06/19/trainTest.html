@@ -6,20 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Train Test Valid | Deconstructing Deep learning</title>
+<title>Oversample and Split | Deconstructing Deep learning</title>
 <meta name="generator" content="Jekyll v3.8.7" />
-<meta property="og:title" content="Train Test Valid" />
+<meta property="og:title" content="Oversample and Split" />
 <meta name="author" content="Subhaditya Mukherjee" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Defining a function to split the dataset into train/test/validation bits." />
-<meta property="og:description" content="Defining a function to split the dataset into train/test/validation bits." />
+<meta name="description" content="Defining a function to split the dataset into train/test bits and oversample it as well." />
+<meta property="og:description" content="Defining a function to split the dataset into train/test bits and oversample it as well." />
 <link rel="canonical" href="http://localhost:4000/2020/06/19/trainTest.html" />
 <meta property="og:url" content="http://localhost:4000/2020/06/19/trainTest.html" />
 <meta property="og:site_name" content="Deconstructing Deep learning" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-19T17:52:02+04:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/19/trainTest.html","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"headline":"Train Test Valid","dateModified":"2020-06-19T17:52:02+04:00","datePublished":"2020-06-19T17:52:02+04:00","description":"Defining a function to split the dataset into train/test/validation bits.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/19/trainTest.html"},"@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/19/trainTest.html","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"headline":"Oversample and Split","dateModified":"2020-06-19T17:52:02+04:00","datePublished":"2020-06-19T17:52:02+04:00","description":"Defining a function to split the dataset into train/test bits and oversample it as well.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/19/trainTest.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=b2f19bb43d5c256e4ad48d112892e39fc990f3fb">
@@ -46,20 +46,155 @@
         
       </header>
       <section>
+      <!-- Html Elements for Search -->
+<div id="search-container">
+Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+<ul id="results-container"></ul>
+</div>
+
+<!-- Script pointing to search-script.js -->
+<script src="js/search-script.js" type="text/javascript"></script>
+
+<!-- Configuration -->
+<script>
+SimpleJekyllSearch({
+  searchInput: document.getElementById('search-input'),
+  resultsContainer: document.getElementById('results-container'),
+  json: '/search.json'
+})
+</script>
 
       <small>19 June 2020</small>
-<h1>Train Test Valid</h1>
+<h1>Oversample and Split</h1>
 
 <p class="view">by Subhaditya Mukherjee</p>
 
-<p>Defining a function to split the dataset into train/test/validation bits.</p>
+<p>Defining a function to split the dataset into train/test bits and oversample it as well.</p>
 
 <h2 id="what-we-need-to-do-and-steps-we-will-try-to-follow">What we need to do and steps we will try to follow.</h2>
 
+<ol>
+  <li>Take all the files and labels as X,y</li>
+  <li>Class distribution</li>
+  <li>Oversample?</li>
+  <li>Split into train/test</li>
+</ol>
+
+<h2 id="class-distribution">Class distribution</h2>
+<p>This is extremely important for classification so we first try to see if the classes are balanced or not.
+Should be quite simple. We first take the labels(lesser computation) and then count each of them. Let us also plot it because graphs are pretty.
+We also return the maximum count to help with oversampling.
+We make this default to oversample if the differences between the classes are greater than 100 images.</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> classDistribution</span><span class="x">(</span><span class="n">y</span><span class="x">)</span>
+    <span class="s">"""
+    Function to plot class distribution to see if balanced or not.
+    """</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">unique</span><span class="x">(</span><span class="n">y</span><span class="x">)</span>
+    <span class="n">cnts</span> <span class="o">=</span> <span class="x">[</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span> <span class="o">.==</span> <span class="n">i</span><span class="x">)</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">labels</span><span class="x">]</span>
+    <span class="n">display</span><span class="x">(</span><span class="n">plot</span><span class="x">(</span><span class="n">cnts</span><span class="x">,</span><span class="n">seriestype</span> <span class="o">=</span> <span class="x">[</span><span class="o">:</span><span class="n">bar</span><span class="x">]))</span>
+    <span class="k">return</span> <span class="n">cnts</span><span class="x">,</span><span class="n">maximum</span><span class="x">(</span><span class="n">cnts</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Done :)</p>
+
+<h2 id="oversample">Oversample</h2>
+<p>This is a technique in which the lower sampled classes are copied till the number of samples are equal.
+So turns out adding it here doesnt help and makes it worse. So I copied the code to the start and we are adding on to the read file function.
+We modify the initial loader once to add the images from the end of the array and repeat the labels.</p>
+
+<p>The modified function is as follows.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#export</span>
+
+<span class="s">"""
+Function to create an array of images and labels -&gt; when the directory structure is as follows
+- main
+    - category1
+        - file1...
+    -category2
+        - file1...
+    ...
+"""</span>
+<span class="k">function</span><span class="nf"> fromFolder</span><span class="x">(</span><span class="n">path</span><span class="o">::</span><span class="kt">String</span><span class="x">,</span><span class="n">imageSize</span><span class="o">=</span><span class="mi">64</span><span class="o">::</span><span class="kt">Int64</span><span class="x">)</span>
+    <span class="nd">@info</span> <span class="n">path</span><span class="x">,</span> <span class="n">imageSize</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">readdir</span><span class="x">(</span><span class="n">path</span><span class="x">)</span>
+    <span class="n">total_files</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">([</span><span class="n">add_path</span><span class="x">(</span><span class="n">x</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">categories</span><span class="x">]));</span>
+    <span class="n">total_categories</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">([</span><span class="n">add_path</span><span class="x">(</span><span class="n">x</span><span class="x">)[</span><span class="mi">2</span><span class="x">]</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">categories</span><span class="x">]));</span>
+    <span class="n">distrib</span><span class="x">,</span><span class="n">max_dis</span> <span class="o">=</span> <span class="n">classDistribution</span><span class="x">(</span><span class="n">total_categories</span><span class="x">)</span>
+    
+    <span class="n">indices_repeat</span> <span class="o">=</span> <span class="n">indexin</span><span class="x">(</span><span class="n">unique</span><span class="x">(</span><span class="n">y</span><span class="x">),</span> <span class="n">y</span><span class="x">)</span>
+    <span class="c"># oversample</span>
+    <span class="n">total_add</span> <span class="o">=</span> <span class="n">max_dis</span><span class="o">.-</span><span class="n">distrib</span> <span class="c"># get the differences to oversample</span>
+    <span class="n">oversample</span> <span class="o">=</span> <span class="nb">false</span><span class="x">;</span>
+    <span class="k">if</span> <span class="n">sum</span><span class="x">(</span><span class="n">total_add</span><span class="x">)</span><span class="o">&gt;</span><span class="mi">100</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">((</span><span class="n">imageSize</span><span class="x">,</span> <span class="n">imageSize</span><span class="x">,</span> <span class="mi">3</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">max_dis</span><span class="o">*</span><span class="n">length</span><span class="x">(</span><span class="n">unique</span><span class="x">(</span><span class="n">total_categories</span><span class="x">)),</span><span class="mi">1</span><span class="x">)));</span>
+        <span class="n">oversample</span><span class="o">=</span> <span class="nb">true</span><span class="x">;</span>
+        <span class="n">oversample_index</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">)</span><span class="o">-</span> <span class="n">sum</span><span class="x">(</span><span class="n">total_add</span><span class="x">)</span><span class="c"># keep a track of indices from the back</span>
+    <span class="k">else</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">((</span><span class="n">imageSize</span><span class="x">,</span> <span class="n">imageSize</span><span class="x">,</span> <span class="mi">3</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">total_categories</span><span class="x">,</span><span class="mi">1</span><span class="x">)));</span>
+        <span class="n">oversample</span><span class="o">=</span> <span class="nb">false</span><span class="x">;</span>
+    <span class="k">end</span>
+    
+    <span class="n">Threads</span><span class="o">.</span><span class="nd">@threads</span> <span class="k">for</span> <span class="n">idx</span> <span class="k">in</span> <span class="n">collect</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">total_files</span><span class="x">,</span><span class="mi">1</span><span class="x">))</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">channelview</span><span class="x">(</span><span class="n">imresize</span><span class="x">(</span><span class="n">load</span><span class="x">(</span><span class="n">total_files</span><span class="x">[</span><span class="n">idx</span><span class="x">]),</span> <span class="x">(</span><span class="n">imageSize</span><span class="x">,</span> <span class="n">imageSize</span><span class="x">)))</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">convert</span><span class="x">(</span><span class="kt">Array</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span><span class="n">img</span><span class="x">)</span>
+        <span class="n">images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="n">idx</span><span class="x">]</span> <span class="o">=</span> <span class="n">permutedims</span><span class="x">(</span><span class="n">img</span><span class="x">,(</span><span class="mi">2</span><span class="x">,</span><span class="mi">3</span><span class="x">,</span><span class="mi">1</span><span class="x">))</span>
+<span class="c">#         @info oversample</span>
+        <span class="k">if</span> <span class="n">oversample</span><span class="o">==</span><span class="nb">true</span>
+            
+            <span class="k">if</span> <span class="n">idx</span> <span class="k">in</span> <span class="n">indices_repeat</span>
+                <span class="n">labelrep</span> <span class="o">=</span> <span class="n">findfirst</span><span class="x">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">==</span><span class="n">idx</span><span class="x">,</span><span class="n">indices_repeat</span><span class="x">)</span> <span class="c"># index in the repeated list</span>
+                <span class="n">to_repeat</span> <span class="o">=</span> <span class="n">total_add</span><span class="x">[</span><span class="n">labelrep</span><span class="x">]</span> <span class="c"># no of times to repeat</span>
+                <span class="n">total_categories</span> <span class="o">=</span> <span class="n">vcat</span><span class="x">(</span><span class="n">total_categories</span><span class="x">,</span> <span class="n">fill</span><span class="x">(</span><span class="n">total_categories</span><span class="x">[</span><span class="n">indices_repeat</span><span class="x">[</span><span class="n">labelrep</span><span class="x">]],</span><span class="n">to_repeat</span><span class="x">))</span>
+                <span class="n">Threads</span><span class="o">.</span><span class="nd">@threads</span> <span class="k">for</span> <span class="n">idx2</span> <span class="k">in</span> <span class="n">collect</span><span class="x">(</span><span class="n">oversample_index</span><span class="o">:</span><span class="n">to_repeat</span><span class="x">)</span>
+                    <span class="n">images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="n">idx2</span><span class="x">]</span> <span class="o">=</span> <span class="n">images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="n">indices_repeat</span><span class="x">[</span><span class="n">labelrep</span><span class="x">]</span> <span class="x">]</span>
+                    
+                <span class="k">end</span>
+                
+                
+            <span class="k">end</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+            
+      
+    <span class="nd">@info</span> <span class="s">"Done loading images"</span>
+    
+<span class="mi">2</span>    <span class="k">return</span> <span class="n">images</span><span class="x">,</span> <span class="n">total_categories</span>
+    
+    
+    
+<span class="k">end</span>
+    
+</code></pre></div></div>
+
+<p>Done :)</p>
+
+<h2 id="split-into-train-test">Split into train test</h2>
+<p>I did not think this would turn out very well but it did somehow. And pretty easily.
+Instead of shuffling the order around. We shuffle the indexes. This means that we do not need to take care of linked sorting etc.
+After we shuffle it, we split the array into 2 bits by a percentage. 
+The view takes care of that bit.
+Then we use the same indexing types we have used so far and pop the shuffled indexes into them. And viola! Train test split is here!</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#export</span>
+<span class="k">function</span><span class="nf"> splitter</span><span class="x">(</span><span class="n">pct_split</span><span class="o">=</span><span class="mf">0.7</span><span class="o">::</span><span class="kt">Float16</span><span class="x">)</span>
+    <span class="s">"""
+    Splits into train/test by pct_split%
+    """</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">shuffle</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">train_idx</span> <span class="o">=</span> <span class="n">view</span><span class="x">(</span><span class="n">idx</span><span class="x">,</span> <span class="mi">1</span><span class="o">:</span><span class="n">floor</span><span class="x">(</span><span class="kt">Int</span><span class="x">,</span> <span class="n">pct_split</span><span class="o">*</span><span class="n">n</span><span class="x">));</span>
+    <span class="n">test_idx</span> <span class="o">=</span> <span class="n">view</span><span class="x">(</span><span class="n">idx</span><span class="x">,</span> <span class="x">(</span><span class="n">floor</span><span class="x">(</span><span class="kt">Int</span><span class="x">,</span> <span class="n">pct_split</span><span class="o">*</span><span class="n">n</span><span class="x">)</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span><span class="o">:</span><span class="n">n</span><span class="x">);</span>
+    <span class="n">ytrain</span><span class="x">,</span><span class="n">ytest</span> <span class="o">=</span> <span class="n">y</span><span class="x">[</span><span class="n">train_idx</span><span class="x">,</span><span class="o">:</span><span class="x">],</span> <span class="n">y</span><span class="x">[</span><span class="n">test_idx</span><span class="x">,</span><span class="o">:</span><span class="x">]</span>
+    <span class="n">Xtrain</span><span class="x">,</span><span class="n">Xtest</span> <span class="o">=</span> <span class="n">X</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="n">train_idx</span><span class="x">],</span> <span class="n">X</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="n">test_idx</span><span class="x">]</span>
+    <span class="k">return</span> <span class="n">Xtrain</span><span class="x">,</span> <span class="n">ytrain</span><span class="x">,</span> <span class="n">Xtest</span><span class="x">,</span> <span class="n">ytest</span>
+<span class="k">end</span>
+</code></pre></div></div>
 
 
 
-  <small>tags: <em>split</em> - <em>tutorial</em> - <em>dataset</em></small>
+  <small>tags: <em>split</em> - <em>tutorial</em> - <em>dataset</em> - <em>distribution</em> - <em>split</em> - <em>oversample</em></small>
 
 
 

@@ -1,0 +1,69 @@
+[
+  
+    {
+
+      "title"    : "Vision",
+      "url"      : "/2020/06/19/Vision.html",
+      "category" : "",
+      "tags"     : "vision, roadmap",
+      "date"     : "2020-06-19 21:56:03 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "notebook2script",
+      "url"      : "/2020/06/19/notebook2script.html",
+      "category" : "",
+      "tags"     : "notebook, script, convert, helper",
+      "date"     : "2020-06-19 19:10:30 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Oversample and Split",
+      "url"      : "/2020/06/19/trainTest.html",
+      "category" : "",
+      "tags"     : "split, tutorial, dataset, distribution, split, oversample",
+      "date"     : "2020-06-19 17:52:02 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Dataloader",
+      "url"      : "/2020/06/19/dataloader.html",
+      "category" : "",
+      "tags"     : "start,, dataloader,, images,, tutorial",
+      "date"     : "2020-06-19 16:53:45 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Initial Steps",
+      "url"      : "/2020/06/19/Initial-Steps.html",
+      "category" : "",
+      "tags"     : "introduction, start, blog, setup",
+      "date"     : "2020-06-19 00:00:00 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Defining the project and outlining what is to come in the future",
+      "url"      : "/2020/06/19/Defining-the-problem.html",
+      "category" : "",
+      "tags"     : "start, defining, post, introduction",
+      "date"     : "2020-06-19 00:00:00 +0400",
+      "discription" : ""
+
+    } 
+  
+]
