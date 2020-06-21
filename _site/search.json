@@ -2,10 +2,21 @@
   
     {
 
-      "title"    : "layers",
+      "title"    : "Initialization",
+      "url"      : "/2020/06/21/initialization.html",
+      "category" : "",
+      "tags"     : "inititialize, xavier, he, glorot, kaiming, normal, random, uniform, zeros, lsuv",
+      "date"     : "2020-06-21 13:58:32 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Linear Model",
       "url"      : "/2020/06/20/layers.html",
       "category" : "",
-      "tags"     : "",
+      "tags"     : "linear, regression, basic, start, dense",
       "date"     : "2020-06-20 12:43:30 +0400",
       "discription" : ""
 
