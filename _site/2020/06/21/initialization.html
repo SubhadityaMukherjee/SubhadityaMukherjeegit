@@ -83,18 +83,20 @@ Please dont. I mean its the worst idea. But anyway.</li>
 </code></pre></div></div>
 
 <ul>
-  <li>Normal Initialization: set all weights to random small numbers
-This is what we did as a test. It does better than init 0 but still. Not a great idea.</li>
+  <li>Normal Initialization: set all weights to random small numbers</li>
 </ul>
+
+<p>This is what we did as a test. It does better than init 0 but still. Not a great idea.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">W</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="mi">2</span><span class="x">,</span><span class="mi">100</span><span class="x">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="mi">2</span><span class="x">)</span>
 </code></pre></div></div>
 
 <ul>
-  <li>Lecun Initialization: normalize variance
-LeCun, Y. A., Bottou, L., Orr, G. B., &amp; Müller, K. R. (2012). Efficient backprop. In Neural networks: Tricks of the trade (pp. 9-48). Springer, Berlin, Heidelberg.</li>
+  <li>Lecun Initialization: normalize variance</li>
 </ul>
+
+<p>LeCun, Y. A., Bottou, L., Orr, G. B., &amp; Müller, K. R. (2012). Efficient backprop. In Neural networks: Tricks of the trade (pp. 9-48). Springer, Berlin, Heidelberg.</p>
 
 <p>Since variance grows with number of inputs. This makes it constant xD
 It draws samples from a truncated normal distribution centered on 0 with stddev &lt;- sqrt(1 / fan_in) where fan_in is the number of input units in the weight tensor.</p>
@@ -133,9 +135,10 @@ First Xavier Normal - It draws samples from a truncated normal distribution cent
 </code></pre></div></div>
 
 <ul>
-  <li>Kaiming Initialization (he init)
-K. He, X. Zhang, S. Ren, and J. Sun, “Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification,” arXiv:1502.01852 [cs], Feb. 2015.</li>
+  <li>Kaiming Initialization (he init)</li>
 </ul>
+
+<p>K. He, X. Zhang, S. Ren, and J. Sun, “Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification,” arXiv:1502.01852 [cs], Feb. 2015.</p>
 
 <p>This works better with ReLU/Leaky ReLU activations. This is mostly used everywhere because we use ReLU more than Sigmoid now.
 Wow. This is just different from Xavier in the fact that there is no fan out :/ And here I thought it was some complicated thing.</p>

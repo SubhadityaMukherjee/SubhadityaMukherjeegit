@@ -18,6 +18,7 @@ b = zeros(2)
 ```
 
 - Normal Initialization: set all weights to random small numbers
+
 This is what we did as a test. It does better than init 0 but still. Not a great idea.
 
 ``` julia
@@ -26,6 +27,7 @@ b = rand(2)
 ```
 
 - Lecun Initialization: normalize variance
+
 LeCun, Y. A., Bottou, L., Orr, G. B., & Müller, K. R. (2012). Efficient backprop. In Neural networks: Tricks of the trade (pp. 9-48). Springer, Berlin, Heidelberg.
 
 Since variance grows with number of inputs. This makes it constant xD
@@ -66,6 +68,7 @@ b = rand(xavier_uniform(2,2), 2)
 ```
 
 - Kaiming Initialization (he init)
+
 K. He, X. Zhang, S. Ren, and J. Sun, “Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification,” arXiv:1502.01852 [cs], Feb. 2015.
 
 This works better with ReLU/Leaky ReLU activations. This is mostly used everywhere because we use ReLU more than Sigmoid now.
