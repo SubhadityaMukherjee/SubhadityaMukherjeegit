@@ -6,20 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Vision | Deconstructing Deep learning</title>
+<title>SGD | Deconstructing Deep learning</title>
 <meta name="generator" content="Jekyll v3.8.7" />
-<meta property="og:title" content="Vision" />
+<meta property="og:title" content="SGD" />
 <meta name="author" content="Subhaditya Mukherjee" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="A roadmap of modules I want to implement. Mostly as a todo list and a help if anyone decides they want to pitch in. (LOL)" />
-<meta property="og:description" content="A roadmap of modules I want to implement. Mostly as a todo list and a help if anyone decides they want to pitch in. (LOL)" />
-<link rel="canonical" href="http://localhost:4000/2020/06/19/Vision.html" />
-<meta property="og:url" content="http://localhost:4000/2020/06/19/Vision.html" />
+<meta name="description" content="In this post we will try to implement SGD and read a bit about what it is." />
+<meta property="og:description" content="In this post we will try to implement SGD and read a bit about what it is." />
+<link rel="canonical" href="http://localhost:4000/2020/06/24/SGD.html" />
+<meta property="og:url" content="http://localhost:4000/2020/06/24/SGD.html" />
 <meta property="og:site_name" content="Deconstructing Deep learning" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-06-19T21:56:03+04:00" />
+<meta property="article:published_time" content="2020-06-24T11:30:33+04:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/19/Vision.html","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"headline":"Vision","dateModified":"2020-06-19T21:56:03+04:00","datePublished":"2020-06-19T21:56:03+04:00","description":"A roadmap of modules I want to implement. Mostly as a todo list and a help if anyone decides they want to pitch in. (LOL)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/19/Vision.html"},"@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/24/SGD.html","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"headline":"SGD","dateModified":"2020-06-24T11:30:33+04:00","datePublished":"2020-06-24T11:30:33+04:00","description":"In this post we will try to implement SGD and read a bit about what it is.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/24/SGD.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=35c36823a0f9cab98def1c963c701b0172329773">
@@ -66,43 +66,34 @@ SimpleJekyllSearch({
 
       <ul id="results-container"></ul>
 
-<small>19 June 2020</small>
-<h1>Vision</h1>
+<small>24 June 2020</small>
+<h1>SGD</h1>
 
 <p class="view">by Subhaditya Mukherjee</p>
 
-<p>A roadmap of modules I want to implement. Mostly as a todo list and a help if anyone decides they want to pitch in. (LOL)</p>
+<p>In this post we will try to implement SGD and read a bit about what it is.</p>
 
-<h2 id="modules---part1-image-classification-d--done">Modules - Part1: image classification (d-&gt; done)</h2>
-<ul>
-  <li>Dataloader for classification (d)</li>
-  <li>Train/test/valid split (d)</li>
-  <li>Gradient descent</li>
-  <li>Some basic layers/activations
-    <ul>
-      <li>Linear</li>
-      <li>Relu, Swish (d and lots more)</li>
-      <li>Softmax</li>
-    </ul>
-  </li>
-  <li>Optimizer
-    <ul>
-      <li>SGD</li>
-      <li>Adam</li>
-      <li>AdamW</li>
-    </ul>
-  </li>
-  <li>Some sort of easy way of defining the architecture</li>
-  <li>Train module</li>
-  <li>Accuracy metrics</li>
-  <li>One cycle training</li>
-  <li>Data augmentation</li>
-  <li>Preprocessing</li>
-</ul>
+<p>Before that. Let us review what we have so far.</p>
+<ol>
+  <li>A way to read images and identify classes</li>
+  <li>A generator go give us this data in batches</li>
+  <li>A dense layer</li>
+  <li>A bunch of activation functions</li>
+  <li>A basic backprop loop.</li>
+</ol>
+
+<p>So what is SGD? Well it is a tiny addition to the loop in which we calculate the gradient and update the weight matrix batch wise instead of doing it for the whole data at once. Thats about it.</p>
+
+<p>Why? Because we have a limited memory. And we are “streaming” the data so to speak. SGD is one of the older technqiues. It works. It works pretty well and it is the first step towards making a proper DL pipeline.</p>
+
+<p>So in the case of gradient descent, SGD just takes random values instead aka Stochastic.</p>
+
+<p>How do we implement it? Let us modify our training loop a bit now and add what we had discussed for “Linear Model”. Lets see if it works. Also as a note. I am using xtest/ytest because it is smaller and we are not using a GPU right now.</p>
 
 
 
-  <small>tags: <em>vision</em> - <em>roadmap</em></small>
+
+  <small>tags: <em>stochastic</em> - <em>gradient</em> - <em>descent</em> - <em>optimize</em></small>
 
 
 

@@ -2,6 +2,39 @@
   
     {
 
+      "title"    : "Implementing Papers",
+      "url"      : "/2020/06/27/Implementing-Papers.html",
+      "category" : "",
+      "tags"     : "papers, github, link, repository, implement",
+      "date"     : "2020-06-27 11:56:57 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Book notes -&gt; 100PageMlblook",
+      "url"      : "/2020/06/27/100PageMlbook.html",
+      "category" : "",
+      "tags"     : "review notes book 100 page machine learning svm random variable unbiased estimator shallow cost decision id3 gd sdg bin norma standa impu regu hyper rnn seq ensem active semi zero combine vote stack dbsc umap",
+      "date"     : "2020-06-27 11:44:28 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "SGD",
+      "url"      : "/2020/06/24/SGD.html",
+      "category" : "",
+      "tags"     : "stochastic, gradient, descent, optimize",
+      "date"     : "2020-06-24 11:30:33 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
       "title"    : "Batching",
       "url"      : "/2020/06/23/batching.html",
       "category" : "",

@@ -1,4 +1,187 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-06-23T23:32:44+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Batching</title><link href="http://localhost:4000/2020/06/23/batching.html" rel="alternate" type="text/html" title="Batching" /><published>2020-06-23T18:48:06+04:00</published><updated>2020-06-23T18:48:06+04:00</updated><id>http://localhost:4000/2020/06/23/batching</id><content type="html" xml:base="http://localhost:4000/2020/06/23/batching.html">&lt;p&gt;Implementing batching for large data. Onehot and data batching. This is a precursor to everything from optimizers to the actual training loop itself.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-06-29T16:26:40+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Implementing Papers</title><link href="http://localhost:4000/2020/06/27/Implementing-Papers.html" rel="alternate" type="text/html" title="Implementing Papers" /><published>2020-06-27T11:56:57+04:00</published><updated>2020-06-27T11:56:57+04:00</updated><id>http://localhost:4000/2020/06/27/Implementing%20Papers</id><content type="html" xml:base="http://localhost:4000/2020/06/27/Implementing-Papers.html">&lt;p&gt;Notes for papers I read?&lt;/p&gt;
+
+&lt;p&gt;So I decided to stop spamming this feed with reviews of papers I read because there are too many and the main content will get hidden. So I will limit this blog to just creating the library and book notes.&lt;/p&gt;
+
+&lt;p&gt;As for papers -&amp;gt; Here is a link to my Github repository with implementations of the papers I read and my personal notes.
+&lt;a href=&quot;https://github.com/SubhadityaMukherjee/PaperImplementations&quot;&gt;Link&lt;/a&gt;&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="papers" /><category term="github" /><category term="link" /><category term="repository" /><category term="implement" /><summary type="html">Notes for papers I read?</summary></entry><entry><title type="html">Book notes -&amp;gt; 100PageMlblook</title><link href="http://localhost:4000/2020/06/27/100PageMlbook.html" rel="alternate" type="text/html" title="Book notes -&gt; 100PageMlblook" /><published>2020-06-27T11:44:28+04:00</published><updated>2020-06-27T11:44:28+04:00</updated><id>http://localhost:4000/2020/06/27/100PageMlbook</id><content type="html" xml:base="http://localhost:4000/2020/06/27/100PageMlbook.html">&lt;p&gt;I decided to add notes to this blog too. All such notes will be tagged with “book” for easier search.
+This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine Learning Book”. &lt;a href=&quot;http://themlbook.com/&quot;&gt;Amazon&lt;/a&gt;. Do support the author if you can.&lt;/p&gt;
+
+&lt;p&gt;A quick note on how I make notes. I first annotate the pdf of the book. And then type down the text to make it searchable. Yes I probably could use OCR but this helps me remember more. Also, this is not meant to be comprehensive reviews but only what I find interesting from the book. I read a lot about Deep Learning so these will keep popping up.&lt;/p&gt;
+
+&lt;p&gt;Okay now let us get to it :)&lt;/p&gt;
+
+&lt;h2 id=&quot;initial-thoughts-from-the-content&quot;&gt;Initial thoughts from the content&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Seems like a book which summarizes ML and tiny bit of DL&lt;/li&gt;
+  &lt;li&gt;Not in depth but more of an executive summary of sorts&lt;/li&gt;
+  &lt;li&gt;Most of the major algorithms explained in brief&lt;/li&gt;
+  &lt;li&gt;Bits of extra information scattered here and there&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;notes&quot;&gt;Notes&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;I skipped making notes of anything I knew prior. So these points are things that I wanted to read again or just found interesting while I was reading the book.&lt;/li&gt;
+  &lt;li&gt;I skipped things like linear regression while making notes so if you dont know what those are better read the book :)&lt;/li&gt;
+  &lt;li&gt;Why ML -&amp;gt; Solve practical problems&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;svm&quot;&gt;SVM&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;SVM sees feature vectors as high dimensional spaces and puts them on a n dimensional plot with an n dimensional hyperplace&lt;/li&gt;
+  &lt;li&gt;minimize euclidean norm&lt;/li&gt;
+  &lt;li&gt;kernels that make boundaries non linear&lt;/li&gt;
+  &lt;li&gt;look for largest margin&lt;/li&gt;
+  &lt;li&gt;Hinge loss -&amp;gt; if data is not linearly separable. penalizes the side of the decision boundary&lt;/li&gt;
+  &lt;li&gt;SVMs with hinge -&amp;gt; soft margin. normal -&amp;gt; hard margin&lt;/li&gt;
+  &lt;li&gt;largin margin : generalization&lt;/li&gt;
+  &lt;li&gt;kernel trick -&amp;gt; implicitly transform original space into a higher dimensional space&lt;/li&gt;
+  &lt;li&gt;lagrange multipliers -&amp;gt; optimization problem by finding equivalent representation -&amp;gt; can be solved by quadratic algos&lt;/li&gt;
+  &lt;li&gt;RBF most widely used&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;random-variable&quot;&gt;Random variable&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Prob distribution -&amp;gt; list of prov associated with each possible value -&amp;gt; prob mass function&lt;/li&gt;
+  &lt;li&gt;continuous random variable -&amp;gt; inf possible values in interval -&amp;gt; prob density function&lt;/li&gt;
+  &lt;li&gt;expectation -&amp;gt; mean of random variable&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;unbiased-estimator&quot;&gt;Unbiased estimator&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Unlimited no of unbiased estimators -&amp;gt; mean will give actual value.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;shallow-learning&quot;&gt;Shallow learning&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Learns parameters directly from features.&lt;/li&gt;
+  &lt;li&gt;Vs DL -&amp;gt; learnt from outputs of previous layers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cost-func&quot;&gt;Cost func&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;avg loss -&amp;gt; empirical risk&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;decision-tree&quot;&gt;Decision tree&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;acyclic graph&lt;/li&gt;
+  &lt;li&gt;in each branch, specific feature is examined&lt;/li&gt;
+  &lt;li&gt;choose next leaf based on threshold&lt;/li&gt;
+  &lt;li&gt;ID3 is approximated by constructing a non parametric model&lt;/li&gt;
+  &lt;li&gt;recursively continue&lt;/li&gt;
+  &lt;li&gt;Entropy is an uncertainty measure -&amp;gt; max when all random values have equal probability&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;gd&quot;&gt;GD&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;SGD -&amp;gt; uses batches to compute gradient&lt;/li&gt;
+  &lt;li&gt;adagrad -&amp;gt; scales ¦Á for each parameter wrt history&lt;/li&gt;
+  &lt;li&gt;momentum -&amp;gt; accelerate SGD&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;techniques&quot;&gt;Techniques&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Binning -&amp;gt; convert continous feature into multiple binary ones&lt;/li&gt;
+  &lt;li&gt;Normalize -&amp;gt; Increase speed&lt;/li&gt;
+  &lt;li&gt;Standardization -&amp;gt; scale between ¦Ì and ¦Ò&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;data-imputation&quot;&gt;Data imputation&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;same value outside normal range&lt;/li&gt;
+  &lt;li&gt;avg value&lt;/li&gt;
+  &lt;li&gt;use regression to fix&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;regularization&quot;&gt;Regularization&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;L1 -&amp;gt; sparse model,lasso reg&lt;/li&gt;
+  &lt;li&gt;L2 -&amp;gt; feature selection, ridge reg&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;hyper-param&quot;&gt;Hyper param&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Grid search&lt;/li&gt;
+  &lt;li&gt;Bayesian optimization&lt;/li&gt;
+  &lt;li&gt;Evolutionary optimization&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;rnn&quot;&gt;RNN&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Sequence&lt;/li&gt;
+  &lt;li&gt;not feed forward -&amp;gt; loops&lt;/li&gt;
+  &lt;li&gt;each unit gets 2 inps -&amp;gt; vector of outputs from prev layer, vector of states from prev time step&lt;/li&gt;
+  &lt;li&gt;backprop through time&lt;/li&gt;
+  &lt;li&gt;gated RNN -&amp;gt; forget gate&lt;/li&gt;
+  &lt;li&gt;store info for future use&lt;/li&gt;
+  &lt;li&gt;read write and erase info stored in units&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;seq2seq&quot;&gt;Seq2seq&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Encoder -&amp;gt; generate state with meaning representation -&amp;gt; embedding&lt;/li&gt;
+  &lt;li&gt;decoder -&amp;gt; take embedding and give output&lt;/li&gt;
+  &lt;li&gt;best results with attention&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ensemble&quot;&gt;Ensemble&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Train many low accuracy models and combine&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;other-learnings&quot;&gt;Other learnings&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Active learning -&amp;gt; label add to those which contribute most to model. Either density (how many examples around x) or uncertainty (how uncertain prediction of model)&lt;/li&gt;
+  &lt;li&gt;SVM -&amp;gt; Use svm to predict differences and get them annotated&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;semi-supervised&quot;&gt;Semi supervised&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;self learning&lt;/li&gt;
+  &lt;li&gt;autoencoder&lt;/li&gt;
+  &lt;li&gt;bottleneck layer -&amp;gt; embedding&lt;/li&gt;
+  &lt;li&gt;denoising -&amp;gt; corrupts left hand side with random peturbation/ normal gaussian noise&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;zero-shot&quot;&gt;Zero shot&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;use embeddings to represent input x and also output y&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;combine-models&quot;&gt;Combine models&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Average&lt;/li&gt;
+  &lt;li&gt;majority vote&lt;/li&gt;
+  &lt;li&gt;Stack -&amp;gt; Use stacked model to tune hyper params&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;other-stuff&quot;&gt;Other stuff&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;regularization -&amp;gt; dropout, batch norm, early stop&lt;/li&gt;
+  &lt;li&gt;avoid loops&lt;/li&gt;
+  &lt;li&gt;density estimation -&amp;gt; model probablity density fn -&amp;gt; novelty&lt;/li&gt;
+  &lt;li&gt;DBSCAN -&amp;gt; build clusters with arbitrary shape&lt;/li&gt;
+  &lt;li&gt;Gaussian mixture model -&amp;gt; member of several clusters with diff membership score&lt;/li&gt;
+  &lt;li&gt;UMAP seems to be better then tsne :o&lt;/li&gt;
+  &lt;li&gt;Ranking -&amp;gt; LambdaMart -&amp;gt; optimize lists on metric. eg Mean average precision (MAP)&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="review notes book 100 page machine learning svm random variable unbiased estimator shallow cost decision id3 gd sdg bin norma standa impu regu hyper rnn seq ensem active semi zero combine vote stack dbsc umap" /><summary type="html">I decided to add notes to this blog too. All such notes will be tagged with “book” for easier search. This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine Learning Book”. Amazon. Do support the author if you can.</summary></entry><entry><title type="html">SGD</title><link href="http://localhost:4000/2020/06/24/SGD.html" rel="alternate" type="text/html" title="SGD" /><published>2020-06-24T11:30:33+04:00</published><updated>2020-06-24T11:30:33+04:00</updated><id>http://localhost:4000/2020/06/24/SGD</id><content type="html" xml:base="http://localhost:4000/2020/06/24/SGD.html">&lt;p&gt;In this post we will try to implement SGD and read a bit about what it is.&lt;/p&gt;
+
+&lt;p&gt;Before that. Let us review what we have so far.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;A way to read images and identify classes&lt;/li&gt;
+  &lt;li&gt;A generator go give us this data in batches&lt;/li&gt;
+  &lt;li&gt;A dense layer&lt;/li&gt;
+  &lt;li&gt;A bunch of activation functions&lt;/li&gt;
+  &lt;li&gt;A basic backprop loop.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So what is SGD? Well it is a tiny addition to the loop in which we calculate the gradient and update the weight matrix batch wise instead of doing it for the whole data at once. Thats about it.&lt;/p&gt;
+
+&lt;p&gt;Why? Because we have a limited memory. And we are “streaming” the data so to speak. SGD is one of the older technqiues. It works. It works pretty well and it is the first step towards making a proper DL pipeline.&lt;/p&gt;
+
+&lt;p&gt;So in the case of gradient descent, SGD just takes random values instead aka Stochastic.&lt;/p&gt;
+
+&lt;p&gt;How do we implement it? Let us modify our training loop a bit now and add what we had discussed for “Linear Model”. Lets see if it works. Also as a note. I am using xtest/ytest because it is smaller and we are not using a GPU right now.&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="stochastic" /><category term="gradient" /><category term="descent" /><category term="optimize" /><summary type="html">In this post we will try to implement SGD and read a bit about what it is.</summary></entry><entry><title type="html">Batching</title><link href="http://localhost:4000/2020/06/23/batching.html" rel="alternate" type="text/html" title="Batching" /><published>2020-06-23T18:48:06+04:00</published><updated>2020-06-23T18:48:06+04:00</updated><id>http://localhost:4000/2020/06/23/batching</id><content type="html" xml:base="http://localhost:4000/2020/06/23/batching.html">&lt;p&gt;Implementing batching for large data. Onehot and data batching. This is a precursor to everything from optimizers to the actual training loop itself.&lt;/p&gt;
 
 &lt;p&gt;First let us look at one hot encoding. Simply put it is encoding the labels as numbers. Should not be particularly challenging.
 What do we intend to achieve? Well lets say we have “cat” “dog”. All we need to do is label these as 0,1 and have a way to convert them back to “cat” “dog”.&lt;/p&gt;
@@ -528,114 +711,4 @@ Then we use the same indexing types we have used so far and pop the shuffled ind
     &lt;span class=&quot;n&quot;&gt;Xtrain&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Xtest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;train_idx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test_idx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Xtrain&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ytrain&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Xtest&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ytest&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="split" /><category term="tutorial" /><category term="dataset" /><category term="distribution" /><category term="split" /><category term="oversample" /><summary type="html">Defining a function to split the dataset into train/test bits and oversample it as well.</summary></entry><entry><title type="html">Dataloader</title><link href="http://localhost:4000/2020/06/19/dataloader.html" rel="alternate" type="text/html" title="Dataloader" /><published>2020-06-19T16:53:45+04:00</published><updated>2020-06-19T16:53:45+04:00</updated><id>http://localhost:4000/2020/06/19/dataloader</id><content type="html" xml:base="http://localhost:4000/2020/06/19/dataloader.html">&lt;p&gt;The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.&lt;/p&gt;
-
-&lt;p&gt;It is a pretty huge thing to deal with at first go. But if we can do it then we can progress towards bigger things :)&lt;/p&gt;
-
-&lt;h2 id=&quot;imports&quot;&gt;Imports&lt;/h2&gt;
-&lt;p&gt;We first need certain libraries (standard ones).&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileIO&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# will help us perform basic file tasks&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Images&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# read images&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Serialization&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# A helper function&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Random&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CUDAapi&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Will allow us to work with the GPU directly. Obviously I wont write a CUDA kernel now&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Plots&lt;/span&gt; 
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GR&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# A plotting backend&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Images&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CuArrays&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Pop arrays to GPU&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ImageView&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Display images&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Statistics&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Random&lt;/span&gt; 
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProgressMeter&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Will allow us to make a fancy looking progress bar :)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gr&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;If we read an image at a time, the process would be extremely slow. So we need to use as much power as we can (make &lt;a href=&quot;https://en.wikipedia.org/wiki/Flash_(Barry_Allen)&quot;&gt;Barry Allen&lt;/a&gt; happy). We first find out how many CPUs we have and then set the number of parallel processes to that many. Aka we now go very very fast :)&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Threads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nthreads&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cpu_info&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;())&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Let us also set a path for the folder using the variable path.&lt;/p&gt;
-
-&lt;p&gt;Now we need to decide a folder structure for the task. I want all my datasets to be of the format.&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    - category1
-        - file1...
-    -category2
-        - file1...
-    ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Now that we have decided that, time to actually read the files :)&lt;/p&gt;
-
-&lt;p&gt;We write a small function to help us add the path to every file from the parent. This will help us very much later.&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; add_path&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_dir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;readdir&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;joinpath&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;));&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;joinpath&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_dir&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fill&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_dir&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The fill function essentially repeats a variable. So in this case we have “cat” repeated as many times as the number of cat images in the folder.&lt;/p&gt;
-
-&lt;p&gt;What do I need?&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Make a list of categories(parent folders)&lt;/li&gt;
-  &lt;li&gt;Make a list of all image files in them&lt;/li&gt;
-  &lt;li&gt;Make a list of all categories (expand the labels for each file)&lt;/li&gt;
-  &lt;li&gt;Create a temporary structure filled with zeros (more efficient)&lt;/li&gt;
-  &lt;li&gt;For each image we load it, resize it to a desired size and convert them to a image format. After that we convert them to Float64 and save it to the previous array we allocated.&lt;/li&gt;
-  &lt;li&gt;Eat, sleep, rave, repeat :))
-    &lt;blockquote&gt;
-      &lt;p&gt;Note that all of this is happening parallely&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; fromFolder&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int64&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;nd&quot;&gt;@info&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;categories&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;readdir&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#1&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;total_files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collect&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Iterators&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_path&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;categories&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]));&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#2&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;total_categories&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collect&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Iterators&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_path&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;categories&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]));&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#3&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;images&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;total_files&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)));&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#4&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;Threads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@threads&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;total_files&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#5&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;channelview&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imresize&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;total_files&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]),&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)))&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;convert&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float64&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;permutedims&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-    &lt;span class=&quot;nd&quot;&gt;@info&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Done loading images&quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;total_categories&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The @info is something I really like. It allows us to print nice versions of outputs :)&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromFolder&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/media/subhaditya/DATA/COSMO/Datasets/catDog/&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;We now have a dataloader which returns all the files in our dataset. We are testing it with the cat/dog dataset (because why not -.-).&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="start," /><category term="dataloader," /><category term="images," /><category term="tutorial" /><summary type="html">The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.</summary></entry><entry><title type="html">Defining the project and outlining what is to come in the future</title><link href="http://localhost:4000/2020/06/19/Defining-the-problem.html" rel="alternate" type="text/html" title="Defining the project and outlining what is to come in the future" /><published>2020-06-19T00:00:00+04:00</published><updated>2020-06-19T00:00:00+04:00</updated><id>http://localhost:4000/2020/06/19/Defining-the-problem</id><content type="html" xml:base="http://localhost:4000/2020/06/19/Defining-the-problem.html">&lt;p&gt;An introduction to what I want to do and why.&lt;/p&gt;
-
-&lt;h2 id=&quot;why-do-i-need-to-make-a-library-from-scratch-when-there-are-so-many-out-there&quot;&gt;Why do I need to make a library from scratch when there are so many out there?&lt;/h2&gt;
-&lt;p&gt;Simply put, I want to learn. And what better way to learn then by making something from scratch?&lt;/p&gt;
-
-&lt;p&gt;Another reason is that documenting the whole process will allow me to learn a lot more than I knew and will help anyone who follows this to see the process, successes and failures of the process.&lt;/p&gt;
-
-&lt;h2 id=&quot;what-do-i-have-in-mind&quot;&gt;What do I have in mind?&lt;/h2&gt;
-&lt;p&gt;I will be using Julia for this and the project will probably span as long as I keep working on it. Which hopefully will be for a long time. In the process, I will try to document what I have done, and why and explore challenges and try to implement many things along the way. Note that this is not meant to be a library which you can use right now. It is a playground.&lt;/p&gt;
-
-&lt;h2 id=&quot;can-i-add-to-it&quot;&gt;Can I add to it?&lt;/h2&gt;
-&lt;p&gt;Feel free to fork the project and add it to your version of the code. I do not get anything out of this except learning and sharing it with the community.&lt;/p&gt;
-
-&lt;h2 id=&quot;can-i-talk-to-you-about-deep-learning&quot;&gt;Can I talk to you about Deep Learning?&lt;/h2&gt;
-&lt;p&gt;YES! I would love to do that. Drop me an email at &lt;a href=&quot;mailto:msubhaditya@gmail.com&quot;&gt;msubhaditya@gmail.com&lt;/a&gt; and we can talk about it. :)&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="start" /><category term="defining" /><category term="post" /><category term="introduction" /><summary type="html">An introduction to what I want to do and why.</summary></entry><entry><title type="html">Initial Steps</title><link href="http://localhost:4000/2020/06/19/Initial-Steps.html" rel="alternate" type="text/html" title="Initial Steps" /><published>2020-06-19T00:00:00+04:00</published><updated>2020-06-19T00:00:00+04:00</updated><id>http://localhost:4000/2020/06/19/Initial-Steps</id><content type="html" xml:base="http://localhost:4000/2020/06/19/Initial-Steps.html">&lt;p&gt;What I started with and how I set up this blog&lt;/p&gt;
-
-&lt;h2 id=&quot;how-am-i-hosting-this&quot;&gt;How am I hosting this?&lt;/h2&gt;
-&lt;p&gt;This blog is hosted on github.io using Jekyll &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;https://jekyllrb.com/&lt;/a&gt;. All the posts are written using markdown.&lt;/p&gt;
-
-&lt;h2 id=&quot;how-can-i-do-the-same&quot;&gt;How can I do the same?&lt;/h2&gt;
-&lt;p&gt;I followed these steps to set up this blog page and if you follow it, you can do the same :)&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Make a github account if you do not have one. And make a page there.&lt;/li&gt;
-  &lt;li&gt;Install jekyll, ruby, bundler &lt;a href=&quot;https://jekyllrb.com/tutorials/using-jekyll-with-bundler/&quot;&gt;https://jekyllrb.com/tutorials/using-jekyll-with-bundler/&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Create a basic website or use a default config file. Name it _config.yml. Mine is &lt;a href=&quot;https://github.com/SubhadityaMukherjee/SubhadityaMukherjee.github.io/blob/master/_config.yml&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Go to the folder and execute bundle init&lt;/li&gt;
-  &lt;li&gt;Edit the gemfile to fix dependency errors&lt;/li&gt;
-  &lt;li&gt;I am using this &lt;a href=&quot;https://github.com/pages-themes/minimal&quot;&gt;theme&lt;/a&gt; which you need to install using bundler&lt;/li&gt;
-  &lt;li&gt;git add . &amp;amp;&amp;amp; git commit -m “added” &amp;amp;&amp;amp; git push&lt;/li&gt;
-  &lt;li&gt;DONE!!!!&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="introduction" /><category term="start" /><category term="blog" /><category term="setup" /><summary type="html">What I started with and how I set up this blog</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="split" /><category term="tutorial" /><category term="dataset" /><category term="distribution" /><category term="split" /><category term="oversample" /><summary type="html">Defining a function to split the dataset into train/test bits and oversample it as well.</summary></entry></feed>
