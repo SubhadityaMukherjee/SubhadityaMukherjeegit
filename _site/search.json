@@ -2,6 +2,17 @@
   
     {
 
+      "title"    : "Loss Functions",
+      "url"      : "/2020/06/30/loss-functions.html",
+      "category" : "",
+      "tags"     : "",
+      "date"     : "2020-06-30 00:01:59 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
       "title"    : "Implementing Papers",
       "url"      : "/2020/06/27/Implementing-Papers.html",
       "category" : "",
@@ -27,7 +38,7 @@
       "title"    : "SGD",
       "url"      : "/2020/06/24/SGD.html",
       "category" : "",
-      "tags"     : "stochastic, gradient, descent, optimize",
+      "tags"     : "stochastic, gradient, descent, optimize, sgd, gd",
       "date"     : "2020-06-24 11:30:33 +0400",
       "discription" : ""
 

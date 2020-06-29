@@ -1,0 +1,17 @@
+---
+layout: post
+title:  Loss Functions
+date:   2020-06-30 23:01:59 +0400
+tags:
+---
+
+In this post we shall explore as many loss functions as I can find.
+
+Loss functions are arguably one of the most important factors in a machine learning model. It gives the model an understanding of how well it did and basically allows it to learn. Simply put, it is the difference between the required result and the produced one. Quite obviously this is different in every place.
+For example in a Generative Adversarial Network (GANs), the loss function is the completely different. In WGAN, it is a distance metric called Wassertein distance.
+In a unet, the loss is the difference between the two images and so on and so forth.
+
+Anyway let us explore everything we can about loss functions. I first made a list of all the loss functions offered by keras. It seems to be pretty comprehensive and I have not heard of many of them so far so lets see.
+
+
+
