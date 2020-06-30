@@ -40,4 +40,4 @@ lat("-sum(y .* logsoftmax(ŷ) .* weight) * 1 // size(y, 2)")
 
 And we get this 
 
-$\log\left( \frac{e^{ŷ}}{\mathrm{sum}\left( e^{ŷ} \right)} \right)$
+$$\log\left( \frac{e^{ŷ}}{\mathrm{sum}\left( e^{ŷ} \right)} \right)$$
