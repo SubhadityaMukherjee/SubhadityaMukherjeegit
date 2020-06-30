@@ -6,7 +6,6 @@ plugins:
   - jekyll-feed
   - jekyll-analytics
   - jekyll-katex
-
 jekyll_analytics:
   GoogleAnalytics:          # Add, if you want to track with Google Analytics
     id: UA-122655566-1          # Required - replace with your tracking id
@@ -16,3 +15,4 @@ markdown: kramdown
 
 kramdown:
   math_engine: katex
+
