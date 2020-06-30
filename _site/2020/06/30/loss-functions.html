@@ -12,7 +12,18 @@
     <!-- To automatically render math in text elements, include the auto-render extension: -->
     <script type = text/javascript  defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
         onload="renderMathInElement(document.body);"></script>
-
+	  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                processEscapes: true
+            },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+  });
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Loss Functions | Deconstructing Deep learning</title>
@@ -31,7 +42,7 @@
 {"@type":"BlogPosting","url":"http://localhost:4000/2020/06/30/loss-functions.html","headline":"Loss Functions","dateModified":"2020-06-30T00:01:59+04:00","datePublished":"2020-06-30T00:01:59+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/30/loss-functions.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"In this post we shall explore as many loss functions as I can find.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=d75938eb263a78ce6542fad6f5225ab78d247a88">
+    <link rel="stylesheet" href="/assets/css/style.css?v=117bbd18d9da326aae529b7eb6eb764c697e6249">
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
