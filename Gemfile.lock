@@ -243,6 +243,7 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
+  jekyll-commonmark-ghpages
   jekyll-feed (~> 0.12)
   jekyll-theme-cayman (~> 0.1.1)
   jekyll-theme-minimal (~> 0.1.1)

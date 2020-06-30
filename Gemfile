@@ -33,3 +33,7 @@ gem "jekyll-theme-cayman", "~> 0.1.1"
 
 
 gem "jekyll-theme-minimal", "~> 0.1.1"
+
+group :jekyll_plugins do
+  gem 'jekyll-commonmark-ghpages'
+end

@@ -4,7 +4,10 @@ layout: default
 # Posts in order
 - RSS feed link : [Click](https://subhadityamukherjee.github.io/feed.xml)
 - For anything you want to see the notebooks of. Please refer to the repository. Everything will be there. Link on the left. 
-
+- The posts are in the order of newer -> older 
+- Format : 
+Date | Title<br>
+TL; DR
 <ul>
   {% for post in site.posts %}
     <li>

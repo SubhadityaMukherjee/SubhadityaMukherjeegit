@@ -2,10 +2,21 @@
   
     {
 
+      "title"    : "latex from code",
+      "url"      : "/2020/06/30/latex-from-code.html",
+      "category" : "",
+      "tags"     : "latex, code, convert",
+      "date"     : "2020-06-30 17:24:21 +0400",
+      "discription" : ""
+
+    } ,
+  
+    {
+
       "title"    : "Loss Functions",
       "url"      : "/2020/06/30/loss-functions.html",
       "category" : "",
-      "tags"     : "",
+      "tags"     : "loss, functions, log, softmax, bce, logits, margin, ranking, huber, smooth, l1, mean, absolute, negative, log, binary, cross, entropy, cosine, similarity, kl, divergence, log, cosh, mae, percentage, root, poisson, sparce, hinge, squared, triplet, margin, ctc, multi, label, soft",
       "date"     : "2020-06-30 00:01:59 +0400",
       "discription" : ""
 
