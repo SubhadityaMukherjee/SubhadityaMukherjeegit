@@ -12,3 +12,7 @@ jekyll_analytics:
     anonymizeIp: false      # Optional - Default: false - set to true for anonymized tracking
 
 markdown: kramdown
+
+kramdown:
+  input: GFM
+  hard_wrap: false
