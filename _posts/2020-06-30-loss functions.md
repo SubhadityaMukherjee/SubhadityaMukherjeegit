@@ -4,7 +4,7 @@ title:  Loss Functions
 date:   2020-06-30 00:01:59 +0400
 tags: loss functions log softmax bce logits margin ranking huber smooth l1 mean absolute negative log binary cross entropy cosine similarity kl divergence log cosh mae percentage root poisson sparce hinge squared triplet margin ctc multi label soft
 ---
-
+{% katexmm %}
 In this post we shall explore as many loss functions as I can find.
 
 Loss functions are arguably one of the most important factors in a machine learning model. It gives the model an understanding of how well it did and basically allows it to learn. Simply put, it is the difference between the required result and the produced one. Quite obviously this is different in every place.
@@ -307,3 +307,4 @@ hinge(x,w_y,w_t) = max.(0,1 .+ max.(w_y.*x .- w_t.*x))
 - Categorical hinge
 - Soft margin
 - Multi label soft margin
+{% endkatexmm %}

@@ -37,8 +37,9 @@ Now we can just do this
 ``` julia
 lat("-sum(y .* logsoftmax(ŷ) .* weight) * 1 // size(y, 2)")
 ```
+{% katexmm %}
 
 And we get this 
 
 $$\left(  - \mathrm{sum}\left( y \cdot \mathrm{logsoftmax}\left( ŷ \right) \cdot weight \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)$$
-
+{% endkatexmm %}

@@ -5,6 +5,7 @@ author: Subhaditya Mukherjee
 plugins:
   - jekyll-feed
   - jekyll-analytics
+  - jekyll-katex
 
 jekyll_analytics:
   GoogleAnalytics:          # Add, if you want to track with Google Analytics
@@ -14,5 +15,4 @@ jekyll_analytics:
 markdown: kramdown
 
 kramdown:
-  input: GFM
-  hard_wrap: false
+  math_engine: katex
