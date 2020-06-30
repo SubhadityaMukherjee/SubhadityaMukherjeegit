@@ -22,14 +22,14 @@ print(latexify("log.(exp.(ŷ)/sum(exp.(ŷ)))"))
 
 But there are two annoyances
 - It is wayyy too long to type all the time
-- The latex renderer we are using (kmarkdown) needs the output to be in the format with an extra $ before and after the expression,  while this just gives "$ string $"
+- The latex renderer we are using (kmarkdown) needs the output to be in the format with an extra dollar before and after the expression,  while this just gives "dollar string dollar"
 - So a little hack
 
 ``` julia
 function lat(x)
-    print('$')
+    print('\$')
     print(latexify(string(x)))
-    print('$')
+    print('\$')
 end
 ```
 Now we can just do this
@@ -37,9 +37,7 @@ Now we can just do this
 ``` julia
 lat("-sum(y .* logsoftmax(ŷ) .* weight) * 1 // size(y, 2)")
 ```
-{% katexmm %}
 
 And we get this 
 
-$$\left(  - \mathrm{sum}\left( y \cdot \mathrm{logsoftmax}\left( ŷ \right) \cdot weight \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)$$
-{% endkatexmm %}
+$\log\left( \frac{e^{ŷ}}{\mathrm{sum}\left( e^{ŷ} \right)} \right)$

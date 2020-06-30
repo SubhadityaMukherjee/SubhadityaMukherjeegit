@@ -4,26 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link type = text/css rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
 
-    <!-- The loading of KaTeX is deferred to speed up page rendering -->
-    <script type = text/javascript defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
-
-    <!-- To automatically render math in text elements, include the auto-render extension: -->
-    <script type = text/javascript  defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
-        onload="renderMathInElement(document.body);"></script>
-	  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            extensions: ["tex2jax.js"],
-            jax: ["input/TeX", "output/HTML-CSS"],
-            tex2jax: {
-                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                processEscapes: true
-            },
-        "HTML-CSS": { availableFonts: ["TeX"] }
-  });
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>SGD | Deconstructing Deep learning</title>
@@ -87,7 +71,6 @@ SimpleJekyllSearch({
 <h1>SGD</h1>
 
 <p class="view">by Subhaditya Mukherjee</p>
-
 <p>In this post we will try to implement SGD and read a bit about what it is.</p>
 
 <p>Before that. Let us review what we have so far.</p>
@@ -185,7 +168,6 @@ The biggest challenge were the dimensions of the Weights and biases matrices. Th
 </code></pre></div></div>
 
 <p>Since I saved them to a string with spaces, I just split them and then convert them into float32. I tried float16 but it is MSE after all and it was out of bounds. Then just a simple plot function using the Plots library. I guess I will have to move this inside the loop if I want it to show me the loss every epoch. (Or atleast modify the loop itself) But well. Baby steps right?</p>
-
 
 
 
