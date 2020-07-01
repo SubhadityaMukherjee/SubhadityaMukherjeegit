@@ -17,15 +17,15 @@
 <meta property="og:title" content="Book notes -&gt; 100PageMlblook" />
 <meta name="author" content="Subhaditya Mukherjee" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="I decided to add notes to this blog too. All such notes will be tagged with “book” for easier search. This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine Learning Book”. Amazon. Do support the author if you can." />
-<meta property="og:description" content="I decided to add notes to this blog too. All such notes will be tagged with “book” for easier search. This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine Learning Book”. Amazon. Do support the author if you can." />
+<meta name="description" content="Notes from 100 Page ML Book" />
+<meta property="og:description" content="Notes from 100 Page ML Book" />
 <link rel="canonical" href="http://localhost:4000/2020/06/27/100PageMlbook.html" />
 <meta property="og:url" content="http://localhost:4000/2020/06/27/100PageMlbook.html" />
 <meta property="og:site_name" content="Deconstructing Deep learning" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-27T11:44:28+04:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/27/100PageMlbook.html","headline":"Book notes -&gt; 100PageMlblook","dateModified":"2020-06-27T11:44:28+04:00","datePublished":"2020-06-27T11:44:28+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/27/100PageMlbook.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"I decided to add notes to this blog too. All such notes will be tagged with “book” for easier search. This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine Learning Book”. Amazon. Do support the author if you can.","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/27/100PageMlbook.html","headline":"Book notes -&gt; 100PageMlblook","dateModified":"2020-06-27T11:44:28+04:00","datePublished":"2020-06-27T11:44:28+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/27/100PageMlbook.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Notes from 100 Page ML Book","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
@@ -73,41 +73,43 @@ Date | Title<br>
 
 
 <p class="view">by Subhaditya Mukherjee</p>
-
-<ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#initial-thoughts-from-the-content">Initial thoughts from the content</a></li>
-<li class="toc-entry toc-h2"><a href="#notes">Notes</a>
 <ul>
-<li class="toc-entry toc-h3"><a href="#svm">SVM</a></li>
-<li class="toc-entry toc-h3"><a href="#random-variable">Random variable</a></li>
-<li class="toc-entry toc-h3"><a href="#unbiased-estimator">Unbiased estimator</a></li>
-<li class="toc-entry toc-h3"><a href="#shallow-learning">Shallow learning</a></li>
-<li class="toc-entry toc-h3"><a href="#cost-func">Cost func</a></li>
-<li class="toc-entry toc-h3"><a href="#decision-tree">Decision tree</a></li>
-<li class="toc-entry toc-h3"><a href="#gd">GD</a></li>
-<li class="toc-entry toc-h3"><a href="#techniques">Techniques</a></li>
-<li class="toc-entry toc-h3"><a href="#data-imputation">Data imputation</a></li>
-<li class="toc-entry toc-h3"><a href="#regularization">Regularization</a></li>
-<li class="toc-entry toc-h3"><a href="#hyper-param">Hyper param</a></li>
-<li class="toc-entry toc-h3"><a href="#rnn">RNN</a></li>
-<li class="toc-entry toc-h3"><a href="#seq2seq">Seq2seq</a></li>
-<li class="toc-entry toc-h3"><a href="#ensemble">Ensemble</a></li>
-<li class="toc-entry toc-h3"><a href="#other-learnings">Other learnings</a></li>
-<li class="toc-entry toc-h3"><a href="#semi-supervised">Semi supervised</a></li>
-<li class="toc-entry toc-h3"><a href="#zero-shot">Zero shot</a></li>
-<li class="toc-entry toc-h3"><a href="#combine-models">Combine models</a></li>
-<li class="toc-entry toc-h3"><a href="#other-stuff">Other stuff</a></li>
+  <li><a href="#initial-thoughts-from-the-content">Initial thoughts from the content</a></li>
+  <li><a href="#notes">Notes</a>
+    <ul>
+      <li><a href="#svm">SVM</a></li>
+      <li><a href="#random-variable">Random variable</a></li>
+      <li><a href="#unbiased-estimator">Unbiased estimator</a></li>
+      <li><a href="#shallow-learning">Shallow learning</a></li>
+      <li><a href="#cost-func">Cost func</a></li>
+      <li><a href="#decision-tree">Decision tree</a></li>
+      <li><a href="#gd">GD</a></li>
+      <li><a href="#techniques">Techniques</a></li>
+      <li><a href="#data-imputation">Data imputation</a></li>
+      <li><a href="#regularization">Regularization</a></li>
+      <li><a href="#hyper-param">Hyper param</a></li>
+      <li><a href="#rnn">RNN</a></li>
+      <li><a href="#seq2seq">Seq2seq</a></li>
+      <li><a href="#ensemble">Ensemble</a></li>
+      <li><a href="#other-learnings">Other learnings</a></li>
+      <li><a href="#semi-supervised">Semi supervised</a></li>
+      <li><a href="#zero-shot">Zero shot</a></li>
+      <li><a href="#combine-models">Combine models</a></li>
+      <li><a href="#other-stuff">Other stuff</a></li>
+    </ul>
+  </li>
 </ul>
-</li>
-</ul><p>I decided to add notes to this blog too. All such notes will be tagged with “book” for easier search.
+
+<p>Notes from 100 Page ML Book</p>
+
+<p>I decided to add notes to this blog too. All such notes will be tagged with “book” for easier search.
 This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine Learning Book”. <a href="http://themlbook.com/">Amazon</a>. Do support the author if you can.</p>
 
 <p>A quick note on how I make notes. I first annotate the pdf of the book. And then type down the text to make it searchable. Yes I probably could use OCR but this helps me remember more. Also, this is not meant to be comprehensive reviews but only what I find interesting from the book. I read a lot about Deep Learning so these will keep popping up.</p>
 
 <p>Okay now let us get to it :)</p>
 
-<h2 id="initial-thoughts-from-the-content">
-<a class="anchor" href="#initial-thoughts-from-the-content" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initial thoughts from the content</h2>
+<h2 id="initial-thoughts-from-the-content">Initial thoughts from the content</h2>
 <ul>
   <li>Seems like a book which summarizes ML and tiny bit of DL</li>
   <li>Not in depth but more of an executive summary of sorts</li>
@@ -115,16 +117,14 @@ This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine L
   <li>Bits of extra information scattered here and there</li>
 </ul>
 
-<h2 id="notes">
-<a class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes</h2>
+<h2 id="notes">Notes</h2>
 <ul>
   <li>I skipped making notes of anything I knew prior. So these points are things that I wanted to read again or just found interesting while I was reading the book.</li>
   <li>I skipped things like linear regression while making notes so if you dont know what those are better read the book :)</li>
   <li>Why ML -&gt; Solve practical problems</li>
 </ul>
 
-<h3 id="svm">
-<a class="anchor" href="#svm" aria-hidden="true"><span class="octicon octicon-link"></span></a>SVM</h3>
+<h3 id="svm">SVM</h3>
 <ul>
   <li>SVM sees feature vectors as high dimensional spaces and puts them on a n dimensional plot with an n dimensional hyperplace</li>
   <li>minimize euclidean norm</li>
@@ -138,35 +138,30 @@ This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine L
   <li>RBF most widely used</li>
 </ul>
 
-<h3 id="random-variable">
-<a class="anchor" href="#random-variable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Random variable</h3>
+<h3 id="random-variable">Random variable</h3>
 <ul>
   <li>Prob distribution -&gt; list of prov associated with each possible value -&gt; prob mass function</li>
   <li>continuous random variable -&gt; inf possible values in interval -&gt; prob density function</li>
   <li>expectation -&gt; mean of random variable</li>
 </ul>
 
-<h3 id="unbiased-estimator">
-<a class="anchor" href="#unbiased-estimator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Unbiased estimator</h3>
+<h3 id="unbiased-estimator">Unbiased estimator</h3>
 <ul>
   <li>Unlimited no of unbiased estimators -&gt; mean will give actual value.</li>
 </ul>
 
-<h3 id="shallow-learning">
-<a class="anchor" href="#shallow-learning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shallow learning</h3>
+<h3 id="shallow-learning">Shallow learning</h3>
 <ul>
   <li>Learns parameters directly from features.</li>
   <li>Vs DL -&gt; learnt from outputs of previous layers</li>
 </ul>
 
-<h3 id="cost-func">
-<a class="anchor" href="#cost-func" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cost func</h3>
+<h3 id="cost-func">Cost func</h3>
 <ul>
   <li>avg loss -&gt; empirical risk</li>
 </ul>
 
-<h3 id="decision-tree">
-<a class="anchor" href="#decision-tree" aria-hidden="true"><span class="octicon octicon-link"></span></a>Decision tree</h3>
+<h3 id="decision-tree">Decision tree</h3>
 <ul>
   <li>acyclic graph</li>
   <li>in each branch, specific feature is examined</li>
@@ -176,47 +171,41 @@ This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine L
   <li>Entropy is an uncertainty measure -&gt; max when all random values have equal probability</li>
 </ul>
 
-<h3 id="gd">
-<a class="anchor" href="#gd" aria-hidden="true"><span class="octicon octicon-link"></span></a>GD</h3>
+<h3 id="gd">GD</h3>
 <ul>
   <li>SGD -&gt; uses batches to compute gradient</li>
   <li>adagrad -&gt; scales ¦Á for each parameter wrt history</li>
   <li>momentum -&gt; accelerate SGD</li>
 </ul>
 
-<h3 id="techniques">
-<a class="anchor" href="#techniques" aria-hidden="true"><span class="octicon octicon-link"></span></a>Techniques</h3>
+<h3 id="techniques">Techniques</h3>
 <ul>
   <li>Binning -&gt; convert continous feature into multiple binary ones</li>
   <li>Normalize -&gt; Increase speed</li>
   <li>Standardization -&gt; scale between ¦Ì and ¦Ò</li>
 </ul>
 
-<h3 id="data-imputation">
-<a class="anchor" href="#data-imputation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data imputation</h3>
+<h3 id="data-imputation">Data imputation</h3>
 <ul>
   <li>same value outside normal range</li>
   <li>avg value</li>
   <li>use regression to fix</li>
 </ul>
 
-<h3 id="regularization">
-<a class="anchor" href="#regularization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Regularization</h3>
+<h3 id="regularization">Regularization</h3>
 <ul>
   <li>L1 -&gt; sparse model,lasso reg</li>
   <li>L2 -&gt; feature selection, ridge reg</li>
 </ul>
 
-<h3 id="hyper-param">
-<a class="anchor" href="#hyper-param" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hyper param</h3>
+<h3 id="hyper-param">Hyper param</h3>
 <ul>
   <li>Grid search</li>
   <li>Bayesian optimization</li>
   <li>Evolutionary optimization</li>
 </ul>
 
-<h3 id="rnn">
-<a class="anchor" href="#rnn" aria-hidden="true"><span class="octicon octicon-link"></span></a>RNN</h3>
+<h3 id="rnn">RNN</h3>
 <ul>
   <li>Sequence</li>
   <li>not feed forward -&gt; loops</li>
@@ -227,29 +216,25 @@ This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine L
   <li>read write and erase info stored in units</li>
 </ul>
 
-<h3 id="seq2seq">
-<a class="anchor" href="#seq2seq" aria-hidden="true"><span class="octicon octicon-link"></span></a>Seq2seq</h3>
+<h3 id="seq2seq">Seq2seq</h3>
 <ul>
   <li>Encoder -&gt; generate state with meaning representation -&gt; embedding</li>
   <li>decoder -&gt; take embedding and give output</li>
   <li>best results with attention</li>
 </ul>
 
-<h3 id="ensemble">
-<a class="anchor" href="#ensemble" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ensemble</h3>
+<h3 id="ensemble">Ensemble</h3>
 <ul>
   <li>Train many low accuracy models and combine</li>
 </ul>
 
-<h3 id="other-learnings">
-<a class="anchor" href="#other-learnings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other learnings</h3>
+<h3 id="other-learnings">Other learnings</h3>
 <ul>
   <li>Active learning -&gt; label add to those which contribute most to model. Either density (how many examples around x) or uncertainty (how uncertain prediction of model)</li>
   <li>SVM -&gt; Use svm to predict differences and get them annotated</li>
 </ul>
 
-<h3 id="semi-supervised">
-<a class="anchor" href="#semi-supervised" aria-hidden="true"><span class="octicon octicon-link"></span></a>Semi supervised</h3>
+<h3 id="semi-supervised">Semi supervised</h3>
 <ul>
   <li>self learning</li>
   <li>autoencoder</li>
@@ -257,22 +242,19 @@ This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine L
   <li>denoising -&gt; corrupts left hand side with random peturbation/ normal gaussian noise</li>
 </ul>
 
-<h3 id="zero-shot">
-<a class="anchor" href="#zero-shot" aria-hidden="true"><span class="octicon octicon-link"></span></a>Zero shot</h3>
+<h3 id="zero-shot">Zero shot</h3>
 <ul>
   <li>use embeddings to represent input x and also output y</li>
 </ul>
 
-<h3 id="combine-models">
-<a class="anchor" href="#combine-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Combine models</h3>
+<h3 id="combine-models">Combine models</h3>
 <ul>
   <li>Average</li>
   <li>majority vote</li>
   <li>Stack -&gt; Use stacked model to tune hyper params</li>
 </ul>
 
-<h3 id="other-stuff">
-<a class="anchor" href="#other-stuff" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other stuff</h3>
+<h3 id="other-stuff">Other stuff</h3>
 <ul>
   <li>regularization -&gt; dropout, batch norm, early stop</li>
   <li>avoid loops</li>
@@ -282,6 +264,8 @@ This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine L
   <li>UMAP seems to be better then tsne :o</li>
   <li>Ranking -&gt; LambdaMart -&gt; optimize lists on metric. eg Mean average precision (MAP)</li>
 </ul>
+
+
 
 
   <small>tags: <em>review notes book 100 page machine learning svm random variable unbiased estimator shallow cost decision id3 gd sdg bin norma standa impu regu hyper rnn seq ensem active semi zero combine vote stack dbsc umap</em></small>

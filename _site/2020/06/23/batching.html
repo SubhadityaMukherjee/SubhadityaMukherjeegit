@@ -17,15 +17,15 @@
 <meta property="og:title" content="Batching" />
 <meta name="author" content="Subhaditya Mukherjee" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Implementing batching for large data. Onehot and data batching. This is a precursor to everything from optimizers to the actual training loop itself." />
-<meta property="og:description" content="Implementing batching for large data. Onehot and data batching. This is a precursor to everything from optimizers to the actual training loop itself." />
+<meta name="description" content="Implementing batching for large data." />
+<meta property="og:description" content="Implementing batching for large data." />
 <link rel="canonical" href="http://localhost:4000/2020/06/23/batching.html" />
 <meta property="og:url" content="http://localhost:4000/2020/06/23/batching.html" />
 <meta property="og:site_name" content="Deconstructing Deep learning" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-23T18:48:06+04:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/23/batching.html","headline":"Batching","dateModified":"2020-06-23T18:48:06+04:00","datePublished":"2020-06-23T18:48:06+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/23/batching.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Implementing batching for large data. Onehot and data batching. This is a precursor to everything from optimizers to the actual training loop itself.","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/23/batching.html","headline":"Batching","dateModified":"2020-06-23T18:48:06+04:00","datePublished":"2020-06-23T18:48:06+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/23/batching.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Implementing batching for large data.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
@@ -74,8 +74,10 @@ Date | Title<br>
 
 <p class="view">by Subhaditya Mukherjee</p>
 
-<ul class="section-nav">
-</ul><p>Implementing batching for large data. Onehot and data batching. This is a precursor to everything from optimizers to the actual training loop itself.</p>
+
+<p>Implementing batching for large data.</p>
+
+<p>Onehot and data batching. This is a precursor to everything from optimizers to the actual training loop itself.</p>
 
 <p>First let us look at one hot encoding. Simply put it is encoding the labels as numbers. Should not be particularly challenging.
 What do we intend to achieve? Well lets say we have “cat” “dog”. All we need to do is label these as 0,1 and have a way to convert them back to “cat” “dog”.</p>
@@ -172,6 +174,8 @@ The try catch is to identify the end of the batch.</p>
 </code></pre></div></div>
 
 <p>And now we have a dataloader which takes into account batch size. Guess we can go ahead and implement optimizers and the rest of the loop now :)</p>
+
+
 
 
   <small>tags: <em>batch</em> - <em>one</em> - <em>hot</em> - <em>loop</em> - <em>dictionary</em> - <em>ide</em> - <em>editor</em> - <em>iteration</em> - <em>loader</em> - <em>data</em> - <em>dataloader</em> - <em>encoding</em> - <em>cold</em></small>

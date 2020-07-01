@@ -2,7 +2,6 @@
 layout: post
 title:  Loss Functions
 date:   2020-06-30 00:01:59 +0400
-toc: true
 tags: loss functions log softmax bce logits margin ranking huber smooth l1 mean absolute negative log binary cross entropy cosine similarity kl divergence log cosh mae percentage root poisson sparce hinge squared triplet margin ctc multi label soft
 ---
 In this post we shall explore as many loss functions as I can find.

@@ -2,7 +2,6 @@
 layout: post
 title: latex from code 
 date: 2020-06-30 17:24:21 +0400
-toc: true
 tags: latex code convert
 ---
 

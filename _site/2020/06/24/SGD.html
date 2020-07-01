@@ -74,8 +74,8 @@ Date | Title<br>
 
 <p class="view">by Subhaditya Mukherjee</p>
 
-<ul class="section-nav">
-</ul><p>In this post we will try to implement SGD and read a bit about what it is.</p>
+
+<p>In this post we will try to implement SGD and read a bit about what it is.</p>
 
 <p>Before that. Let us review what we have so far.</p>
 <ol>
@@ -172,6 +172,8 @@ The biggest challenge were the dimensions of the Weights and biases matrices. Th
 </code></pre></div></div>
 
 <p>Since I saved them to a string with spaces, I just split them and then convert them into float32. I tried float16 but it is MSE after all and it was out of bounds. Then just a simple plot function using the Plots library. I guess I will have to move this inside the loop if I want it to show me the loss every epoch. (Or atleast modify the loop itself) But well. Baby steps right?</p>
+
+
 
 
 

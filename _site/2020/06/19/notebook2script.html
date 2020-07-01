@@ -73,35 +73,32 @@ Date | Title<br>
 
 
 <p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#repository">Repository</a></li>
+  <li><a href="#what">What?</a></li>
+  <li><a href="#what-do-i-need">What do I need?</a></li>
+  <li><a href="#lets-goooo">Lets goooo</a></li>
+  <li><a href="#usage">Usage</a></li>
+</ul>
 
-<ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#repository">Repository</a></li>
-<li class="toc-entry toc-h2"><a href="#what">What?</a></li>
-<li class="toc-entry toc-h2"><a href="#what-do-i-need">What do I need?</a></li>
-<li class="toc-entry toc-h2"><a href="#lets-goooo">Lets goooo</a></li>
-<li class="toc-entry toc-h2"><a href="#usage">Usage</a></li>
-</ul><p>I want to convert my work as a script. Selectively.</p>
+<p>I want to convert my work as a script. Selectively.</p>
 
-<h2 id="repository">
-<a class="anchor" href="#repository" aria-hidden="true"><span class="octicon octicon-link"></span></a>Repository</h2>
+<h2 id="repository">Repository</h2>
 
 <p><a href="https://github.com/SubhadityaMukherjee/notebook2script.jl">https://github.com/SubhadityaMukherjee/notebook2script.jl</a></p>
 
-<h2 id="what">
-<a class="anchor" href="#what" aria-hidden="true"><span class="octicon octicon-link"></span></a>What?</h2>
+<h2 id="what">What?</h2>
 <p>I like to do my development in jupyter notebooks. When I convert them to scripts I need to save the whole notebook as a script and then remove what I dont need. WHY -.-
 I want to make a script to save only the cells I finally want for my script by adding an #export to them.</p>
 
-<h2 id="what-do-i-need">
-<a class="anchor" href="#what-do-i-need" aria-hidden="true"><span class="octicon octicon-link"></span></a>What do I need?</h2>
+<h2 id="what-do-i-need">What do I need?</h2>
 <ul>
   <li>Understand JSON tags for the cells</li>
   <li>Find the cells with #export</li>
   <li>Save them separately.</li>
 </ul>
 
-<h2 id="lets-goooo">
-<a class="anchor" href="#lets-goooo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Lets goooo</h2>
+<h2 id="lets-goooo">Lets goooo</h2>
 <p>Let us first import JSON since jupyter notebooks are JSON files</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">JSON</span>
@@ -138,14 +135,15 @@ I want to make a script to save only the cells I finally want for my script by a
 <span class="n">close</span><span class="x">(</span><span class="n">io</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="usage">
-<a class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+<h2 id="usage">Usage</h2>
 
 <ul>
   <li>julia notebook2script.jl “pathToInput.ipynb” “pathToOutput”</li>
   <li>No need to add a .jl</li>
   <li>Done :)</li>
 </ul>
+
+
 
 
   <small>tags: <em>notebook</em> - <em>script</em> - <em>convert</em> - <em>helper</em></small>

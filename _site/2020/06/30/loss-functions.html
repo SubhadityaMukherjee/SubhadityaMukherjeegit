@@ -73,30 +73,31 @@ Date | Title<br>
 
 
 <p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#log-softmax">Log softmax</a></li>
+  <li><a href="#bce-logits">BCE Logits</a></li>
+  <li><a href="#margin-ranking">Margin Ranking</a></li>
+  <li><a href="#hubersmooth-l1smooth-mae">Huber/Smooth L1/Smooth MAE</a></li>
+  <li><a href="#negative-log-likelihood">Negative log likelihood</a></li>
+  <li><a href="#bce">BCE</a></li>
+  <li><a href="#categoricalce">CategoricalCE</a></li>
+  <li><a href="#cosine-similarity">Cosine similarity</a></li>
+  <li><a href="#kl-divergence">KL Divergence</a></li>
+  <li><a href="#log-cosh">Log Cosh</a></li>
+  <li><a href="#mae--l1">MAE == L1</a></li>
+  <li><a href="#mape">MAPE</a></li>
+  <li><a href="#msle">MSLE</a></li>
+  <li><a href="#mse">MSE</a></li>
+  <li><a href="#rmse">RMSE</a></li>
+  <li><a href="#poisson">Poisson</a></li>
+  <li><a href="#sparse-ce">Sparse CE</a></li>
+  <li><a href="#squared-hinge">Squared Hinge</a></li>
+  <li><a href="#triplet-margin">Triplet margin</a></li>
+  <li><a href="#hinge">Hinge</a></li>
+  <li><a href="#loss-functions-i-cant-make-sense-of-right-now">Loss functions I can’t make sense of right now</a></li>
+</ul>
 
-<ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#log-softmax">Log softmax</a></li>
-<li class="toc-entry toc-h2"><a href="#bce-logits">BCE Logits</a></li>
-<li class="toc-entry toc-h2"><a href="#margin-ranking">Margin Ranking</a></li>
-<li class="toc-entry toc-h2"><a href="#hubersmooth-l1smooth-mae">Huber/Smooth L1/Smooth MAE</a></li>
-<li class="toc-entry toc-h2"><a href="#negative-log-likelihood">Negative log likelihood</a></li>
-<li class="toc-entry toc-h2"><a href="#bce">BCE</a></li>
-<li class="toc-entry toc-h2"><a href="#categoricalce">CategoricalCE</a></li>
-<li class="toc-entry toc-h2"><a href="#cosine-similarity">Cosine similarity</a></li>
-<li class="toc-entry toc-h2"><a href="#kl-divergence">KL Divergence</a></li>
-<li class="toc-entry toc-h2"><a href="#log-cosh">Log Cosh</a></li>
-<li class="toc-entry toc-h2"><a href="#mae--l1">MAE == L1</a></li>
-<li class="toc-entry toc-h2"><a href="#mape">MAPE</a></li>
-<li class="toc-entry toc-h2"><a href="#msle">MSLE</a></li>
-<li class="toc-entry toc-h2"><a href="#mse">MSE</a></li>
-<li class="toc-entry toc-h2"><a href="#rmse">RMSE</a></li>
-<li class="toc-entry toc-h2"><a href="#poisson">Poisson</a></li>
-<li class="toc-entry toc-h2"><a href="#sparse-ce">Sparse CE</a></li>
-<li class="toc-entry toc-h2"><a href="#squared-hinge">Squared Hinge</a></li>
-<li class="toc-entry toc-h2"><a href="#triplet-margin">Triplet margin</a></li>
-<li class="toc-entry toc-h2"><a href="#hinge">Hinge</a></li>
-<li class="toc-entry toc-h2"><a href="#loss-functions-i-cant-make-sense-of-right-now">Loss functions I can’t make sense of right now</a></li>
-</ul><p>In this post we shall explore as many loss functions as I can find.</p>
+<p>In this post we shall explore as many loss functions as I can find.</p>
 
 <p>Loss functions are arguably one of the most important factors in a machine learning model. It gives the model an understanding of how well it did and basically allows it to learn. Simply put, it is the difference between the required result and the produced one. Quite obviously this is different in every place.
 For example in a Generative Adversarial Network (GANs), the loss function is the completely different. In WGAN, it is a distance metric called Wassertein distance.
@@ -110,24 +111,21 @@ Edit : Maybe this isnt a fully comprehensive list. But I will add to it if I fin
 Also note that the examples used are not necessarily the ones that will be used while training and are random values used to test if the code is working</p>
 </blockquote>
 
-<h2 id="log-softmax">
-<a class="anchor" href="#log-softmax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Log softmax</h2>
+<h2 id="log-softmax">Log softmax</h2>
 
 <script type="math/tex; mode=display">\log\left( \frac{e^{ŷ}}{\mathrm{sum}\left( e^{ŷ} \right)} \right)</script>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span><span class="o">/</span><span class="n">sum</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)))</span>
 </code></pre></div></div>
 
-<h2 id="bce-logits">
-<a class="anchor" href="#bce-logits" aria-hidden="true"><span class="octicon octicon-link"></span></a>BCE Logits</h2>
+<h2 id="bce-logits">BCE Logits</h2>
 
 <script type="math/tex; mode=display">\left(  - \mathrm{sum}\left( y \cdot \mathrm{logsoftmax}\left( ŷ \right) \cdot weight \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)</script>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bcelogits</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">weight</span><span class="x">)</span>  <span class="o">=-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span> <span class="o">.*</span> <span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">.*</span> <span class="n">weight</span><span class="x">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">//</span> <span class="n">size</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="margin-ranking">
-<a class="anchor" href="#margin-ranking" aria-hidden="true"><span class="octicon octicon-link"></span></a>Margin Ranking</h2>
+<h2 id="margin-ranking">Margin Ranking</h2>
 
 <ul>
   <li>Creates a criterion that measures the loss given inputs x1x1x1 , x2x2x2 , two 1D mini-batch Tensors, and a label 1D mini-batch tensor yyy (containing 1 or -1).</li>
@@ -140,8 +138,7 @@ Also note that the examples used are not necessarily the ones that will be used 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">marginranking</span><span class="x">(</span><span class="n">x1</span><span class="x">,</span><span class="n">x2</span><span class="x">,</span><span class="n">y</span><span class="x">,</span><span class="n">margin</span><span class="o">=</span><span class="mf">0.0</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="o">-</span><span class="n">y</span><span class="o">.*</span><span class="x">(</span><span class="n">x1</span><span class="o">.-</span><span class="n">x2</span><span class="x">)</span><span class="o">.+</span><span class="n">margin</span><span class="x">))</span>
 </code></pre></div></div>
 
-<h2 id="hubersmooth-l1smooth-mae">
-<a class="anchor" href="#hubersmooth-l1smooth-mae" aria-hidden="true"><span class="octicon octicon-link"></span></a>Huber/Smooth L1/Smooth MAE</h2>
+<h2 id="hubersmooth-l1smooth-mae">Huber/Smooth L1/Smooth MAE</h2>
 
 <ul>
   <li>It is less sensitive to outliers than the MSELoss and in some cases prevents exploding gradients</li>
@@ -166,8 +163,7 @@ Also note that the examples used are not necessarily the ones that will be used 
 <span class="k">end</span>
 </code></pre></div></div>
 
-<h2 id="negative-log-likelihood">
-<a class="anchor" href="#negative-log-likelihood" aria-hidden="true"><span class="octicon octicon-link"></span></a>Negative log likelihood</h2>
+<h2 id="negative-log-likelihood">Negative log likelihood</h2>
 
 <ul>
   <li>Classification,  Smaller quicker training, Simple tasks.</li>
@@ -179,8 +175,7 @@ Also note that the examples used are not necessarily the ones that will be used 
 <span class="n">nll</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="x">))</span>
 </code></pre></div></div>
 
-<h2 id="bce">
-<a class="anchor" href="#bce" aria-hidden="true"><span class="octicon octicon-link"></span></a>BCE</h2>
+<h2 id="bce">BCE</h2>
 
 <ul>
   <li>classification 2 cat</li>
@@ -191,8 +186,7 @@ Also note that the examples used are not necessarily the ones that will be used 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bce</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span><span class="o">.+</span><span class="x">(</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">y</span><span class="x">)</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">ŷ</span><span class="x">)))</span>
 </code></pre></div></div>
 
-<h2 id="categoricalce">
-<a class="anchor" href="#categoricalce" aria-hidden="true"><span class="octicon octicon-link"></span></a>CategoricalCE</h2>
+<h2 id="categoricalce">CategoricalCE</h2>
 
 <ul>
   <li>classification n cat</li>
@@ -203,8 +197,7 @@ Also note that the examples used are not necessarily the ones that will be used 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cce</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
 </code></pre></div></div>
 
-<h2 id="cosine-similarity">
-<a class="anchor" href="#cosine-similarity" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cosine similarity</h2>
+<h2 id="cosine-similarity">Cosine similarity</h2>
 
 <p>L2 norm is <script type="math/tex">\sqrt{\mathrm{sum}\left( \left( \left\|x\right\| \right)^{2} \right)}</script></p>
 
@@ -216,8 +209,7 @@ Also note that the examples used are not necessarily the ones that will be used 
 <span class="k">end</span>
 </code></pre></div></div>
 
-<h2 id="kl-divergence">
-<a class="anchor" href="#kl-divergence" aria-hidden="true"><span class="octicon octicon-link"></span></a>KL Divergence</h2>
+<h2 id="kl-divergence">KL Divergence</h2>
 <ul>
   <li>Classification</li>
   <li>Same can be achieved with cross entropy with lesser computation, so avoid it.</li>
@@ -243,8 +235,7 @@ Also note that the examples used are not necessarily the ones that will be used 
 <span class="k">end</span>
 </code></pre></div></div>
 
-<h2 id="log-cosh">
-<a class="anchor" href="#log-cosh" aria-hidden="true"><span class="octicon octicon-link"></span></a>Log Cosh</h2>
+<h2 id="log-cosh">Log Cosh</h2>
 <ul>
   <li>works like the MSE, but is smoothed towards large errors (presumably caused by outliers) so that the final error score isn’t impacted thoroughly.</li>
 </ul>
@@ -262,8 +253,7 @@ Also note that the examples used are not necessarily the ones that will be used 
 <span class="k">end</span>
 </code></pre></div></div>
 
-<h2 id="mae--l1">
-<a class="anchor" href="#mae--l1" aria-hidden="true"><span class="octicon octicon-link"></span></a>MAE == L1</h2>
+<h2 id="mae--l1">MAE == L1</h2>
 
 <ul>
   <li>Mean absolute error</li>
@@ -289,8 +279,7 @@ For mean,</p>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<h2 id="mape">
-<a class="anchor" href="#mape" aria-hidden="true"><span class="octicon octicon-link"></span></a>MAPE</h2>
+<h2 id="mape">MAPE</h2>
 
 <ul>
   <li>mean absolute % error</li>
@@ -301,8 +290,7 @@ For mean,</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mape</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span> <span class="n">abs</span><span class="o">.</span><span class="x">((</span><span class="n">y</span><span class="o">-</span><span class="n">ŷ</span><span class="x">)</span><span class="o">/</span><span class="n">y</span><span class="x">))</span>
 </code></pre></div></div>
 
-<h2 id="msle">
-<a class="anchor" href="#msle" aria-hidden="true"><span class="octicon octicon-link"></span></a>MSLE</h2>
+<h2 id="msle">MSLE</h2>
 
 <ul>
   <li>Mean squared log error</li>
@@ -314,8 +302,7 @@ For mean,</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">msle</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">((</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="o">.+</span><span class="mi">1</span><span class="x">)</span><span class="o">.-</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.+</span><span class="mi">1</span><span class="x">))</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="mse">
-<a class="anchor" href="#mse" aria-hidden="true"><span class="octicon octicon-link"></span></a>MSE</h2>
+<h2 id="mse">MSE</h2>
 
 <ul>
   <li>Regression</li>
@@ -323,8 +310,7 @@ For mean,</p>
   <li>
     <p>Mean <script type="math/tex">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)</script></p>
   </li>
-  <li>Sum <script type="math/tex">\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)</script>
-</li>
+  <li>Sum <script type="math/tex">\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)</script></li>
 </ul>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> mse</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">reduction</span><span class="o">=</span> <span class="s">"mean"</span><span class="x">)</span> 
@@ -336,8 +322,7 @@ For mean,</p>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<h2 id="rmse">
-<a class="anchor" href="#rmse" aria-hidden="true"><span class="octicon octicon-link"></span></a>RMSE</h2>
+<h2 id="rmse">RMSE</h2>
 
 <ul>
   <li>Root mean squared</li>
@@ -346,15 +331,13 @@ For mean,</p>
   <li>
     <p>Mean <script type="math/tex">\sqrt{\frac{1}{2} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}</script></p>
   </li>
-  <li>Sum <script type="math/tex">\sqrt{\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}</script>
-</li>
+  <li>Sum <script type="math/tex">\sqrt{\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}</script></li>
 </ul>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bcelogits</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">weight</span><span class="x">)</span>  <span class="o">=-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span> <span class="o">.*</span> <span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">.*</span> <span class="n">weight</span><span class="x">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">//</span> <span class="n">size</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="poisson">
-<a class="anchor" href="#poisson" aria-hidden="true"><span class="octicon octicon-link"></span></a>Poisson</h2>
+<h2 id="poisson">Poisson</h2>
 
 <ul>
   <li>When data is from poisson distr</li>
@@ -365,8 +348,7 @@ For mean,</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">poisson</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.-</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
 </code></pre></div></div>
 
-<h2 id="sparse-ce">
-<a class="anchor" href="#sparse-ce" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sparse CE</h2>
+<h2 id="sparse-ce">Sparse CE</h2>
 
 <ul>
   <li>For sparse matrices</li>
@@ -378,8 +360,7 @@ For mean,</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sparsece</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
 </code></pre></div></div>
 
-<h2 id="squared-hinge">
-<a class="anchor" href="#squared-hinge" aria-hidden="true"><span class="octicon octicon-link"></span></a>Squared Hinge</h2>
+<h2 id="squared-hinge">Squared Hinge</h2>
 
 <ul>
   <li>problems involving yes/no (binary) decisions and when you’re not interested in knowing how certain the classifier is about the classification</li>
@@ -392,8 +373,7 @@ For mean,</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">squaredhinge</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="n">sum</span><span class="x">(</span><span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span><span class="mi">1</span> <span class="o">.-</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">ŷ</span><span class="x">))</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="triplet-margin">
-<a class="anchor" href="#triplet-margin" aria-hidden="true"><span class="octicon octicon-link"></span></a>Triplet margin</h2>
+<h2 id="triplet-margin">Triplet margin</h2>
 
 <ul>
   <li>Requires tuples of anchor, positive, negative</li>
@@ -416,8 +396,7 @@ For mean,</p>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<h2 id="hinge">
-<a class="anchor" href="#hinge" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hinge</h2>
+<h2 id="hinge">Hinge</h2>
 
 <ul>
   <li>Classification</li>
@@ -430,8 +409,7 @@ For mean,</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hinge</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">w_y</span><span class="x">,</span><span class="n">w_t</span><span class="x">)</span> <span class="o">=</span> <span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span><span class="mi">1</span> <span class="o">.+</span> <span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="n">w_y</span><span class="o">.*</span><span class="n">x</span> <span class="o">.-</span> <span class="n">w_t</span><span class="o">.*</span><span class="n">x</span><span class="x">))</span>
 </code></pre></div></div>
 
-<h2 id="loss-functions-i-cant-make-sense-of-right-now">
-<a class="anchor" href="#loss-functions-i-cant-make-sense-of-right-now" aria-hidden="true"><span class="octicon octicon-link"></span></a>Loss functions I can’t make sense of right now</h2>
+<h2 id="loss-functions-i-cant-make-sense-of-right-now">Loss functions I can’t make sense of right now</h2>
 
 <ul>
   <li>Honestly I feel like most of these are from NLP, which is why they dont make sense to me. I am yet to do NLP properly. But that’s good because it means I can get back to them as and when I do them.</li>
@@ -441,6 +419,8 @@ For mean,</p>
   <li>Soft margin</li>
   <li>Multi label soft margin</li>
 </ul>
+
+
 
 
   <small>tags: <em>loss</em> - <em>functions</em> - <em>log</em> - <em>softmax</em> - <em>bce</em> - <em>logits</em> - <em>margin</em> - <em>ranking</em> - <em>huber</em> - <em>smooth</em> - <em>l1</em> - <em>mean</em> - <em>absolute</em> - <em>negative</em> - <em>log</em> - <em>binary</em> - <em>cross</em> - <em>entropy</em> - <em>cosine</em> - <em>similarity</em> - <em>kl</em> - <em>divergence</em> - <em>log</em> - <em>cosh</em> - <em>mae</em> - <em>percentage</em> - <em>root</em> - <em>poisson</em> - <em>sparce</em> - <em>hinge</em> - <em>squared</em> - <em>triplet</em> - <em>margin</em> - <em>ctc</em> - <em>multi</em> - <em>label</em> - <em>soft</em></small>

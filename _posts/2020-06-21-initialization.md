@@ -2,7 +2,6 @@
 layout: post
 title:  Initialization
 date:   2020-06-21 13:58:32 +0400
-toc: true
 tags: inititialize xavier he glorot kaiming normal random uniform zeros lsuv
 ---
 

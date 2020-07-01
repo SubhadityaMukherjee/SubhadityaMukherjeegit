@@ -17,15 +17,15 @@
 <meta property="og:title" content="Activation functions" />
 <meta name="author" content="Subhaditya Mukherjee" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Activation functions are an extremely important part of any neural network. But they are actually much simpler than we make them out to be. Here are some of them. Lets define a test matrix." />
-<meta property="og:description" content="Activation functions are an extremely important part of any neural network. But they are actually much simpler than we make them out to be. Here are some of them. Lets define a test matrix." />
+<meta name="description" content="Implementing activation functions." />
+<meta property="og:description" content="Implementing activation functions." />
 <link rel="canonical" href="http://localhost:4000/2020/06/20/activationFunctions.html" />
 <meta property="og:url" content="http://localhost:4000/2020/06/20/activationFunctions.html" />
 <meta property="og:site_name" content="Deconstructing Deep learning" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-20T02:00:43+04:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/20/activationFunctions.html","headline":"Activation functions","dateModified":"2020-06-20T02:00:43+04:00","datePublished":"2020-06-20T02:00:43+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/20/activationFunctions.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Activation functions are an extremely important part of any neural network. But they are actually much simpler than we make them out to be. Here are some of them. Lets define a test matrix.","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/20/activationFunctions.html","headline":"Activation functions","dateModified":"2020-06-20T02:00:43+04:00","datePublished":"2020-06-20T02:00:43+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/20/activationFunctions.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Implementing activation functions.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
@@ -73,25 +73,27 @@ Date | Title<br>
 
 
 <p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#relu">Relu</a></li>
+  <li><a href="#leaky-relu">Leaky relu</a></li>
+  <li><a href="#prelu">PRelu</a></li>
+  <li><a href="#maxout">Maxout</a></li>
+  <li><a href="#sigmoid">Sigmoid</a></li>
+  <li><a href="#noisy-relu">Noisy Relu</a></li>
+  <li><a href="#softplus">Softplus</a></li>
+  <li><a href="#elu">Elu</a></li>
+  <li><a href="#swish">Swish</a></li>
+</ul>
 
-<ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#relu">Relu</a></li>
-<li class="toc-entry toc-h2"><a href="#leaky-relu">Leaky relu</a></li>
-<li class="toc-entry toc-h2"><a href="#prelu">PRelu</a></li>
-<li class="toc-entry toc-h2"><a href="#maxout">Maxout</a></li>
-<li class="toc-entry toc-h2"><a href="#sigmoid">Sigmoid</a></li>
-<li class="toc-entry toc-h2"><a href="#noisy-relu">Noisy Relu</a></li>
-<li class="toc-entry toc-h2"><a href="#softplus">Softplus</a></li>
-<li class="toc-entry toc-h2"><a href="#elu">Elu</a></li>
-<li class="toc-entry toc-h2"><a href="#swish">Swish</a></li>
-</ul><p>Activation functions are an extremely important part of any neural network. But they are actually much simpler than we make them out to be. Here are some of them.
+<p>Implementing activation functions.</p>
+
+<p>Activation functions are an extremely important part of any neural network. But they are actually much simpler than we make them out to be. Here are some of them.
 Lets define a test matrix.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">test</span> <span class="o">=</span> <span class="x">[</span><span class="mi">100</span> <span class="mf">1.0</span> <span class="mf">0.0</span> <span class="o">-</span><span class="mf">300.0</span><span class="x">;</span><span class="mi">100</span> <span class="mf">1.0</span> <span class="mf">0.0</span> <span class="mf">300.0</span><span class="x">]</span>
 </code></pre></div></div>
 
-<h2 id="relu">
-<a class="anchor" href="#relu" aria-hidden="true"><span class="octicon octicon-link"></span></a>Relu</h2>
+<h2 id="relu">Relu</h2>
 <ul>
   <li>The Rectified Linear Unit (ReLU) activation function produces 0 as an output when x &lt; 0, and then produces a linear with slope of 1 when x &gt; 0.</li>
   <li>Nair, V., &amp; Hinton, G. E. (2010, January). Rectified linear units improve restricted boltzmann machines. In ICML.</li>
@@ -101,8 +103,7 @@ Lets define a test matrix.</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">relu</span><span class="x">(</span><span class="n">mat</span><span class="x">)</span> <span class="o">=</span> <span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="n">mat</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="leaky-relu">
-<a class="anchor" href="#leaky-relu" aria-hidden="true"><span class="octicon octicon-link"></span></a>Leaky relu</h2>
+<h2 id="leaky-relu">Leaky relu</h2>
 <ul>
   <li>Andrew L. Maas, Awni Y. Hannun, Andrew Y. Ng (2014). Rectifier Nonlinearities Improve Neural Network Acoustic Models.</li>
   <li>f(x) = max(0.01x,x)</li>
@@ -111,8 +112,7 @@ Lets define a test matrix.</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lrelu</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mf">0.01</span><span class="n">x</span><span class="x">,</span> <span class="n">x</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="prelu">
-<a class="anchor" href="#prelu" aria-hidden="true"><span class="octicon octicon-link"></span></a>PRelu</h2>
+<h2 id="prelu">PRelu</h2>
 <ul>
   <li>f(x) = max(x, x*a)</li>
 </ul>
@@ -122,8 +122,7 @@ Lets define a test matrix.</p>
 <span class="n">prelu</span><span class="x">(</span><span class="n">test</span><span class="x">,</span><span class="mf">0.10</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="maxout">
-<a class="anchor" href="#maxout" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maxout</h2>
+<h2 id="maxout">Maxout</h2>
 <ul>
   <li>f(x) = max(x, x*a)</li>
 </ul>
@@ -132,8 +131,7 @@ Lets define a test matrix.</p>
 <span class="n">maxout</span><span class="x">(</span><span class="n">test</span><span class="x">,</span><span class="mf">0.10</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="sigmoid">
-<a class="anchor" href="#sigmoid" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sigmoid</h2>
+<h2 id="sigmoid">Sigmoid</h2>
 <ul>
   <li>f(x) = 1/(1+e^-x)</li>
 </ul>
@@ -142,8 +140,7 @@ Lets define a test matrix.</p>
 <span class="n">σ</span><span class="x">(</span><span class="n">test</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="noisy-relu">
-<a class="anchor" href="#noisy-relu" aria-hidden="true"><span class="octicon octicon-link"></span></a>Noisy Relu</h2>
+<h2 id="noisy-relu">Noisy Relu</h2>
 <ul>
   <li>f(x) = max(0, x+Y) where YϵNormal(0,1)</li>
 </ul>
@@ -153,8 +150,7 @@ Lets define a test matrix.</p>
 <span class="n">noisyrelu</span><span class="x">(</span><span class="n">test</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="softplus">
-<a class="anchor" href="#softplus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Softplus</h2>
+<h2 id="softplus">Softplus</h2>
 <ul>
   <li>f(x) = log(e^x+1)</li>
 </ul>
@@ -163,8 +159,7 @@ Lets define a test matrix.</p>
 <span class="n">softplus</span><span class="x">(</span><span class="n">test</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="elu">
-<a class="anchor" href="#elu" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elu</h2>
+<h2 id="elu">Elu</h2>
 <ul>
   <li>f(x) = max(x, a*(e^x-1))</li>
 </ul>
@@ -173,8 +168,7 @@ Lets define a test matrix.</p>
 <span class="n">elu</span><span class="x">(</span><span class="n">test</span><span class="x">,</span><span class="mf">0.1</span><span class="x">)</span>
 </code></pre></div></div>
 
-<h2 id="swish">
-<a class="anchor" href="#swish" aria-hidden="true"><span class="octicon octicon-link"></span></a>Swish</h2>
+<h2 id="swish">Swish</h2>
 <ul>
   <li>f(x) = x/(1+e^(-βx))</li>
 </ul>
@@ -182,6 +176,8 @@ Lets define a test matrix.</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">swish</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">β</span><span class="x">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">./</span><span class="x">(</span><span class="mi">1</span> <span class="o">.+</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="o">-</span><span class="n">β</span><span class="o">.*</span><span class="n">x</span><span class="x">))</span>
 <span class="n">swish</span><span class="x">(</span><span class="n">test</span><span class="x">,</span><span class="mf">0.1</span><span class="x">)</span>
 </code></pre></div></div>
+
+
 
 
   <small>tags: <em>activation</em> - <em>leaky</em> - <em>swish</em> - <em>sigmoid</em> - <em>soft</em> - <em>elu</em></small>

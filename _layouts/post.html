@@ -1,6 +1,5 @@
 ---
 layout: default
-
 ---
 <a href = "/deconstructingdl.html">Go to index</a><br><br>
 
@@ -19,8 +18,10 @@ layout: default
 
 
 <p class="view">by {{ page.author | default: site.author }}</p>
+{% include toc.html html=content %}
+{{ content }}
 
-{{ content|toc }}
+
 {% if page.tags %}
   <small>tags: <em>{{ page.tags | join: "</em> - <em>" }}</em></small>
 {% endif %}
