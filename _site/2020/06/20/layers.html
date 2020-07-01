@@ -7,7 +7,9 @@
 
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
 </script>
+    <!-- To automatically render math in text elements, include the auto-render extension: --> 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Linear Model | Deconstructing Deep learning</title>
@@ -26,36 +28,52 @@
 {"datePublished":"2020-06-20T12:43:30+04:00","@type":"BlogPosting","url":"http://localhost:4000/2020/06/20/layers.html","dateModified":"2020-06-20T12:43:30+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/20/layers.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Let us start the fun with a simple model which will be extended to fit complex needs.","headline":"Linear Model","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
   </head>
   <body>
     <div class="wrapper">
+      <header>
+        <h2><a href="http://localhost:4000/">Home page</a></h2>
+
+
+        
+
+        <p>Making a Deep Learning library from scratch and explaining it the whole way + Related deviations</p>
+
+<p>
+- RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+- Source? Refer to the repository <a href="https://github.com/SubhadityaMukherjee/DataLoader.jl">Link</a><br>
+- The posts are in the order of newer -> older <br>
+- Format : 
+Date | Title<br>
+&emsp;TL; DR
+</p>
+
+        
+
+        
+      </header>
       <section>
-      <!-- Html Elements for Search -->
-<div id="search-container">
-Search for something in the blog <input type="text" id="search-input" placeholder="search...">
-<ul id="results-container"></ul>
-</div>
 
-<!-- Script pointing to search-script.js -->
-<script src="js/search-script.js" type="text/javascript"></script>
+      <a href = "/deconstructingdl.html">Go to index</a><br><br>
 
-<!-- Configuration -->
-<script>
-SimpleJekyllSearch({
-  searchInput: document.getElementById('search-input'),
-  resultsContainer: document.getElementById('results-container'),
-  json: '/search.json'
-})
-</script>
 
-      <small>20 June 2020</small>
+<small>20 June 2020</small>
 <h1>Linear Model</h1>
 
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~2 mins</h3>
+  
+</span>
+
+
 <p class="view">by Subhaditya Mukherjee</p>
+
 <p>Let us start the fun with a simple model which will be extended to fit complex needs.</p>
 
 <p>The first and easiest model we can think of to start with is the Dense or fully connected Linear layer model. Once we have this working, this can be extended further. So what is this layer? Simply put, W*x.+b where W and b are the initialized weights and biases. For now these are random. Later we will check out Kaiming/glorot initialization instead.</p>
@@ -101,6 +119,9 @@ We run this bit as many times as needed to get results.</p>
 
 
       </section>
+      <footer>
+        
+      </footer>
     </div>
     <script src="/assets/js/scale.fix.js"></script>
     
