@@ -22,5 +22,6 @@ jobs:
       - uses: helaili/jekyll-action@2.0.3
         env:
           JEKYLL_PAT: ${{ secrets.JEKYLL_PAT }}
+          GITHUB_REPOSITORY: gh-pages
         with:
           jekyll_src: './'
