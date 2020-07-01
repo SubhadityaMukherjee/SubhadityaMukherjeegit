@@ -30,12 +30,14 @@
         <p>Making a Deep Learning library from scratch and explaining it the whole way + Related deviations</p>
 
 <p>
+- <a href = "mailto: msubhaditya@gmail.com">Drop me an email</a><br>
 - RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
 - Source? Refer to the repository <a href="https://github.com/SubhadityaMukherjee/DataLoader.jl">Link</a><br>
 - The posts are in the order of newer -> older <br>
 - Format : 
 Date | Title<br>
-&emsp;TL; DR
+&emsp;TL; DR<br>
+- &#9998;: Post, &#9883; : Article, &#128214;: Book notes
 </p>
 
         {% if site.github.is_user_page %}
@@ -50,7 +52,25 @@ Date | Title<br>
         </ul>
         {% endif %}
       </header>
+      
       <section>
+            <!-- Html Elements for Search -->
+<div id="search-container">
+Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+<ul id="results-container"></ul>
+</div>
+
+<!-- Script pointing to search-script.js -->
+<script src="js/search-script.js" type="text/javascript"></script>
+
+<!-- Configuration -->
+<script>
+SimpleJekyllSearch({
+  searchInput: document.getElementById('search-input'),
+  resultsContainer: document.getElementById('results-container'),
+  json: '/search.json'
+})
+</script>
 
       {{ content }}
 
