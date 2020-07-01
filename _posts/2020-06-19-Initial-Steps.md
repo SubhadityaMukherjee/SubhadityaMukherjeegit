@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Initial Steps"
+toc: true
 tags: introduction start blog setup
 ---
 

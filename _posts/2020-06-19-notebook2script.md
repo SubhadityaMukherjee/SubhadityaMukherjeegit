@@ -3,6 +3,7 @@ layout: post
 title:  notebook2script
 date:   2020-06-19 19:10:30 +0400
 tags: notebook script convert helper
+toc: true
 ---
 
 I want to convert my work as a script. Selectively.

@@ -2,6 +2,7 @@
 layout: post
 title: "Defining the project and outlining what is to come in the future"
 author: Subhaditya Mukherjee
+toc: true
 tags: start defining post introduction
 ---
 An introduction to what I want to do and why.

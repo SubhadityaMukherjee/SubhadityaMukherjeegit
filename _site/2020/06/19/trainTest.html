@@ -25,7 +25,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-19T17:52:02+04:00" />
 <script type="application/ld+json">
-{"datePublished":"2020-06-19T17:52:02+04:00","@type":"BlogPosting","url":"http://localhost:4000/2020/06/19/trainTest.html","dateModified":"2020-06-19T17:52:02+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/19/trainTest.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Defining a function to split the dataset into train/test bits and oversample it as well.","headline":"Oversample and Split","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/19/trainTest.html","headline":"Oversample and Split","dateModified":"2020-06-19T17:52:02+04:00","datePublished":"2020-06-19T17:52:02+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/19/trainTest.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Defining a function to split the dataset into train/test bits and oversample it as well.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
@@ -74,9 +74,15 @@ Date | Title<br>
 
 <p class="view">by Subhaditya Mukherjee</p>
 
-<p>Defining a function to split the dataset into train/test bits and oversample it as well.</p>
+<ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#what-we-need-to-do-and-steps-we-will-try-to-follow">What we need to do and steps we will try to follow.</a></li>
+<li class="toc-entry toc-h2"><a href="#class-distribution">Class distribution</a></li>
+<li class="toc-entry toc-h2"><a href="#oversample">Oversample</a></li>
+<li class="toc-entry toc-h2"><a href="#split-into-train-test">Split into train test</a></li>
+</ul><p>Defining a function to split the dataset into train/test bits and oversample it as well.</p>
 
-<h2 id="what-we-need-to-do-and-steps-we-will-try-to-follow">What we need to do and steps we will try to follow.</h2>
+<h2 id="what-we-need-to-do-and-steps-we-will-try-to-follow">
+<a class="anchor" href="#what-we-need-to-do-and-steps-we-will-try-to-follow" aria-hidden="true"><span class="octicon octicon-link"></span></a>What we need to do and steps we will try to follow.</h2>
 
 <ol>
   <li>Take all the files and labels as X,y</li>
@@ -85,7 +91,8 @@ Date | Title<br>
   <li>Split into train/test</li>
 </ol>
 
-<h2 id="class-distribution">Class distribution</h2>
+<h2 id="class-distribution">
+<a class="anchor" href="#class-distribution" aria-hidden="true"><span class="octicon octicon-link"></span></a>Class distribution</h2>
 <p>This is extremely important for classification so we first try to see if the classes are balanced or not.
 Should be quite simple. We first take the labels(lesser computation) and then count each of them. Let us also plot it because graphs are pretty.
 We also return the maximum count to help with oversampling.
@@ -103,7 +110,8 @@ We make this default to oversample if the differences between the classes are gr
 
 <p>Done :)</p>
 
-<h2 id="oversample">Oversample</h2>
+<h2 id="oversample">
+<a class="anchor" href="#oversample" aria-hidden="true"><span class="octicon octicon-link"></span></a>Oversample</h2>
 <p>This is a technique in which the lower sampled classes are copied till the number of samples are equal.
 So turns out adding it here doesnt help and makes it worse. So I copied the code to the start and we are adding on to the read file function.
 We modify the initial loader once to add the images from the end of the array and repeat the labels.</p>
@@ -175,7 +183,8 @@ Function to create an array of images and labels -&gt; when the directory struct
 
 <p>Done :)</p>
 
-<h2 id="split-into-train-test">Split into train test</h2>
+<h2 id="split-into-train-test">
+<a class="anchor" href="#split-into-train-test" aria-hidden="true"><span class="octicon octicon-link"></span></a>Split into train test</h2>
 <p>I did not think this would turn out very well but it did somehow. And pretty easily.
 Instead of shuffling the order around. We shuffle the indexes. This means that we do not need to take care of linked sorting etc.
 After we shuffle it, we split the array into 2 bits by a percentage. 

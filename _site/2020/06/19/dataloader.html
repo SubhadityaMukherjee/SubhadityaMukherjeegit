@@ -25,7 +25,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-19T16:53:45+04:00" />
 <script type="application/ld+json">
-{"datePublished":"2020-06-19T16:53:45+04:00","@type":"BlogPosting","url":"http://localhost:4000/2020/06/19/dataloader.html","dateModified":"2020-06-19T16:53:45+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/19/dataloader.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.","headline":"Dataloader","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/19/dataloader.html","headline":"Dataloader","dateModified":"2020-06-19T16:53:45+04:00","datePublished":"2020-06-19T16:53:45+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/19/dataloader.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
@@ -74,23 +74,28 @@ Date | Title<br>
 
 <p class="view">by Subhaditya Mukherjee</p>
 
-<p>The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.</p>
+<ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#imports">Imports</a></li>
+</ul><p>The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.</p>
 
 <p>It is a pretty huge thing to deal with at first go. But if we can do it then we can progress towards bigger things :)</p>
 
-<h2 id="imports">Imports</h2>
+<h2 id="imports">
+<a class="anchor" href="#imports" aria-hidden="true"><span class="octicon octicon-link"></span></a>Imports</h2>
+
 <p>We first need certain libraries (standard ones).</p>
+
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">FileIO</span> <span class="c"># will help us perform basic file tasks</span>
 <span class="k">using</span> <span class="n">Images</span> <span class="c"># read images</span>
 <span class="k">using</span> <span class="n">Serialization</span> <span class="c"># A helper function</span>
 <span class="k">using</span> <span class="n">Random</span>
 <span class="k">using</span> <span class="n">CUDAapi</span> <span class="c"># Will allow us to work with the GPU directly. Obviously I wont write a CUDA kernel now</span>
-<span class="k">using</span> <span class="n">Plots</span> 
+<span class="k">using</span> <span class="n">Plots</span>
 <span class="k">import</span> <span class="n">GR</span> <span class="c"># A plotting backend</span>
 <span class="k">using</span> <span class="n">Images</span>
 <span class="k">using</span> <span class="n">CuArrays</span> <span class="c"># Pop arrays to GPU</span>
 <span class="k">using</span> <span class="n">ImageView</span> <span class="c"># Display images</span>
-<span class="k">using</span> <span class="n">Statistics</span><span class="x">,</span> <span class="n">Random</span> 
+<span class="k">using</span> <span class="n">Statistics</span><span class="x">,</span> <span class="n">Random</span>
 <span class="k">import</span> <span class="n">ProgressMeter</span> <span class="c"># Will allow us to make a fancy looking progress bar :)</span>
 <span class="n">gr</span><span class="x">()</span>
 </code></pre></div></div>
@@ -103,35 +108,27 @@ Date | Title<br>
 <p>Let us also set a path for the folder using the variable path.</p>
 
 <p>Now we need to decide a folder structure for the task. I want all my datasets to be of the format.</p>
+
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    - category1
         - file1...
     -category2
         - file1...
     ...
 </code></pre></div></div>
+
 <p>Now that we have decided that, time to actually read the files :)</p>
 
 <p>We write a small function to help us add the path to every file from the parent. This will help us very much later.</p>
+
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> add_path</span><span class="x">(</span><span class="n">cat</span><span class="o">::</span><span class="kt">String</span><span class="x">)</span>
     <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">readdir</span><span class="x">(</span><span class="n">joinpath</span><span class="x">(</span><span class="n">path</span><span class="x">,</span><span class="n">cat</span><span class="x">));</span>
     <span class="k">return</span> <span class="x">[</span><span class="n">joinpath</span><span class="x">(</span><span class="n">path</span><span class="x">,</span> <span class="n">cat</span><span class="x">,</span><span class="n">x</span><span class="x">)</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">temp_dir</span><span class="x">],</span><span class="n">fill</span><span class="x">(</span><span class="n">cat</span><span class="x">,</span><span class="n">size</span><span class="x">(</span><span class="n">temp_dir</span><span class="x">,</span><span class="mi">1</span><span class="x">)</span> <span class="x">)</span>
 <span class="k">end</span>
 </code></pre></div></div>
+
 <p>The fill function essentially repeats a variable. So in this case we have “cat” repeated as many times as the number of cat images in the folder.</p>
 
-<p>What do I need?</p>
-<ol>
-  <li>Make a list of categories(parent folders)</li>
-  <li>Make a list of all image files in them</li>
-  <li>Make a list of all categories (expand the labels for each file)</li>
-  <li>Create a temporary structure filled with zeros (more efficient)</li>
-  <li>For each image we load it, resize it to a desired size and convert them to a image format. After that we convert them to Float64 and save it to the previous array we allocated.</li>
-  <li>Eat, sleep, rave, repeat :))
-    <blockquote>
-      <p>Note that all of this is happening parallely</p>
-    </blockquote>
-  </li>
-</ol>
+<p>What do I need? 1. Make a list of categories(parent folders) 2. Make a list of all image files in them 3. Make a list of all categories (expand the labels for each file) 4. Create a temporary structure filled with zeros (more efficient) 5. For each image we load it, resize it to a desired size and convert them to a image format. After that we convert them to Float64 and save it to the previous array we allocated. 6. Eat, sleep, rave, repeat :)) &gt; Note that all of this is happening parallely</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> fromFolder</span><span class="x">(</span><span class="n">path</span><span class="o">::</span><span class="kt">String</span><span class="x">,</span><span class="n">imageSize</span><span class="o">=</span><span class="mi">64</span><span class="o">::</span><span class="kt">Int64</span><span class="x">)</span>
     <span class="nd">@info</span> <span class="n">path</span><span class="x">,</span> <span class="n">imageSize</span>
@@ -152,13 +149,14 @@ Date | Title<br>
 </code></pre></div></div>
 
 <p>The @info is something I really like. It allows us to print nice versions of outputs :)</p>
+
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">X</span><span class="x">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">fromFolder</span><span class="x">(</span><span class="s">"/media/subhaditya/DATA/COSMO/Datasets/catDog/"</span><span class="x">,</span><span class="mi">64</span><span class="x">);</span>
 </code></pre></div></div>
+
 <p>We now have a dataloader which returns all the files in our dataset. We are testing it with the cat/dog dataset (because why not -.-).</p>
 
 
-
-  <small>tags: <em>start,</em> - <em>dataloader,</em> - <em>images,</em> - <em>tutorial</em></small>
+  <small>tags: <em>start</em> - <em>dataloader</em> - <em>images</em> - <em>tutorial</em></small>
 
 
 

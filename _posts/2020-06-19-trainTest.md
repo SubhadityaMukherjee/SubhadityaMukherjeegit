@@ -2,6 +2,7 @@
 layout: post
 title:  Oversample and Split
 date:   2020-06-19 17:52:02 +0400
+toc: true
 tags: split tutorial dataset distribution split oversample
 ---
 

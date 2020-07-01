@@ -2,6 +2,7 @@
 layout: post
 title: Activation functions
 date:   2020-06-20 02:00:43 +0400
+toc: true
 tags: activation leaky swish sigmoid soft elu
 ---
 

@@ -5,6 +5,9 @@ author: Subhaditya Mukherjee
 plugins:
   - jekyll-feed
   - jekyll-analytics
+  - jekyll-toc
+  - jekyll-seo-tag
+  
 jekyll_analytics:
   GoogleAnalytics:          # Add, if you want to track with Google Analytics
     id: UA-122655566-1          # Required - replace with your tracking id
