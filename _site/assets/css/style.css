@@ -242,6 +242,13 @@ body {
   color: #727272;
   font-weight: 400; }
 
+input[id="search-input"] {
+  margin-left: 1em;
+  border-radius: 5px; }
+
+li[id="bul"] {
+  list-style: none; }
+
 h1, h2, h3, h4, h5, h6 {
   color: #222;
   margin: 0 0 20px; }
@@ -261,8 +268,11 @@ h2 {
 h3, h4, h5, h6 {
   color: #494949; }
 
+a[id="imp"] {
+  color: #C43B4A; }
+
 a {
-  color: #267CB9;
+  color: #4BAFB4;
   text-decoration: none; }
 
 a:hover, a:focus {
