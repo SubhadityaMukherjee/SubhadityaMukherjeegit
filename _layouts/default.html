@@ -21,51 +21,51 @@
     <div class="wrapper">
       <header>
         <h2><a id = "imp" href="{{ "/" | absolute_url }}">Home page</a></h2>
-
-
+        
+        
         {% if site.logo %}
-          <img src="{{site.logo | relative_url}}" alt="Logo" />
+        <img src="{{site.logo | relative_url}}" alt="Logo" />
         {% endif %}
-
+        
         <p>Making a Deep Learning library from scratch and explaining it the whole way + δeviations</p>
-
-<p>
-Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
-| RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> | Source? Refer to<a href="https://github.com/SubhadityaMukherjee/DataLoader.jl"> the repository</a><br>
-The posts are in the order of newer -> older <br>
-Format : 
-Date | Title<br>
-&emsp;&emsp;TL; DR<br>
-&#9998;: Post, &#9883; : Deviation, &#128214;: Book notes
-<div id="search-container">
-Search for something in the blog <input type="text" id="search-input" placeholder="search...">
-
-</div>
-<ul id="results-container"></ul>
-</p>
-
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> | Source? Refer to<a href="https://github.com/SubhadityaMukherjee/DataLoader.jl"> the repository</a><br>
+          The posts are in the order of newer -> older <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          &#9998;: Post, &#9883; : Deviation, &#128214;: Book notes
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+            
+          </div>
+          <ul id="results-container"></ul>
+        </p>
+        
         
         <p class="view"><a href="{{ site.github.owner_url }}">View My GitHub Profile</a></p>
       </header>
       
-      <section>
-            <!-- Html Elements for Search -->
+      <hr>
+      <!-- Html Elements for Search -->
+      
+      <!-- Script pointing to search-script.js -->
+      <script src="js/search-script.js" type="text/javascript"></script>
+      
+      <!-- Configuration -->
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/search.json'
+        })
+        </script>
+<section>
+  {{ content }}
 
-<!-- Script pointing to search-script.js -->
-<script src="js/search-script.js" type="text/javascript"></script>
 
-<!-- Configuration -->
-<script>
-SimpleJekyllSearch({
-  searchInput: document.getElementById('search-input'),
-  resultsContainer: document.getElementById('results-container'),
-  json: '/search.json'
-})
-</script>
-
-      {{ content }}
-
-      </section>
       <footer>
         {% if site.github.is_project_page %}
         <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
