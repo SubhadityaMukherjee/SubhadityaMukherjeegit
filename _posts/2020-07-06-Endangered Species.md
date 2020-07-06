@@ -4,7 +4,7 @@ title: Endangered Species
 date: 2020-07-06 01:59
 category: article
 author: Subhaditya Mukherjee
-tags: []
+tags: art awareness species endangered style transfer neural web page wildlife site 
 ---
 
 Here we will talk about spreading awareness about endangered species through AI powered art.
