@@ -508,15 +508,6 @@ ul.downloads {
 .downloads ul a:active {
   background-color: #1e2227; }
 
-strong {
-  color: #222;
-  font-weight: 700; }
-
-.downloads a strong {
-  font-size: 14px;
-  display: block;
-  color: #222; }
-
 hr {
   border: 0;
   background: #1e2227;
@@ -800,6 +791,15 @@ footer {
     color: #9ce8ec;
     text-decoration: none; }
 
+  strong {
+    color: red;
+    font-weight: 700; }
+
+  .downloads a strong {
+    font-size: 14px;
+    display: block;
+    color: red; }
+
   code,
   pre {
     font-family: Lato;
@@ -1046,6 +1046,15 @@ footer {
   pre {
     font-family: Lato;
     color: #333; }
+
+  strong {
+    color: #222;
+    font-weight: 700; }
+
+  .downloads a strong {
+    font-size: 14px;
+    display: block;
+    color: #222; }
 
   pre {
     padding: 8px 15px;

@@ -35,16 +35,6 @@ ul.downloads {
   background-color: rgb(30, 34, 39);
 }
 
-strong {
-  color: #222;
-  font-weight: 700;
-}
-.downloads a strong {
-  font-size: 14px;
-  display: block;
-  color: #222;
-}
-
 hr {
   border: 0;
   background: rgb(30, 34, 39);
@@ -272,6 +262,7 @@ footer {
 
 @media (prefers-color-scheme: dark) {
   @import "rouge-dark";
+
   body {
     background-color: black;
     color: white;
@@ -296,7 +287,15 @@ footer {
     color: #9ce8ec;
     text-decoration: none;
   }
-
+  strong {
+    color: red;
+    font-weight: 700;
+  }
+  .downloads a strong {
+    font-size: 14px;
+    display: block;
+    color: red;
+  }
   code,
   pre {
     font-family: Lato;
@@ -336,7 +335,15 @@ footer {
     font-family: Lato;
     color: #333;
   }
-
+  strong {
+    color: #222;
+    font-weight: 700;
+  }
+  .downloads a strong {
+    font-size: 14px;
+    display: block;
+    color: #222;
+  }
   pre {
     padding: 8px 15px;
     background: #f8f8f8;
