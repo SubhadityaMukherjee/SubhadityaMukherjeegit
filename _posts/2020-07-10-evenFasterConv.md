@@ -2,11 +2,12 @@
 layout: post
 title:  My life is a lie + Even faster conv 
 date:   2020-07-10 22:24:36 +0400
-tags:
+tags: corre conv ope faster cairo gtk image fft fast four col im2 im
 ---
 
 Why CNNs are Correlation Neural Networks and an even faster Convolution operation.
 
+## Corr Net
 Okay so, my life is a lie. And the operation I have been calling convolution till now is actually correlation, mathematically. But historical reasons deem that it is called Convolution. So technically, we are working with Correlation Neural Networks. Admittedly, that does not sound cool enough, so let us just stick to calling it what we did so far.
 
 Anyway, today I was thinking of implementing an even more optimized convolution. This is done by first converting the image to a column. We do the same for the kernel, and follow what we did previously. And use FFT in the end as usual.
@@ -16,6 +17,7 @@ Okay so first, lets get what we need. Cairo and Gtk are to save the outputs dire
 ``` julia
 using Plots,Images, ImageView,TestImages, Cairo,Gtk
 ```
+## Im2col
 
 Now we need to define a way to convert an image to a column vector.
 We first input the block size and store it away. Do the same for the height and width of the image. 
@@ -42,6 +44,8 @@ function im2col(A, block_size) # mxn: block_size
        end
 ```
 
+## Col2im
+
 Quite obviously, we need to reverse it as well. So we define col2im.
 This is quite simple. We just use a reshape function with the size we want it to be in.
 
@@ -51,6 +55,8 @@ function col2im(A,block_size)
     return reshape(A, (mm, nn))
 end
 ```
+
+## Tests
 
 So lets test it out!
 Let us take our beloved mandrill using testimages.
@@ -101,3 +107,5 @@ write_to_png(out1, "/home/subhaditya/Desktop/GITHUB/SubhadityaMukherjee.github.i
 <img src="{{site.baseurl}}/img/deconstrucImages/imconv.png" alt="drawing" width="200"/>
 
 Fun.
+
+
