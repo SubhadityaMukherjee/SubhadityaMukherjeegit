@@ -1,4 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-11T15:25:18+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Pooling layers</title><link href="http://localhost:4000/2020/07/11/pooling.html" rel="alternate" type="text/html" title="Pooling layers" /><published>2020-07-11T12:43:34+04:00</published><updated>2020-07-11T12:43:34+04:00</updated><id>http://localhost:4000/2020/07/11/pooling</id><content type="html" xml:base="http://localhost:4000/2020/07/11/pooling.html">&lt;p&gt;Here we will look at the pooling operation and its types.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-13T20:23:09+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">fastai Book</title><link href="http://localhost:4000/book/2020/07/12/fastai-Book.html" rel="alternate" type="text/html" title="fastai Book" /><published>2020-07-12T11:50:52+04:00</published><updated>2020-07-12T11:50:52+04:00</updated><id>http://localhost:4000/book/2020/07/12/fastai%20Book</id><content type="html" xml:base="http://localhost:4000/book/2020/07/12/fastai-Book.html">&lt;p&gt;What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD”
+by Jeremy Howard  (Author), Sylvain Gugger (Author)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.amazon.com/Deep-Learning-Coders-fastai-PyTorch/dp/1492045527&quot;&gt;Link to the book&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I will not be adding any codes here as those will be part of the projects/deeper blog posts.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;drive-train-approach&quot;&gt;Drive train approach&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Define an objective&lt;/li&gt;
+  &lt;li&gt;Find out what inputs you can control&lt;/li&gt;
+  &lt;li&gt;Find out what data can be collected&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;data-issues&quot;&gt;Data issues&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Out of domain data&lt;/li&gt;
+  &lt;li&gt;Different lighting conditions&lt;/li&gt;
+  &lt;li&gt;Corrupted images&lt;/li&gt;
+  &lt;li&gt;Type of image the model sees change over time&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;deplyoment&quot;&gt;Deplyoment&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;The model itself might change behavior of the place where it is deployed&lt;/li&gt;
+  &lt;li&gt;Gradual expansion of users&lt;/li&gt;
+  &lt;li&gt;Parallel human process&lt;/li&gt;
+  &lt;li&gt;Consider what could go wrong&lt;/li&gt;
+  &lt;li&gt;Look for feedback loops&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;general-points&quot;&gt;General points&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;If it isnt an image, you can still make it one if you are creative xD&lt;/li&gt;
+  &lt;li&gt;Train a model, then use the trained model to find errors in data. Its faster.&lt;/li&gt;
+  &lt;li&gt;Sometimes things are just not solvable using Deep Learning or do not need it&lt;/li&gt;
+  &lt;li&gt;NLP : Not that great yet&lt;/li&gt;
+  &lt;li&gt;BLOG!! (Lol considering this is one)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ethics&quot;&gt;Ethics&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Well founded standards of right or wrong&lt;/li&gt;
+  &lt;li&gt;Context dependent&lt;/li&gt;
+  &lt;li&gt;Many perspectives of stakeholders&lt;/li&gt;
+  &lt;li&gt;Mistakes in software implementation&lt;/li&gt;
+  &lt;li&gt;Feedback loops -&amp;gt; might lead to worse outcomes/incorrect predictions&lt;/li&gt;
+  &lt;li&gt;“To the blind technocrat, the means were more important than the end”&lt;/li&gt;
+  &lt;li&gt;Consider the entire pipeline&lt;/li&gt;
+  &lt;li&gt;Work closely with people who will end up using the research&lt;/li&gt;
+  &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="book" /><summary type="html">What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD” by Jeremy Howard (Author), Sylvain Gugger (Author)</summary></entry><entry><title type="html">Pooling layers</title><link href="http://localhost:4000/2020/07/11/pooling.html" rel="alternate" type="text/html" title="Pooling layers" /><published>2020-07-11T12:43:34+04:00</published><updated>2020-07-11T12:43:34+04:00</updated><id>http://localhost:4000/2020/07/11/pooling</id><content type="html" xml:base="http://localhost:4000/2020/07/11/pooling.html">&lt;p&gt;Here we will look at the pooling operation and its types.&lt;/p&gt;
 
 &lt;p&gt;Okay so what is a pooling layer? Let us take this matrix.&lt;/p&gt;
 
@@ -912,131 +967,4 @@ I am confusion.&lt;/p&gt;
 
 &lt;p&gt;Ah yes it was that. Once it did go to the GPU, it took 1 second. Which means that it could take lesser on the next run, except my dear ol GPU wont let me do it for such a huge array.&lt;/p&gt;
 
-&lt;p&gt;But I guess I should be satsified with 1k x 1k. I mean come on, do we even use such huge images for DL. (Unless you work at Google LOL)&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="fast" /><category term="conv" /><category term="gpu" /><category term="fftw" /><category term="fourier" /><category term="transform" /><category term="2d" /><category term="cuda" /><category term="limits" /><summary type="html">Here we will look at the various ways of implementing convolutions and benchmark them.</summary></entry><entry><title type="html">Image kernels</title><link href="http://localhost:4000/2020/07/02/kernels.html" rel="alternate" type="text/html" title="Image kernels" /><published>2020-07-02T19:34:06+04:00</published><updated>2020-07-02T19:34:06+04:00</updated><id>http://localhost:4000/2020/07/02/kernels</id><content type="html" xml:base="http://localhost:4000/2020/07/02/kernels.html">&lt;p&gt;Image kernels are fun as filters, so let us just look at a few of them and maybe try something else?&lt;/p&gt;
-
-&lt;p&gt;Where do I get the numbers from? &lt;a href=&quot;https://setosa.io/ev/image-kernels/&quot;&gt;Awesome blog&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;So we start with this image&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/cam.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;filters&quot;&gt;Filters&lt;/h1&gt;
-
-&lt;h2 id=&quot;blur&quot;&gt;Blur&lt;/h2&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;0.0625&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.125&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0625&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;0.125&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.25&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.125&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;0.0625&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.125&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0625&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/camdblur.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;bottom-sobel&quot;&gt;Bottom Sobel&lt;/h2&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/botsob.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;emboss&quot;&gt;Emboss&lt;/h2&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/emb.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;identify&quot;&gt;Identify&lt;/h2&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/iden.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;left-sobel&quot;&gt;Left Sobel&lt;/h2&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/lesob.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;outline&quot;&gt;Outline&lt;/h2&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt; 
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/out.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;right-sobel&quot;&gt;Right sobel&lt;/h2&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt; 
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/rsob.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;sharpen&quot;&gt;Sharpen&lt;/h2&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/shar.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;top-sobel&quot;&gt;Top sobel&lt;/h2&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kernel_blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;;&lt;/span&gt; 
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/tsob.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;experiments&quot;&gt;Experiments!!&lt;/h1&gt;
-
-&lt;h2 id=&quot;what-happens-when-you-convolve-two-images-of-the-same-size&quot;&gt;What happens when you convolve two images of the same size??&lt;/h2&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tmp_cm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;channelview&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Gray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testimage&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;house&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)));&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;tmp_cm2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;channelview&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Gray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testimage&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;mandrill&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)));&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;imshow&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conv2d&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_cm2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_cm&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;I get a fully white image… Is it because the images are of the same size?
-Since these convolutions are only in black and white.. I cheated a bit for the purpose of this experiment and used a library. (Obviously I will do it from scratch later or atleast try to).&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DSP&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;imshow&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DSP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conv&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;channelview&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_cm&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_cm2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;I want to analyze a bit more. Here are the two images
-&lt;img src=&quot;/img/deconstrucImages/house.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;img src=&quot;/img/deconstrucImages/mandorig.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;So I get this.
-&lt;img src=&quot;/img/deconstrucImages/2conv.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I am not sure why? I can’t visualize it atleast.&lt;/p&gt;
-
-&lt;h2 id=&quot;different-size&quot;&gt;Different size?&lt;/h2&gt;
-
-&lt;p&gt;So the largest realistic kernel size I have seen is 15. So let us take this house and resize it to that and try and see what happens.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/houseconv.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Man I have to take a second to actually appreciate the fact that we can understand this as a house. So this is what we get.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/2convm.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Wow! That actually did something. You know, I am actually enjoying this detour. I should add more experiment sections whenever I can.&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="kernel" /><category term="image" /><category term="filter" /><category term="blur" /><category term="sobel" /><category term="emboss" /><category term="identity" /><category term="outline" /><summary type="html">Image kernels are fun as filters, so let us just look at a few of them and maybe try something else?</summary></entry></feed>
+&lt;p&gt;But I guess I should be satsified with 1k x 1k. I mean come on, do we even use such huge images for DL. (Unless you work at Google LOL)&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="fast" /><category term="conv" /><category term="gpu" /><category term="fftw" /><category term="fourier" /><category term="transform" /><category term="2d" /><category term="cuda" /><category term="limits" /><summary type="html">Here we will look at the various ways of implementing convolutions and benchmark them.</summary></entry></feed>
