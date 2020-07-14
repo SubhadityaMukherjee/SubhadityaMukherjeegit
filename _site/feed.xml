@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-13T20:23:09+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">fastai Book</title><link href="http://localhost:4000/book/2020/07/12/fastai-Book.html" rel="alternate" type="text/html" title="fastai Book" /><published>2020-07-12T11:50:52+04:00</published><updated>2020-07-12T11:50:52+04:00</updated><id>http://localhost:4000/book/2020/07/12/fastai%20Book</id><content type="html" xml:base="http://localhost:4000/book/2020/07/12/fastai-Book.html">&lt;p&gt;What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD”
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-14T23:54:35+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">fastai Book</title><link href="http://localhost:4000/book/2020/07/12/fastai-Book.html" rel="alternate" type="text/html" title="fastai Book" /><published>2020-07-12T11:50:52+04:00</published><updated>2020-07-12T11:50:52+04:00</updated><id>http://localhost:4000/book/2020/07/12/fastai%20Book</id><content type="html" xml:base="http://localhost:4000/book/2020/07/12/fastai-Book.html">&lt;p&gt;What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD”
 by Jeremy Howard  (Author), Sylvain Gugger (Author)&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://www.amazon.com/Deep-Learning-Coders-fastai-PyTorch/dp/1492045527&quot;&gt;Link to the book&lt;/a&gt;&lt;/p&gt;
@@ -39,6 +39,7 @@ by Jeremy Howard  (Author), Sylvain Gugger (Author)&lt;/p&gt;
   &lt;li&gt;Sometimes things are just not solvable using Deep Learning or do not need it&lt;/li&gt;
   &lt;li&gt;NLP : Not that great yet&lt;/li&gt;
   &lt;li&gt;BLOG!! (Lol considering this is one)&lt;/li&gt;
+  &lt;li&gt;Keep checking shapes of layers/inputs as you go&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;ethics&quot;&gt;Ethics&lt;/h2&gt;
@@ -52,7 +53,11 @@ by Jeremy Howard  (Author), Sylvain Gugger (Author)&lt;/p&gt;
   &lt;li&gt;“To the blind technocrat, the means were more important than the end”&lt;/li&gt;
   &lt;li&gt;Consider the entire pipeline&lt;/li&gt;
   &lt;li&gt;Work closely with people who will end up using the research&lt;/li&gt;
-  &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;technicalmath&quot;&gt;Technical/Math&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;difference between L1 norm and mean squared error (MSE) is that the latter will penalize bigger mistakes more heavily than the former (and be more lenient with small mistakes).&lt;/li&gt;
 &lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="book" /><summary type="html">What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD” by Jeremy Howard (Author), Sylvain Gugger (Author)</summary></entry><entry><title type="html">Pooling layers</title><link href="http://localhost:4000/2020/07/11/pooling.html" rel="alternate" type="text/html" title="Pooling layers" /><published>2020-07-11T12:43:34+04:00</published><updated>2020-07-11T12:43:34+04:00</updated><id>http://localhost:4000/2020/07/11/pooling</id><content type="html" xml:base="http://localhost:4000/2020/07/11/pooling.html">&lt;p&gt;Here we will look at the pooling operation and its types.&lt;/p&gt;
 
 &lt;p&gt;Okay so what is a pooling layer? Let us take this matrix.&lt;/p&gt;

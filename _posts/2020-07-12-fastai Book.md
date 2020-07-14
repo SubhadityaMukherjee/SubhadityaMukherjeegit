@@ -38,6 +38,9 @@ by Jeremy Howard  (Author), Sylvain Gugger (Author)
 - Sometimes things are just not solvable using Deep Learning or do not need it
 - NLP : Not that great yet
 - BLOG!! (Lol considering this is one)
+- Keep checking shapes of layers/inputs as you go
+
+
 
 ## Ethics
 
@@ -49,4 +52,7 @@ by Jeremy Howard  (Author), Sylvain Gugger (Author)
 - "To the blind technocrat, the means were more important than the end"
 - Consider the entire pipeline 
 - Work closely with people who will end up using the research
-- 
+
+## Technical/Math
+- difference between L1 norm and mean squared error (MSE) is that the latter will penalize bigger mistakes more heavily than the former (and be more lenient with small mistakes).
+
