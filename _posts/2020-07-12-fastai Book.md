@@ -39,6 +39,7 @@ by Jeremy Howard  (Author), Sylvain Gugger (Author)
 - NLP : Not that great yet
 - BLOG!! (Lol considering this is one)
 - Keep checking shapes of layers/inputs as you go
+- Large models arent necessarily better models. Start small and then scale up.
 
 
 
@@ -55,4 +56,4 @@ by Jeremy Howard  (Author), Sylvain Gugger (Author)
 
 ## Technical/Math
 - difference between L1 norm and mean squared error (MSE) is that the latter will penalize bigger mistakes more heavily than the former (and be more lenient with small mistakes).
-
+- Regression -> Add y range. aka (min,max). that does better
