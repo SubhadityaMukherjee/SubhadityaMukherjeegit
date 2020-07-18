@@ -1,4 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-17T01:30:21+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Image Preprocessing</title><link href="http://localhost:4000/2020/07/17/preprocessing.html" rel="alternate" type="text/html" title="Image Preprocessing" /><published>2020-07-17T00:56:06+04:00</published><updated>2020-07-17T00:56:06+04:00</updated><id>http://localhost:4000/2020/07/17/preprocessing</id><content type="html" xml:base="http://localhost:4000/2020/07/17/preprocessing.html">&lt;p&gt;We look at some image processing techniques and try to implement them from scratch.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-18T11:25:19+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Universal Approximation theorem</title><link href="http://localhost:4000/2020/07/18/Universal-Approximation-theorem.html" rel="alternate" type="text/html" title="Universal Approximation theorem" /><published>2020-07-18T10:42:41+04:00</published><updated>2020-07-18T10:42:41+04:00</updated><id>http://localhost:4000/2020/07/18/Universal%20Approximation%20theorem</id><content type="html" xml:base="http://localhost:4000/2020/07/18/Universal-Approximation-theorem.html">&lt;p&gt;What makes Neural Networks tick mathematically.&lt;/p&gt;
+
+&lt;p&gt;This is going to be a really short article but I decided it was important to talk about it. So the reason why NNs work is due to a theorem called the Universal Approximation theorem.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-it&quot;&gt;What is it&lt;/h2&gt;
+
+&lt;p&gt;What this means that given an x and a y, the NN can identify a mapping between them. “Approximately”. This is required when we have non linearly separable data. (Aka you can’t split them directly into n parts just by say drawing a line between them. This could be complex structures like images or text or anything which cannot be directly modelled.&lt;/p&gt;
+
+&lt;p&gt;So we take a non linear function, for example the sigmoid. &lt;script type=&quot;math/tex&quot;&gt;\frac{1}{1 + e^{ - \left( w^{T}x + b \right)}}&lt;/script&gt;.
+Then we have to combine multiple such neurons in a way such that we can accurately model our problem. The end result is a complex function and the existing weights are distributed across many layers. Sounds familiar? Welcome to Deep Learning (lol).&lt;/p&gt;
+
+&lt;p&gt;The Universal approximation theorem states that&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;a feed forward network with a single hidden layer containing a finite number of neurons can approximate continuous functions on compact subsets of &lt;script type=&quot;math/tex&quot;&gt;\mathbb{R}&lt;/script&gt; , under mild assumptions on the activation function.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Um. Can these guys speak normally. -.- Lets break it down a bit.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;a feed forward network : take an input, apply a function, get an output, repeat&lt;/li&gt;
+  &lt;li&gt;a single hidden layer : yes you can use more, but theoretically…&lt;/li&gt;
+  &lt;li&gt;finite number of neurons: you can do it without needing an infinite computer&lt;/li&gt;
+  &lt;li&gt;approximate continuous functions: continuous functions are anything which dont have breaks/holes in between. This just says that it is possible to approximate the mapping which we talked about&lt;/li&gt;
+  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\mathbb{R}&lt;/script&gt; is just the set of all real numbers&lt;/li&gt;
+  &lt;li&gt;An activation function is something like the ReLU/Sigmoid&lt;/li&gt;
+  &lt;li&gt;All this boils down to the fact that a neural network can approximate any complex relation given an input and an output.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;how-does-it-work&quot;&gt;How does it work?&lt;/h2&gt;
+
+&lt;p&gt;Well here is an image. See if you can understand whats happening.
+ &lt;img src=&quot;/img/uat.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Makes sense right? Every curve at an infinitely small point can be a collection of lines (approximately).
+Oh and as a form of citation, &lt;a href=&quot;https://medium.com/hackernoon/illustrative-proof-of-universal-approximation-theorem-5845c02822f6&quot;&gt;here&lt;/a&gt; is where I got this image from. Its a great blog you should really check it out.&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="uat" /><category term="tick" /><category term="theorem" /><category term="feed" /><category term="forwa" /><category term="real" /><category term="activation" /><category term="complex" /><category term="non" /><category term="linear" /><summary type="html">What makes Neural Networks tick mathematically.</summary></entry><entry><title type="html">Image Preprocessing</title><link href="http://localhost:4000/2020/07/17/preprocessing.html" rel="alternate" type="text/html" title="Image Preprocessing" /><published>2020-07-17T00:56:06+04:00</published><updated>2020-07-17T00:56:06+04:00</updated><id>http://localhost:4000/2020/07/17/preprocessing</id><content type="html" xml:base="http://localhost:4000/2020/07/17/preprocessing.html">&lt;p&gt;We look at some image processing techniques and try to implement them from scratch.&lt;/p&gt;
 
 &lt;p&gt;So before we start, let us import the usual packages and load two images. Our beloved mandrill and an image of the earth.
 We also define a function to take an array and resize it and display it as an image.&lt;/p&gt;
@@ -805,94 +839,4 @@ Then we iterate over the list of names and convert our formatted name to plain t
 
 &lt;p&gt;We run this until it is done and now we have our site. (This is how I made the site shown above)&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/outputs/screen1.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="article" /><category term="art" /><category term="awareness" /><category term="species" /><category term="endangered" /><category term="style" /><category term="transfer" /><category term="neural" /><category term="web" /><category term="page" /><category term="wildlife" /><category term="site" /><summary type="html">Here we will talk about spreading awareness about endangered species through AI powered art.</summary></entry><entry><title type="html">Padding</title><link href="http://localhost:4000/2020/07/04/padding.html" rel="alternate" type="text/html" title="Padding" /><published>2020-07-04T11:25:39+04:00</published><updated>2020-07-04T11:25:39+04:00</updated><id>http://localhost:4000/2020/07/04/padding</id><content type="html" xml:base="http://localhost:4000/2020/07/04/padding.html">&lt;p&gt;To implement a faster conv we need padding, so here we will try to explore what that means and try to implement it.&lt;/p&gt;
-
-&lt;p&gt;The objective is to get the kernel to be the same size as the image and fill it with some value so as to be able to apply FFT to it.&lt;/p&gt;
-
-&lt;p&gt;We first import the packages we need, I am just using the image packages for visualization and then take a small image and a kernel (just for testing, we can scale it up later). 
-We are also making the kernel a solid block of white as it is just easier to see since the img is random numbers.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Images&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ImageView&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Plots&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LinearAlgebra&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Statistics&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float32&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float32&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h2 id=&quot;constant-padding&quot;&gt;Constant padding&lt;/h2&gt;
-&lt;p&gt;Okay now for constant padding. This means that we choose a value and then apply it to the figure.&lt;/p&gt;
-
-&lt;p&gt;Steps followed :&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;To save memory, let us first allocate an image of constants with the size of the image. We do this by making an array of ones and then element wise multiplying it by constant. (Note that the number should be in the range of 0-1 for a gray scale image)&lt;/li&gt;
-  &lt;li&gt;Then we identify the center of the image&lt;/li&gt;
-  &lt;li&gt;We then find out the space required by the kernel to fit in this array&lt;/li&gt;
-  &lt;li&gt;Just set this space in the padded version = the kernel&lt;/li&gt;
-  &lt;li&gt;Convert it to grayscale so we can plot it and see if it worked.&lt;/li&gt;
-  &lt;li&gt;Note that we scale the constant between 0 and 1 using the sigmoid function&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; pad_constant&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;kernel_h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kernel_w&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;img_h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img_w&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;padded_kernel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img_h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img_w&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.*&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exp&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)));&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;pad_h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pad_w&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;padded_kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;center_x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;center_y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pad_w&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;÷&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pad_h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;÷&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;tmp_x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;center_x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel_w÷2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;tmp_y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;center_y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel_h÷2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;padded_kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;collect&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel_w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;collect&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel_h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Gray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;padded_kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pad_constant&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Since our kernel was white and we supplied a constant of .3(grayish), we get this -&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/pad_const.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;It works!!&lt;/p&gt;
-
-&lt;h2 id=&quot;max-padding&quot;&gt;Max padding&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Pad with the max value in the image.&lt;/li&gt;
-  &lt;li&gt;We will repurpose our previous function for this&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pad_constant&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maximum&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/pad_max.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;min-padding&quot;&gt;Min padding&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Pad with the min value in the image.&lt;/li&gt;
-  &lt;li&gt;We will repurpose our previous function for this&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pad_constant&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;minimum&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/pad_min.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;mean-padding&quot;&gt;Mean padding&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Pad with the min value in the image.&lt;/li&gt;
-  &lt;li&gt;We will repurpose our previous function for this&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pad_constant&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/pad_mean.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;median-padding&quot;&gt;Median padding&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Pad with the median value in the image.&lt;/li&gt;
-  &lt;li&gt;We will repurpose our previous function for this&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pad_constant&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/pad_median.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="pad" /><category term="image" /><category term="view" /><category term="constant" /><category term="copy" /><category term="symm" /><category term="max" /><category term="min" /><category term="aver" /><category term="mode" /><category term="med" /><summary type="html">To implement a faster conv we need padding, so here we will try to explore what that means and try to implement it.</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;/outputs/screen1.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="article" /><category term="art" /><category term="awareness" /><category term="species" /><category term="endangered" /><category term="style" /><category term="transfer" /><category term="neural" /><category term="web" /><category term="page" /><category term="wildlife" /><category term="site" /><summary type="html">Here we will talk about spreading awareness about endangered species through AI powered art.</summary></entry></feed>
