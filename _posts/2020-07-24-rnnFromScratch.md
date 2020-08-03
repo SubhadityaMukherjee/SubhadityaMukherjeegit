@@ -5,7 +5,7 @@ date:   2020-07-24 11:41:02 +0400
 tags:
 ---
 
-NLP time!! Here we will look at an RNN from scratch.
+(WIP Skip for now) NLP time!! Here we will look at an RNN from scratch.
 
 >Adapting the code from Python [Link](https://github.com/prateekkarkare/rnn_char_modelling/blob/master/char_model_dino.py)
 
