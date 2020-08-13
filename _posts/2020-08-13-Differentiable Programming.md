@@ -121,7 +121,7 @@ Yay! We have successfully modelled an equation using a neural network with barel
 digraph G{
   "find a new language" -> "It is called dot" -> "draw unnecessary graph"
   "scream because it worked" -> "cry because why not"
-  node [shape=box] "Imagine DRAWING THIS" -> "Scream even more"
+  node [shape=box] "Imagine DRAWING THIS" -> "Scream even moree"
 }
 
 {% endgraphviz %}
