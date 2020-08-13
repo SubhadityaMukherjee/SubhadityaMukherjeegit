@@ -30,6 +30,7 @@ GEM
     jekyll-analytics (0.1.14)
     jekyll-feed (0.14.0)
       jekyll (>= 3.7, < 5.0)
+    jekyll-graphviz (0.1.0)
     jekyll-sass-converter (1.5.2)
       sass (~> 3.4)
     jekyll-seo-tag (2.6.1)
@@ -72,6 +73,7 @@ PLATFORMS
 DEPENDENCIES
   jekyll-analytics
   jekyll-feed (~> 0.12)
+  jekyll-graphviz
   jekyll-theme-minimal (~> 0.1.1)
   jekyll-toc (~> 0.14.0)
   toc (~> 0.0.4)

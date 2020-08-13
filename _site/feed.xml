@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-08-13T01:56:58+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Differentiable Programming</title><link href="http://localhost:4000/2020/08/13/Differentiable-Programming.html" rel="alternate" type="text/html" title="Differentiable Programming" /><published>2020-08-13T01:07:58+04:00</published><updated>2020-08-13T01:07:58+04:00</updated><id>http://localhost:4000/2020/08/13/Differentiable%20Programming</id><content type="html" xml:base="http://localhost:4000/2020/08/13/Differentiable-Programming.html">&lt;p&gt;Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-08-14T02:20:04+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Differentiable Programming</title><link href="http://localhost:4000/2020/08/13/Differentiable-Programming.html" rel="alternate" type="text/html" title="Differentiable Programming" /><published>2020-08-13T01:07:58+04:00</published><updated>2020-08-13T01:07:58+04:00</updated><id>http://localhost:4000/2020/08/13/Differentiable%20Programming</id><content type="html" xml:base="http://localhost:4000/2020/08/13/Differentiable-Programming.html">&lt;p&gt;Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)&lt;/p&gt;
 
 &lt;h2 id=&quot;in-theory&quot;&gt;In theory&lt;/h2&gt;
 
@@ -15,9 +15,193 @@ In summary, DL had the following steps -&amp;gt; Pick a bunch of inputs and outp
   &lt;p&gt;I am still figuring things out so I will update this as I go along. If I get anything wrong now, hopefully I will learn enough to fix it. If not, please do tell me&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
+&lt;h2 id=&quot;lotka-volterra&quot;&gt;Lotka Volterra&lt;/h2&gt;
 
-&lt;h2 id=&quot;automatic-differentiation-part-1&quot;&gt;Automatic differentiation part 1&lt;/h2&gt;</content><author><name>Subhaditya Mukherjee</name></author><summary type="html">Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)</summary></entry><entry><title type="html">Compositional Pattern Producing Networks</title><link href="http://localhost:4000/2020/08/12/Compositional-Pattern-Producing-Networks.html" rel="alternate" type="text/html" title="Compositional Pattern Producing Networks" /><published>2020-08-12T00:26:21+04:00</published><updated>2020-08-12T00:26:21+04:00</updated><id>http://localhost:4000/2020/08/12/Compositional%20Pattern%20Producing%20Networks</id><content type="html" xml:base="http://localhost:4000/2020/08/12/Compositional-Pattern-Producing-Networks.html">&lt;p&gt;Today we will talk about Compositional Pattern Producing Networks.&lt;/p&gt;
+&lt;p&gt;As an example, here is the most common one I found so far. The Lotka Volterra model. What is it? 
+Simply put, it is an ecological model which tries to describe the relationship between two species where one is a predator and the other is prey. It aims to model how the population changes over time.&lt;/p&gt;
+
+&lt;p&gt;Here we get some different packages. Along with our old friends Latexify, Flux and Plots.
+DiffEqFlux will allow us to use differential equation solvers. I do not think I will try to implement that from scratch as it is currently wayy out of scope for me.
+The only major thing I will try to atleast understand and write in depth about is Automatic Differentiation. (More explained throughout the course of this article)&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Latexify&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DiffEqFlux&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DiffEqSensitivity&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OrdinaryDiffEq&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Zygote&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Plots&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;what-is-it&quot;&gt;What is it&lt;/h2&gt;
+&lt;p&gt;Okay now let us model the system.&lt;/p&gt;
+
+&lt;p&gt;We have two populations and so we need two starting values which we set as x and y.
+We will also define a few parameters that we need.
+The first being the equation of the first population.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We take α to be the growth rate.&lt;/li&gt;
+  &lt;li&gt;β to be the rate at which the prey is killed.&lt;/li&gt;
+  &lt;li&gt;δ to be the death rate of the predators&lt;/li&gt;
+  &lt;li&gt;γ rate at which the predators increase&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;dx = \left( \alpha - \beta \cdot y \right) \cdot x&lt;/script&gt;
+
+&lt;p&gt;The second being the equation of the second population.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;dy = \left( \delta \cdot x - \gamma \right) \cdot y&lt;/script&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; lotka_volterra&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;du&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;α&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;β&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;δ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;γ&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;du&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;α&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;β&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;du&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;δ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;γ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;modelling-it&quot;&gt;Modelling it&lt;/h2&gt;
+
+&lt;p&gt;Now that we have a model of our system, we set a few default values just to start with. Giving the inital populations a value of 1. And some default parameters for our rates.&lt;/p&gt;
+
+&lt;p&gt;We then pop this into what is known as an ODEProblem. This is a wrapper for allowing us to pose our function as an ODE. We can then attempt to solve it using an ODESolver. (I am still getting the details. When I understand it fully, there will be a post)&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;2.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;u0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;prob&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ODEProblem&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lotka_volterra&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;10.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Our current plot looks something like this.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;img src=&quot;/img/dif1.png&quot; alt=&quot;im&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So we write a tiny function to return an array with the solutions for that current timestep. We are also using the Tsit5(Tsitorous) solver. This seems to be part of something called Runge-Kutta. 
+A google says “Runge–Kutta method is an effective and widely used method for solving the initial-value problems of differential equations and can be used to construct high order accurate numerical method by functions’ self without needing the high order derivatives of functions.”.&lt;/p&gt;
+
+&lt;p&gt;I guess that roughly translates to -&amp;gt; Solve a higher order differential equation without much overhead?&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; predict_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prob&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Tsit5&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reltol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1e-4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now for something more up my alley. Optimizers and loss!! We are using sum of squared absolute error here it seems. And our dear friend Adam.
+We also have a callback function to display the current loss and then try to remake the equation using the current parameters so we can plot it.&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;loss_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;abs2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;())&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ADAM&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;cb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loss_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;())&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remake&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prob&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Tsit5&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ylim&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;train&quot;&gt;Train!!&lt;/h2&gt;
+&lt;p&gt;Finally we can train the network.&lt;/p&gt;
+
+&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;train!&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loss_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Iterators&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;repeated&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;((),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cb&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;outputs&quot;&gt;Outputs&lt;/h2&gt;
+&lt;p&gt;As time goes by we get.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;img src=&quot;/img/dif2.png&quot; alt=&quot;im&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;img src=&quot;/img/dif3.png&quot; alt=&quot;im&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And finally.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;img src=&quot;/img/dif4.png&quot; alt=&quot;im&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Yay! We have successfully modelled an equation using a neural network with barely any data. This is a first step duh. Long way to go before I get anywhere substantial. But baby steps right?&lt;/p&gt;
+
+&lt;h2 id=&quot;unnecessary-graph&quot;&gt;Unnecessary graph&lt;/h2&gt;
+&lt;div class=&quot;graphviz-wrapper&quot;&gt;
+
+&lt;!-- Generated by graphviz version 2.43.0 (0)
+ --&gt;
+&lt;!-- Title: G Pages: 1 --&gt;
+&lt;svg role=&quot;img&quot; aria-label=&quot;graphviz-b631679c20bd6fc61413fecf27a36220&quot; width=&quot;592pt&quot; height=&quot;188pt&quot; viewBox=&quot;0.00 0.00 592.19 188.00&quot;&gt;
+&lt;title&gt;graphviz-b631679c20bd6fc61413fecf27a36220&lt;/title&gt;
+&lt;desc&gt;
+digraph G{
+  &amp;quot;find a new language&amp;quot; -&amp;gt; &amp;quot;It is called dot&amp;quot; -&amp;gt; &amp;quot;draw unnecessary graph&amp;quot;
+  &amp;quot;scream because it worked&amp;quot; -&amp;gt; &amp;quot;cry because why not&amp;quot;
+  node [shape=box] &amp;quot;Imagine DRAWING THIS&amp;quot; -&amp;gt; &amp;quot;Scream even more&amp;quot;
+}
+
+&lt;/desc&gt;
+
+&lt;g id=&quot;graph0&quot; class=&quot;graph&quot; transform=&quot;scale(1 1) rotate(0) translate(4 184)&quot;&gt;
+&lt;title&gt;G&lt;/title&gt;
+&lt;polygon fill=&quot;white&quot; stroke=&quot;transparent&quot; points=&quot;-4,4 -4,-184 588.19,-184 588.19,4 -4,4&quot; /&gt;
+&lt;!-- find a new language --&gt;
+&lt;g id=&quot;node1&quot; class=&quot;node&quot;&gt;
+&lt;title&gt;find a new language&lt;/title&gt;
+&lt;ellipse fill=&quot;none&quot; stroke=&quot;black&quot; cx=&quot;96.19&quot; cy=&quot;-162&quot; rx=&quot;82.59&quot; ry=&quot;18&quot; /&gt;
+&lt;text text-anchor=&quot;middle&quot; x=&quot;96.19&quot; y=&quot;-158.3&quot; font-family=&quot;Times,serif&quot; font-size=&quot;14.00&quot;&gt;find a new language&lt;/text&gt;
+&lt;/g&gt;
+&lt;!-- It is called dot --&gt;
+&lt;g id=&quot;node2&quot; class=&quot;node&quot;&gt;
+&lt;title&gt;It is called dot&lt;/title&gt;
+&lt;ellipse fill=&quot;none&quot; stroke=&quot;black&quot; cx=&quot;96.19&quot; cy=&quot;-90&quot; rx=&quot;61.99&quot; ry=&quot;18&quot; /&gt;
+&lt;text text-anchor=&quot;middle&quot; x=&quot;96.19&quot; y=&quot;-86.3&quot; font-family=&quot;Times,serif&quot; font-size=&quot;14.00&quot;&gt;It is called dot&lt;/text&gt;
+&lt;/g&gt;
+&lt;!-- find a new language&amp;#45;&amp;gt;It is called dot --&gt;
+&lt;g id=&quot;edge1&quot; class=&quot;edge&quot;&gt;
+&lt;title&gt;find a new language&amp;#45;&amp;gt;It is called dot&lt;/title&gt;
+&lt;path fill=&quot;none&quot; stroke=&quot;black&quot; d=&quot;M96.19,-143.7C96.19,-135.98 96.19,-126.71 96.19,-118.11&quot; /&gt;
+&lt;polygon fill=&quot;black&quot; stroke=&quot;black&quot; points=&quot;99.69,-118.1 96.19,-108.1 92.69,-118.1 99.69,-118.1&quot; /&gt;
+&lt;/g&gt;
+&lt;!-- draw unnecessary graph --&gt;
+&lt;g id=&quot;node3&quot; class=&quot;node&quot;&gt;
+&lt;title&gt;draw unnecessary graph&lt;/title&gt;
+&lt;ellipse fill=&quot;none&quot; stroke=&quot;black&quot; cx=&quot;96.19&quot; cy=&quot;-18&quot; rx=&quot;96.38&quot; ry=&quot;18&quot; /&gt;
+&lt;text text-anchor=&quot;middle&quot; x=&quot;96.19&quot; y=&quot;-14.3&quot; font-family=&quot;Times,serif&quot; font-size=&quot;14.00&quot;&gt;draw unnecessary graph&lt;/text&gt;
+&lt;/g&gt;
+&lt;!-- It is called dot&amp;#45;&amp;gt;draw unnecessary graph --&gt;
+&lt;g id=&quot;edge2&quot; class=&quot;edge&quot;&gt;
+&lt;title&gt;It is called dot&amp;#45;&amp;gt;draw unnecessary graph&lt;/title&gt;
+&lt;path fill=&quot;none&quot; stroke=&quot;black&quot; d=&quot;M96.19,-71.7C96.19,-63.98 96.19,-54.71 96.19,-46.11&quot; /&gt;
+&lt;polygon fill=&quot;black&quot; stroke=&quot;black&quot; points=&quot;99.69,-46.1 96.19,-36.1 92.69,-46.1 99.69,-46.1&quot; /&gt;
+&lt;/g&gt;
+&lt;!-- scream because it worked --&gt;
+&lt;g id=&quot;node4&quot; class=&quot;node&quot;&gt;
+&lt;title&gt;scream because it worked&lt;/title&gt;
+&lt;ellipse fill=&quot;none&quot; stroke=&quot;black&quot; cx=&quot;299.19&quot; cy=&quot;-162&quot; rx=&quot;102.88&quot; ry=&quot;18&quot; /&gt;
+&lt;text text-anchor=&quot;middle&quot; x=&quot;299.19&quot; y=&quot;-158.3&quot; font-family=&quot;Times,serif&quot; font-size=&quot;14.00&quot;&gt;scream because it worked&lt;/text&gt;
+&lt;/g&gt;
+&lt;!-- cry because why not --&gt;
+&lt;g id=&quot;node5&quot; class=&quot;node&quot;&gt;
+&lt;title&gt;cry because why not&lt;/title&gt;
+&lt;ellipse fill=&quot;none&quot; stroke=&quot;black&quot; cx=&quot;299.19&quot; cy=&quot;-90&quot; rx=&quot;83.39&quot; ry=&quot;18&quot; /&gt;
+&lt;text text-anchor=&quot;middle&quot; x=&quot;299.19&quot; y=&quot;-86.3&quot; font-family=&quot;Times,serif&quot; font-size=&quot;14.00&quot;&gt;cry because why not&lt;/text&gt;
+&lt;/g&gt;
+&lt;!-- scream because it worked&amp;#45;&amp;gt;cry because why not --&gt;
+&lt;g id=&quot;edge3&quot; class=&quot;edge&quot;&gt;
+&lt;title&gt;scream because it worked&amp;#45;&amp;gt;cry because why not&lt;/title&gt;
+&lt;path fill=&quot;none&quot; stroke=&quot;black&quot; d=&quot;M299.19,-143.7C299.19,-135.98 299.19,-126.71 299.19,-118.11&quot; /&gt;
+&lt;polygon fill=&quot;black&quot; stroke=&quot;black&quot; points=&quot;302.69,-118.1 299.19,-108.1 295.69,-118.1 302.69,-118.1&quot; /&gt;
+&lt;/g&gt;
+&lt;!-- Imagine DRAWING THIS --&gt;
+&lt;g id=&quot;node6&quot; class=&quot;node&quot;&gt;
+&lt;title&gt;Imagine DRAWING THIS&lt;/title&gt;
+&lt;polygon fill=&quot;none&quot; stroke=&quot;black&quot; points=&quot;584.19,-180 420.19,-180 420.19,-144 584.19,-144 584.19,-180&quot; /&gt;
+&lt;text text-anchor=&quot;middle&quot; x=&quot;502.19&quot; y=&quot;-158.3&quot; font-family=&quot;Times,serif&quot; font-size=&quot;14.00&quot;&gt;Imagine DRAWING THIS&lt;/text&gt;
+&lt;/g&gt;
+&lt;!-- Scream even more --&gt;
+&lt;g id=&quot;node7&quot; class=&quot;node&quot;&gt;
+&lt;title&gt;Scream even more&lt;/title&gt;
+&lt;polygon fill=&quot;none&quot; stroke=&quot;black&quot; points=&quot;561.69,-108 442.69,-108 442.69,-72 561.69,-72 561.69,-108&quot; /&gt;
+&lt;text text-anchor=&quot;middle&quot; x=&quot;502.19&quot; y=&quot;-86.3&quot; font-family=&quot;Times,serif&quot; font-size=&quot;14.00&quot;&gt;Scream even more&lt;/text&gt;
+&lt;/g&gt;
+&lt;!-- Imagine DRAWING THIS&amp;#45;&amp;gt;Scream even more --&gt;
+&lt;g id=&quot;edge4&quot; class=&quot;edge&quot;&gt;
+&lt;title&gt;Imagine DRAWING THIS&amp;#45;&amp;gt;Scream even more&lt;/title&gt;
+&lt;path fill=&quot;none&quot; stroke=&quot;black&quot; d=&quot;M502.19,-143.7C502.19,-135.98 502.19,-126.71 502.19,-118.11&quot; /&gt;
+&lt;polygon fill=&quot;black&quot; stroke=&quot;black&quot; points=&quot;505.69,-118.1 502.19,-108.1 498.69,-118.1 505.69,-118.1&quot; /&gt;
+&lt;/g&gt;
+&lt;/g&gt;
+&lt;/svg&gt;
+&lt;/div&gt;</content><author><name>Subhaditya Mukherjee</name></author><summary type="html">Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)</summary></entry><entry><title type="html">Compositional Pattern Producing Networks</title><link href="http://localhost:4000/2020/08/12/Compositional-Pattern-Producing-Networks.html" rel="alternate" type="text/html" title="Compositional Pattern Producing Networks" /><published>2020-08-12T00:26:21+04:00</published><updated>2020-08-12T00:26:21+04:00</updated><id>http://localhost:4000/2020/08/12/Compositional%20Pattern%20Producing%20Networks</id><content type="html" xml:base="http://localhost:4000/2020/08/12/Compositional-Pattern-Producing-Networks.html">&lt;p&gt;Today we will talk about Compositional Pattern Producing Networks.&lt;/p&gt;
 
 &lt;p&gt;Note that Whatever I learnt about this is from &lt;a href=&quot;https://blog.otoro.net/2016/03/25/generating-abstract-patterns-with-tensorflow/&quot;&gt;Link to post&lt;/a&gt; and the original Julia implementation at the model zoo. (Which I am trying to fix).&lt;/p&gt;
 
