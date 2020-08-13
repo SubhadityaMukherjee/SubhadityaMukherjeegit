@@ -115,13 +115,3 @@ And finally.
 - ![im](/img/dif4.png)
 
 Yay! We have successfully modelled an equation using a neural network with barely any data. This is a first step duh. Long way to go before I get anywhere substantial. But baby steps right?
-
-## Unnecessary graph
-{% graphviz %}
-digraph G{
-  "find a new language" -> "It is called dot" -> "draw unnecessary graph"
-  "scream because it worked" -> "cry because why not"
-  node [shape=box] "Imagine DRAWING THIS" -> "Scream even moree"
-}
-
-{% endgraphviz %}
