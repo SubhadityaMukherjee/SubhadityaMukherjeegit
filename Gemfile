@@ -35,3 +35,4 @@ gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 gem "toc", "~> 0.0.4"
 
 gem "jekyll-toc", "~> 0.14.0"
+gem "kramdown", ">= 2.3.0"
