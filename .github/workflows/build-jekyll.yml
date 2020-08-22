@@ -23,6 +23,7 @@ jobs:
         with:
           provider: 'github'
           token: ${{ secrets.GH_TOKEN }}
+          TOKEN: ${{ secrets.GH_TOKEN }}
           jekyll_src: './'
           jekyll_cfg: '_config.yml'
           cname: 'www.subhadityamukherjee.me'
