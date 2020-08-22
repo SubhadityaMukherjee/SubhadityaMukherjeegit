@@ -36,3 +36,4 @@ gem "toc", "~> 0.0.4"
 
 gem "jekyll-toc", "~> 0.14.0"
 gem "kramdown", ">= 2.3.0"
+gem "kramdown-parser-gfm"
