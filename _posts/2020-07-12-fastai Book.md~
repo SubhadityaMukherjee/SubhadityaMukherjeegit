@@ -1,0 +1,23 @@
+---
+layout: post
+title:  fastai Book
+date:   2020-07-12 11:50:52 +0400
+categories: book
+tags:
+---
+
+What I found interesting from the book "Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD"
+by Jeremy Howard  (Author), Sylvain Gugger (Author)
+
+[Link to the book](https://www.amazon.com/Deep-Learning-Coders-fastai-PyTorch/dp/1492045527)
+
+> I will not be adding any codes here as those will be part of the projects/deeper blog posts.
+
+
+
+## General points
+
+- If it isnt an image, you can still make it one if you are creative xD
+- Train a model, then use the trained model to find errors in data. Its faster.
+- Sometimes things are just not solvable using Deep Learning or do not need it
+- NLP : Not that great yet

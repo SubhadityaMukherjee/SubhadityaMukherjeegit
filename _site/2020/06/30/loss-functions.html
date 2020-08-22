@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+    <!-- To automatically render math in text elements, include the auto-render extension: --> 
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Loss Functions | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Loss Functions" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In this post we shall explore as many loss functions as I can find." />
+<meta property="og:description" content="In this post we shall explore as many loss functions as I can find." />
+<link rel="canonical" href="http://localhost:4000/2020/06/30/loss-functions.html" />
+<meta property="og:url" content="http://localhost:4000/2020/06/30/loss-functions.html" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-30T00:01:59+04:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/30/loss-functions.html","dateModified":"2020-06-30T00:01:59+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/30/loss-functions.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"headline":"Loss Functions","description":"In this post we shall explore as many loss functions as I can find.","datePublished":"2020-06-30T00:01:59+04:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h2><a id = "imp" href="http://localhost:4000/">Home page</a></h2>
+        
+        
+        
+        
+        <p>Making a Deep Learning library from scratch and explaining it the whole way + δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> | Source? Refer to<a href="https://github.com/SubhadityaMukherjee/DataLoader.jl"> the repository</a><br>
+          The posts are in the order of newer -> older <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          &#9998;: Post, &#9883; : Deviation, &#128214;: Book notes, &#128640;: Spaceship
+          
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+            
+          </div>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view"><a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile</a></p>
+      </header>
+      
+      <hr>
+      <!-- Html Elements for Search -->
+      
+      <!-- Script pointing to search-script.js -->
+      <script src="js/search-script.js" type="text/javascript"></script>
+      
+      <!-- Configuration -->
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/search.json'
+        })
+        </script>
+<section>
+  <a href = "/deconstructingdl.html">Go to index</a><br><br>
+
+
+<small>30 June 2020</small>
+<h1>Loss Functions</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~22 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#log-softmax">Log softmax</a></li>
+  <li><a href="#bce-logits">BCE Logits</a></li>
+  <li><a href="#margin-ranking">Margin Ranking</a></li>
+  <li><a href="#hubersmooth-l1smooth-mae">Huber/Smooth L1/Smooth MAE</a></li>
+  <li><a href="#negative-log-likelihood">Negative log likelihood</a></li>
+  <li><a href="#bce">BCE</a></li>
+  <li><a href="#categoricalce">CategoricalCE</a></li>
+  <li><a href="#cosine-similarity">Cosine similarity</a></li>
+  <li><a href="#kl-divergence">KL Divergence</a></li>
+  <li><a href="#log-cosh">Log Cosh</a></li>
+  <li><a href="#mae--l1">MAE == L1</a></li>
+  <li><a href="#mape">MAPE</a></li>
+  <li><a href="#msle">MSLE</a></li>
+  <li><a href="#mse">MSE</a></li>
+  <li><a href="#rmse">RMSE</a></li>
+  <li><a href="#poisson">Poisson</a></li>
+  <li><a href="#sparse-ce">Sparse CE</a></li>
+  <li><a href="#squared-hinge">Squared Hinge</a></li>
+  <li><a href="#triplet-margin">Triplet margin</a></li>
+  <li><a href="#hinge">Hinge</a></li>
+  <li><a href="#loss-functions-i-cant-make-sense-of-right-now">Loss functions I can’t make sense of right now</a></li>
+</ul>
+
+<p>In this post we shall explore as many loss functions as I can find.</p>
+
+<p>Loss functions are arguably one of the most important factors in a machine learning model. It gives the model an understanding of how well it did and basically allows it to learn. Simply put, it is the difference between the required result and the produced one. Quite obviously this is different in every place.
+For example in a Generative Adversarial Network (GANs), the loss function is the completely different. In WGAN, it is a distance metric called Wassertein distance.
+In a unet, the loss is the difference between the two images and so on and so forth.</p>
+
+<p>Anyway let us explore everything we can about loss functions. I first made a list of all the loss functions offered by keras. It seems to be pretty comprehensive and I have not heard of many of them so far so lets see.
+Edit : Maybe this isnt a fully comprehensive list. But I will add to it if I find more later. I realized that most of these seem to just be small modifications on previous ones. And some are beyond my understanding right now. But I will come back to them when I get it. (I added a tiny list of those I dont understand yet at the bottom)</p>
+
+<blockquote>
+  <p>Since I am arbitrarily hooking together loss functions from every library I can find, if you feel something is wrong do let me know :)
+Also note that the examples used are not necessarily the ones that will be used while training and are random values used to test if the code is working</p>
+</blockquote>
+
+<h2 id="log-softmax">Log softmax</h2>
+
+<script type="math/tex; mode=display">\log\left( \frac{e^{ŷ}}{\mathrm{sum}\left( e^{ŷ} \right)} \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span><span class="o">/</span><span class="n">sum</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)))</span>
+</code></pre></div></div>
+
+<h2 id="bce-logits">BCE Logits</h2>
+
+<script type="math/tex; mode=display">\left(  - \mathrm{sum}\left( y \cdot \mathrm{logsoftmax}\left( ŷ \right) \cdot weight \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bcelogits</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">weight</span><span class="x">)</span>  <span class="o">=-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span> <span class="o">.*</span> <span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">.*</span> <span class="n">weight</span><span class="x">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">//</span> <span class="n">size</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="margin-ranking">Margin Ranking</h2>
+
+<ul>
+  <li>Creates a criterion that measures the loss given inputs x1x1x1 , x2x2x2 , two 1D mini-batch Tensors, and a label 1D mini-batch tensor yyy (containing 1 or -1).</li>
+  <li>If y=1y = 1y=1 then it assumed the first input should be ranked higher (have a larger value) than the second input, and vice-versa for y=−1y = -1y=−1 .</li>
+  <li>take avg</li>
+</ul>
+
+<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \mathrm{max}\left( 0, \left(  - y \right) \cdot x1 - x2 + margin \right) \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">marginranking</span><span class="x">(</span><span class="n">x1</span><span class="x">,</span><span class="n">x2</span><span class="x">,</span><span class="n">y</span><span class="x">,</span><span class="n">margin</span><span class="o">=</span><span class="mf">0.0</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="o">-</span><span class="n">y</span><span class="o">.*</span><span class="x">(</span><span class="n">x1</span><span class="o">.-</span><span class="n">x2</span><span class="x">)</span><span class="o">.+</span><span class="n">margin</span><span class="x">))</span>
+</code></pre></div></div>
+
+<h2 id="hubersmooth-l1smooth-mae">Huber/Smooth L1/Smooth MAE</h2>
+
+<ul>
+  <li>It is less sensitive to outliers than the MSELoss and in some cases prevents exploding gradients</li>
+  <li>Fast RCNN</li>
+</ul>
+
+<p>if <script type="math/tex">\left( \left\|y - ŷ\right\| \lt 1.0 \right) >1</script></p>
+
+<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( 0.5 \cdot \left( y - ŷ \right)^{2} \right)</script>
+
+<p>else</p>
+
+<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|y - ŷ\right\| - 0.5 \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> huber</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> 
+    
+    <span class="k">if</span> <span class="n">count</span><span class="x">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">==</span><span class="mi">0</span><span class="x">,</span> <span class="n">all</span><span class="o">.</span><span class="x">(</span><span class="n">abs</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="o">.-</span><span class="n">ŷ</span><span class="x">)</span><span class="o">.&lt;</span><span class="mf">1.0</span><span class="x">))</span><span class="o">&gt;=</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">.*</span><span class="n">sum</span><span class="x">(</span><span class="mf">0.5</span> <span class="o">.*</span><span class="x">(</span><span class="n">y</span> <span class="o">.-</span> <span class="n">ŷ</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+    <span class="k">else</span>
+        <span class="k">return</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">.*</span><span class="n">sum</span><span class="x">(</span><span class="n">abs</span><span class="o">.</span><span class="x">(</span><span class="n">y</span> <span class="o">.-</span> <span class="n">ŷ</span><span class="x">)</span><span class="o">.-</span><span class="mf">0.5</span><span class="x">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="negative-log-likelihood">Negative log likelihood</h2>
+
+<ul>
+  <li>Classification,  Smaller quicker training, Simple tasks.</li>
+</ul>
+
+<script type="math/tex; mode=display">- \mathrm{sum}\left( \log\left( y \right) \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nll</span><span class="x">(</span><span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="x">))</span>
+<span class="n">nll</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="x">))</span>
+</code></pre></div></div>
+
+<h2 id="bce">BCE</h2>
+
+<ul>
+  <li>classification 2 cat</li>
+</ul>
+
+<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( y \cdot \log\left( ŷ \right) + \log\left( 1 - y \right) \cdot \log\left( 1 - ŷ \right) \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bce</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span><span class="o">.+</span><span class="x">(</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">y</span><span class="x">)</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">ŷ</span><span class="x">)))</span>
+</code></pre></div></div>
+
+<h2 id="categoricalce">CategoricalCE</h2>
+
+<ul>
+  <li>classification n cat</li>
+</ul>
+
+<script type="math/tex; mode=display">- \mathrm{sum}\left( y \cdot \log\left( ŷ \right) \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cce</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
+</code></pre></div></div>
+
+<h2 id="cosine-similarity">Cosine similarity</h2>
+
+<p>L2 norm is <script type="math/tex">\sqrt{\mathrm{sum}\left( \left( \left\|x\right\| \right)^{2} \right)}</script></p>
+
+<p>Cosine similarity is <script type="math/tex">- \mathrm{sum}\left( \mathrm{l2norm}\left( y \right) \cdot \mathrm{l2norm}\left( ŷ \right) \right)</script></p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">l2_norm</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">sqrt</span><span class="o">.</span><span class="x">(</span><span class="n">sum</span><span class="x">((</span><span class="n">abs</span><span class="o">.</span><span class="x">(</span><span class="n">x</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span><span class="x">)))</span>
+<span class="k">function</span><span class="nf"> cosinesimilarity</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">l2_norm</span><span class="x">(</span><span class="n">y</span><span class="x">)</span><span class="o">.*</span><span class="n">l2_norm</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="kl-divergence">KL Divergence</h2>
+<ul>
+  <li>Classification</li>
+  <li>Same can be achieved with cross entropy with lesser computation, so avoid it.</li>
+</ul>
+
+<p>We first define xlogx for a weird edge case <script type="math/tex">x \cdot \log\left( x \right)</script></p>
+
+<p>Then entropy <script type="math/tex">\mathrm{sum}\left( \mathrm{xlogx}\left( y \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)</script></p>
+
+<p>Then cce as defined before <script type="math/tex">- \mathrm{sum}\left( y \cdot \log\left( ŷ \right) \right)</script></p>
+
+<p>Finally KLD <script type="math/tex">entropy + crossentropyloss</script></p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> xlogx</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">log</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+  <span class="n">ifelse</span><span class="x">(</span><span class="n">iszero</span><span class="x">(</span><span class="n">x</span><span class="x">),</span> <span class="n">zero</span><span class="x">(</span><span class="n">result</span><span class="x">),</span> <span class="n">result</span><span class="x">)</span>
+<span class="k">end</span>
+
+<span class="k">function</span><span class="nf"> kldivergence</span><span class="x">(</span> <span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span>
+  <span class="n">entropy</span> <span class="o">=</span> <span class="n">sum</span><span class="x">(</span><span class="n">xlogx</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="x">))</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">//</span><span class="n">size</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="mi">2</span><span class="x">)</span>
+  <span class="n">cross_entropy</span> <span class="o">=</span> <span class="n">cce</span><span class="x">(</span><span class="n">ŷ</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span>
+  <span class="k">return</span> <span class="n">entropy</span> <span class="o">+</span> <span class="n">cross_entropy</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="log-cosh">Log Cosh</h2>
+<ul>
+  <li>works like the MSE, but is smoothed towards large errors (presumably caused by outliers) so that the final error score isn’t impacted thoroughly.</li>
+</ul>
+
+<p>We first define the softplus function <script type="math/tex">\log\left( e^{x} + 1 \right)</script></p>
+
+<p>Then , <script type="math/tex">x = ŷ - y</script></p>
+
+<p>logcosh = <script type="math/tex">\mathrm{mean}\left( x + \mathrm{softplus}\left( -2 \cdot x \right) - \log\left( 2.0 \right) \right)</script></p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">softplus</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">x</span><span class="x">)</span><span class="o">.+</span><span class="mi">1</span><span class="x">)</span>
+<span class="k">function</span><span class="nf"> logcosh</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">ŷ</span> <span class="o">-</span> <span class="n">y</span>
+    <span class="k">return</span> <span class="n">mean</span><span class="x">(</span><span class="n">x</span><span class="o">.+</span><span class="n">softplus</span><span class="x">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">.*</span><span class="n">x</span><span class="x">)</span> <span class="o">.-</span> <span class="n">log</span><span class="x">(</span><span class="mf">2.</span><span class="x">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="mae--l1">MAE == L1</h2>
+
+<ul>
+  <li>Mean absolute error</li>
+  <li>Use Mean absolute error when you are doing regression and don’t want outliers to play a big role. It can also be useful if you know that your distribution is multimodal, and it’s desirable to have predictions at one of the modes, rather than at the mean of them.</li>
+  <li>Denoising, reconstruction</li>
+</ul>
+
+<p>There are two ways of doing this, mean and sum.
+For mean,</p>
+
+<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|y - ŷ\right\| \right)</script>
+
+<p>For sum,</p>
+
+<script type="math/tex; mode=display">\mathrm{sum}\left( \left\|y - ŷ\right\| \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> mae</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">reduction</span><span class="o">=</span> <span class="s">"mean"</span><span class="x">)</span> 
+    <span class="k">if</span> <span class="n">reduction</span><span class="o">==</span><span class="s">"mean"</span>
+        <span class="k">return</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">abs</span><span class="o">.</span><span class="x">(</span><span class="n">y</span> <span class="o">.-</span> <span class="n">ŷ</span><span class="x">))</span>
+    <span class="k">elseif</span> <span class="n">reduction</span><span class="o">==</span><span class="s">"sum"</span>
+        <span class="k">return</span> <span class="n">sum</span><span class="x">(</span><span class="n">abs</span><span class="o">.</span><span class="x">(</span><span class="n">y</span> <span class="o">.-</span> <span class="n">ŷ</span><span class="x">))</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="mape">MAPE</h2>
+
+<ul>
+  <li>mean absolute % error</li>
+</ul>
+
+<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|\frac{y - ŷ}{y}\right\| \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mape</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span> <span class="n">abs</span><span class="o">.</span><span class="x">((</span><span class="n">y</span><span class="o">-</span><span class="n">ŷ</span><span class="x">)</span><span class="o">/</span><span class="n">y</span><span class="x">))</span>
+</code></pre></div></div>
+
+<h2 id="msle">MSLE</h2>
+
+<ul>
+  <li>Mean squared log error</li>
+  <li>Use MSLE when doing regression, believing that your target, conditioned on the input, is normally distributed, and you don’t want large errors to be significantly more penalized than small ones, in those cases where the range of the target value is large.</li>
+</ul>
+
+<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( \log\left( y + 1 \right) - \log\left( ŷ + 1 \right) \right)^{2} \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">msle</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">((</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="o">.+</span><span class="mi">1</span><span class="x">)</span><span class="o">.-</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.+</span><span class="mi">1</span><span class="x">))</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="mse">MSE</h2>
+
+<ul>
+  <li>Regression</li>
+  <li>Two types again with mean and no mean</li>
+  <li>
+    <p>Mean <script type="math/tex">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)</script></p>
+  </li>
+  <li>Sum <script type="math/tex">\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)</script></li>
+</ul>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> mse</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">reduction</span><span class="o">=</span> <span class="s">"mean"</span><span class="x">)</span> 
+    <span class="k">if</span> <span class="n">reduction</span><span class="o">==</span><span class="s">"mean"</span>
+        <span class="k">return</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">((</span><span class="n">y</span> <span class="o">.-</span> <span class="n">ŷ</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span> <span class="x">)</span>
+    <span class="k">elseif</span> <span class="n">reduction</span><span class="o">==</span><span class="s">"sum"</span>
+        <span class="k">return</span> <span class="n">sum</span><span class="x">((</span><span class="n">y</span> <span class="o">.-</span> <span class="n">ŷ</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span> <span class="x">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="rmse">RMSE</h2>
+
+<ul>
+  <li>Root mean squared</li>
+  <li>Regression</li>
+  <li>Two types again with mean and no mean</li>
+  <li>
+    <p>Mean <script type="math/tex">\sqrt{\frac{1}{2} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}</script></p>
+  </li>
+  <li>Sum <script type="math/tex">\sqrt{\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}</script></li>
+</ul>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bcelogits</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">weight</span><span class="x">)</span>  <span class="o">=-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span> <span class="o">.*</span> <span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">.*</span> <span class="n">weight</span><span class="x">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">//</span> <span class="n">size</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="poisson">Poisson</h2>
+
+<ul>
+  <li>When data is from poisson distr</li>
+</ul>
+
+<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( ŷ - \log\left( ŷ \right) \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">poisson</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.-</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
+</code></pre></div></div>
+
+<h2 id="sparse-ce">Sparse CE</h2>
+
+<ul>
+  <li>For sparse matrices</li>
+  <li>Categorical crossentropy</li>
+</ul>
+
+<script type="math/tex; mode=display">- \mathrm{sum}\left( ŷ \cdot \log\left( ŷ \right) \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sparsece</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
+</code></pre></div></div>
+
+<h2 id="squared-hinge">Squared Hinge</h2>
+
+<ul>
+  <li>problems involving yes/no (binary) decisions and when you’re not interested in knowing how certain the classifier is about the classification</li>
+  <li>tanh for last layer</li>
+  <li>maximum margin</li>
+</ul>
+
+<script type="math/tex; mode=display">\mathrm{sum}\left( \left( \mathrm{max}\left( 0, 1 - y \cdot ŷ \right) \right)^{2} \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">squaredhinge</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="n">sum</span><span class="x">(</span><span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span><span class="mi">1</span> <span class="o">.-</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">ŷ</span><span class="x">))</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="triplet-margin">Triplet margin</h2>
+
+<ul>
+  <li>Requires tuples of anchor, positive, negative</li>
+  <li>alpha is the distance between positive and negative sample, arbitrarily set to 0.3</li>
+</ul>
+
+<p>We first find the positive distance <script type="math/tex">pos{distance} = \left( anchor - positive \right)^{2} -1</script></p>
+
+<p>Then the negative distance <script type="math/tex">neg{distance} = \left( anchor - negative \right)^{2} -1</script></p>
+
+<p>Then the temporary loss <script type="math/tex">posdistance - negdistance + \alpha</script></p>
+
+<p>And the final loss <script type="math/tex">\mathrm{sum}\left( \mathrm{max}\left( loss_{1}, 0.0 \right) \right)</script></p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> tripletloss</span><span class="x">(</span><span class="n">anchor</span> <span class="x">,</span> <span class="n">positive</span><span class="x">,</span> <span class="n">negative</span><span class="x">,</span> <span class="n">α</span> <span class="o">=</span> <span class="mf">0.3</span><span class="x">)</span>
+    <span class="n">pos_distance</span> <span class="o">=</span> <span class="x">(</span><span class="n">anchor</span><span class="o">.-</span><span class="n">positive</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span> <span class="o">.+</span> <span class="x">(</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span>
+    <span class="n">neg_distance</span> <span class="o">=</span>  <span class="x">(</span><span class="n">anchor</span><span class="o">.-</span><span class="n">negative</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span> <span class="o">.+</span> <span class="x">(</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span>
+    <span class="n">loss_1</span> <span class="o">=</span> <span class="x">(</span><span class="n">pos_distance</span><span class="o">.-</span><span class="n">neg_distance</span><span class="x">)</span><span class="o">.+</span><span class="n">α</span>
+    <span class="k">return</span> <span class="n">sum</span><span class="x">(</span><span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="n">loss_1</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="hinge">Hinge</h2>
+
+<ul>
+  <li>Classification</li>
+  <li>SVMs</li>
+  <li>the w are weights of the model (wow)</li>
+</ul>
+
+<script type="math/tex; mode=display">\mathrm{max}\left( 0, 1 + \mathrm{max}\left( w_{y} \cdot x - w_{t} \cdot x \right) \right)</script>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hinge</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">w_y</span><span class="x">,</span><span class="n">w_t</span><span class="x">)</span> <span class="o">=</span> <span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span><span class="mi">1</span> <span class="o">.+</span> <span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="n">w_y</span><span class="o">.*</span><span class="n">x</span> <span class="o">.-</span> <span class="n">w_t</span><span class="o">.*</span><span class="n">x</span><span class="x">))</span>
+</code></pre></div></div>
+
+<h2 id="loss-functions-i-cant-make-sense-of-right-now">Loss functions I can’t make sense of right now</h2>
+
+<ul>
+  <li>Honestly I feel like most of these are from NLP, which is why they dont make sense to me. I am yet to do NLP properly. But that’s good because it means I can get back to them as and when I do them.</li>
+  <li>Multi label margin</li>
+  <li>CTC</li>
+  <li>Categorical hinge</li>
+  <li>Soft margin</li>
+  <li>Multi label soft margin</li>
+</ul>
+
+
+<section>
+<!-- <ul> -->
+Related posts:&emsp;
+
+<!-- <li> -->
+  <a href=/2020/08/13/Differentiable-Programming.html> Differentiable Programming&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/2020/08/12/Compositional-Pattern-Producing-Networks.html> Compositional Pattern Producing Networks&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/2020/08/11/VGG.html> VGG&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/2020/07/29/Optimizers.html> Optimizers&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/2020/07/25/VAE.html> VAE&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/2020/07/25/convFlux.html> Simple conv with Flux&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/2020/07/24/rnnFromScratch.html> RNN from scratch&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/2020/07/24/backprop.html> Backprop&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/article/2020/07/21/Low-Poly.html> Low Poly&emsp; </a>
+  <!-- </li> -->
+
+<!-- <li> -->
+  <a href=/2020/07/18/Universal-Approximation-theorem.html> Universal Approximation theorem&emsp; </a>
+  <!-- </li> -->
+
+
+</section>
+<!-- </ul> -->
+
+
+
+
+      <footer>
+        
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    
+  </body>
+</html>

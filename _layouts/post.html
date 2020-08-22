@@ -1,12 +1,35 @@
 ---
 layout: default
 ---
+<a href = "/deconstructingdl.html">Go to index</a><br><br>
+
 
 <small>{{ page.date | date: "%-d %B %Y" }}</small>
 <h1>{{ page.title }}</h1>
 
+<span class="reading-time" title="Estimated read time">
+  {% assign words = content | number_of_words %}
+  {% if words < 360 %}
+    <h3>Reading time : ~1 min</h3>
+  {% else %}
+    <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3>
+  {% endif %}
+</span>
+
+
 <p class="view">by {{ page.author | default: site.author }}</p>
-{{content}}
-{% if page.tags %}
-  <small>tags: <em>{{ page.tags | join: "</em> - <em>" }}</em></small>
-{% endif %}
+{% include toc.html html=content %}
+{{ content }}
+
+<section>
+<!-- <ul> -->
+Related posts:&emsp;
+{% for p in site.related_posts %}
+<!-- <li> -->
+  <a href={{ p.url }}> {{ p.title }}&emsp; </a>
+  <!-- </li> -->
+{% endfor %}
+
+</section>
+<!-- </ul> -->
+

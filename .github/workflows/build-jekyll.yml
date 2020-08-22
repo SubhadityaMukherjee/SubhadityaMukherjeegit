@@ -20,6 +20,7 @@ jobs:
             ${{ runner.os }}-gems-
 
       - uses: jeffreytse/jekyll-deploy-action@v0.1.0
-        with:
-          provider: 'github'
-          token: ${{ secrets.GH_TOKEN }}
+      - uses: helaili/jekyll-action@2.0.3
+        env:
+          JEKYLL_PAT: ${{ secrets.JEKYLL_PAT }}
+          GITHUB_REPOSITORY: gh-pages
