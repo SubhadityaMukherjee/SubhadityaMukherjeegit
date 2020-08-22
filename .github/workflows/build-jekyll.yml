@@ -23,4 +23,4 @@ jobs:
         env:
           JEKYLL_PAT: ${{ secrets.JEKYLL_PAT }}
           GITHUB_REPOSITORY: gh-pages
-          token: ${{ secrets.GH_TOKEN }}
+          TOKEN: ${{ secrets.GH_TOKEN }}
