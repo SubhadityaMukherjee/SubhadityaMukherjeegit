@@ -7,12 +7,14 @@
 
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
 </script>
+    <!-- To automatically render math in text elements, include the auto-render extension: --> 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Posts in order | Deconstructing Deep learning</title>
+<title>Deconstructing Deep learning | Making a Deep Learning library from scratch in Julia and documenting it the whole way!</title>
 <meta name="generator" content="Jekyll v3.8.7" />
-<meta property="og:title" content="Posts in order" />
+<meta property="og:title" content="Deconstructing Deep learning" />
 <meta name="author" content="Subhaditya Mukherjee" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Making a Deep Learning library from scratch in Julia and documenting it the whole way!" />
@@ -21,10 +23,10 @@
 <meta property="og:url" content="http://localhost:4000/deconstructingdl.html" />
 <meta property="og:site_name" content="Deconstructing Deep learning" />
 <script type="application/ld+json">
-{"@type":"WebPage","url":"http://localhost:4000/deconstructingdl.html","headline":"Posts in order","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"Making a Deep Learning library from scratch in Julia and documenting it the whole way!","@context":"https://schema.org"}</script>
+{"@type":"WebPage","url":"http://localhost:4000/deconstructingdl.html","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"headline":"Deconstructing Deep learning","description":"Making a Deep Learning library from scratch in Julia and documenting it the whole way!","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=117bbd18d9da326aae529b7eb6eb764c697e6249">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
@@ -32,153 +34,602 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1><a href="https://subhadityamukherjee.github.io/deconstructingdl.html">Home</a></h1>
-	<h1><a href="https://subhadityamukherjee.github.io/">About me</a></h1>
-	<h1><a href = "mailto: msubhaditya@gmail.com">Drop me an email</a></h1>
-
-        <p>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</p>
-
+        <h2><a id = "imp" href="http://localhost:4000/">Home page</a></h2>
         
-        <p class="view"><a href="https://github.com/SubhadityaMukherjee/DataLoader.jl">View the Project on GitHub <small>github.com/SubhadityaMukherjee/DataLoader.jl</small></a></p>
         
-
         
-
         
+        <p>Making a Deep Learning library from scratch and explaining it the whole way + δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> | Source? Refer to<a href="https://github.com/SubhadityaMukherjee/DataLoader.jl"> the repository</a><br>
+          The posts are in the order of newer -> older <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          &#9998;: Post, &#9883; : Deviation, &#128214;: Book notes, &#128640;: Spaceship
+          
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+            
+          </div>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view"><a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile</a></p>
       </header>
-      <section>
+      
+      <hr>
       <!-- Html Elements for Search -->
-<div id="search-container">
-Search for something in the blog <input type="text" id="search-input" placeholder="search...">
-<ul id="results-container"></ul>
-</div>
+      
+      <!-- Script pointing to search-script.js -->
+      <script src="js/search-script.js" type="text/javascript"></script>
+      
+      <!-- Configuration -->
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/search.json'
+        })
+        </script>
+<section>
+  <ul>
+<h2> Articles  </h2>
+<!-- Differentiable Programming -->
 
-<!-- Script pointing to search-script.js -->
-<script src="js/search-script.js" type="text/javascript"></script>
-
-<!-- Configuration -->
-<script>
-SimpleJekyllSearch({
-  searchInput: document.getElementById('search-input'),
-  resultsContainer: document.getElementById('results-container'),
-  json: '/search.json'
-})
-</script>
-
-      <h1 id="posts-in-order">Posts in order</h1>
-<ul>
-  <li>RSS feed link : <a href="https://subhadityamukherjee.github.io/feed.xml">Click</a></li>
-  <li>For anything you want to see the notebooks of. Please refer to the repository. Everything will be there. Link on the left.</li>
-  <li>The posts are in the order of newer -&gt; older</li>
-  <li>Format : 
-Date | Title<br />
-TL; DR</li>
-</ul>
-<ul>
   
-    <li>
-      <h2><a href="/2020/06/30/latex-from-code.html">30 June 2020 - latex from code</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/08/13/Differentiable-Programming.html">&#9998; 13 Aug 20 : Differentiable programming</a></h3>
+	<p>Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/08/12/Compositional-Pattern-Producing-Networks.html">&#9998; 12 Aug 20 : Compositional pattern producing networks</a></h3>
+	<p>Today we will talk about Compositional Pattern Producing Networks.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/08/11/VGG.html">&#9998; 11 Aug 20 : Vgg</a></h3>
+	<p>Here we will talk about VGG networks and how to implement VGG16 and VGG19.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/29/Optimizers.html">&#9998; 29 Jul 20 : Optimizers</a></h3>
+	<p>Finally let us look at optimizers. Once that is done, we will be able to use Flux ML for a lot of things directly.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/25/VAE.html">&#9998; 25 Jul 20 : Vae</a></h3>
+	<p>A simple Variational Auto Encoder using just what we made so far!!</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/25/convFlux.html">&#9998; 25 Jul 20 : Simple conv with flux</a></h3>
+	<p>Using the library functions which we defined till now to run a simple Neural Network.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/24/rnnFromScratch.html">&#9998; 24 Jul 20 : Rnn from scratch</a></h3>
+	<p>(WIP Skip for now) NLP time!! Here we will look at an RNN from scratch.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/24/backprop.html">&#9998; 24 Jul 20 : Backprop</a></h3>
+	<p>Looking at backpropagation from scratch because somehow I have not done that yet.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/article/2020/07/21/Low-Poly.html">&#9883; 21 Jul 20 : Low poly</a></h3>
+	<p>Convert a video to low poly :) (See images below if you dont know what that is)</p>
+
+
+	
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/18/Universal-Approximation-theorem.html">&#9998; 18 Jul 20 : Universal approximation theorem</a></h3>
+	<p>What makes Neural Networks tick mathematically.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/17/preprocessing.html">&#9998; 17 Jul 20 : Image preprocessing</a></h3>
+	<p>We look at some image processing techniques and try to implement them from scratch.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/book/2020/07/12/fastai-Book.html">&#128214; 12 Jul 20 : Fastai book</a></h3>
+	<p>What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD”
+by Jeremy Howard  (Author), Sylvain Gugger (Author)</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/11/pooling.html">&#9998; 11 Jul 20 : Pooling layers</a></h3>
+	<p>Here we will look at the pooling operation and its types.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/10/evenFasterConv.html">&#9998; 10 Jul 20 : My life is a lie + even faster conv</a></h3>
+	<p>Why CNNs are Correlation Neural Networks and an even faster Convolution operation.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/article/2020/07/09/mandelbrot.html">&#9883; 9 Jul 20 : Mandelbrot set</a></h3>
+	<p>Have you heard of fractal patterns? Here we will try to make some :) (look at the pictures at the end)</p>
+
+
+	
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/article/2020/07/07/Action-Recognition-part-2.html">&#9883; 7 Jul 20 : Action recognition part 2</a></h3>
+	<p>Continuing the action recognition project.</p>
+
+
+	
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/space/2020/07/07/adopt.html">&#128640; 7 Jul 20 : Adopt dont shop</a></h3>
+	<p>I want to talk about adopting animals.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/article/2020/07/06/Video-Classification.html">&#9883; 6 Jul 20 : Action recognition part 1</a></h3>
+	<p>I try to reimplement Video recognition from <a href="https://github.com/jfzhang95/pytorch-video-recognition">Link</a> and explain the code as I go along.</p>
+
+
+	
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/article/2020/07/06/Endangered-Species.html">&#9883; 6 Jul 20 : Endangered species</a></h3>
+	<p>Here we will talk about spreading awareness about endangered species through AI powered art.</p>
+
+
+	
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/04/padding.html">&#9998; 4 Jul 20 : Padding</a></h3>
+	<p>To implement a faster conv we need padding, so here we will try to explore what that means and try to implement it.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/03/fasterConv.html">&#9998; 3 Jul 20 : Faster and more general conv</a></h3>
+	<p>Here we will look at the various ways of implementing convolutions and benchmark them.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/02/kernels.html">&#9998; 2 Jul 20 : Image kernels</a></h3>
+	<p>Image kernels are fun as filters, so let us just look at a few of them and maybe try something else?</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/07/02/convolution.html">&#9998; 2 Jul 20 : Basic convolution</a></h3>
+	<p>Here we will talk about convolution and how to implement it from scratch.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/article/2020/07/01/time.html">&#9883; 1 Jul 20 : Imposter syndrome in the research community</a></h3>
+	<p>How to deal with imposter syndrome and what causes it.</p>
+
+
+	
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/30/latex-from-code.html">&#9998; 30 Jun 20 : Latex from code</a></h3>
 	<p>I want to talk about how to get these beautiful looking latex equations without any effort at all.</p>
 
 
+	
+
+
     </li>
   
-    <li>
-      <h2><a href="/2020/06/30/loss-functions.html">30 June 2020 - Loss Functions</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/30/loss-functions.html">&#9998; 30 Jun 20 : Loss functions</a></h3>
 	<p>In this post we shall explore as many loss functions as I can find.</p>
 
 
+	
+
+
     </li>
   
-    <li>
-      <h2><a href="/2020/06/27/Implementing-Papers.html">27 June 2020 - Implementing Papers</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/27/Implementing-Papers.html">&#9998; 27 Jun 20 : Implementing papers</a></h3>
 	<p>Notes for papers I read?</p>
 
 
-    </li>
-  
-    <li>
-      <h2><a href="/2020/06/27/100PageMlbook.html">27 June 2020 - Book notes -&gt; 100PageMlblook</a></h2>
-	<p>I decided to add notes to this blog too. All such notes will be tagged with “book” for easier search.
-This one is my notes while reading “Andriy Burkov : The Hundred-Page Machine Learning Book”. <a href="http://themlbook.com/">Amazon</a>. Do support the author if you can.</p>
+	
 
 
     </li>
   
-    <li>
-      <h2><a href="/2020/06/24/SGD.html">24 June 2020 - SGD</a></h2>
+
+
+    <li id="bul">
+  
+	
+	    <h3><a href="/book/2020/06/27/100PageMlbook.html">&#128214; 27 Jun 20 : 100pagemlblook</a></h3>
+	<p>Notes from 100 Page ML Book</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/24/SGD.html">&#9998; 24 Jun 20 : Sgd</a></h3>
 	<p>In this post we will try to implement SGD and read a bit about what it is.</p>
 
 
-    </li>
-  
-    <li>
-      <h2><a href="/2020/06/23/batching.html">23 June 2020 - Batching</a></h2>
-	<p>Implementing batching for large data. Onehot and data batching. This is a precursor to everything from optimizers to the actual training loop itself.</p>
+	
 
 
     </li>
   
-    <li>
-      <h2><a href="/2020/06/21/initialization.html">21 June 2020 - Initialization</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/23/batching.html">&#9998; 23 Jun 20 : Batching</a></h3>
+	<p>Implementing batching for large data.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/21/initialization.html">&#9998; 21 Jun 20 : Initialization</a></h3>
 	<p>We explore the different initialization techniques that we have and look at papers to see which does better.</p>
 
 
+	
+
+
     </li>
   
-    <li>
-      <h2><a href="/2020/06/20/layers.html">20 June 2020 - Linear Model</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/20/layers.html">&#9998; 20 Jun 20 : Linear model</a></h3>
 	<p>Let us start the fun with a simple model which will be extended to fit complex needs.</p>
 
 
-    </li>
-  
-    <li>
-      <h2><a href="/2020/06/20/activationFunctions.html">20 June 2020 - Activation functions</a></h2>
-	<p>Activation functions are an extremely important part of any neural network. But they are actually much simpler than we make them out to be. Here are some of them.
-Lets define a test matrix.</p>
+	
 
 
     </li>
   
-    <li>
-      <h2><a href="/2020/06/19/Vision.html">19 June 2020 - Vision</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/20/activationFunctions.html">&#9998; 20 Jun 20 : Activation functions</a></h3>
+	<p>Implementing activation functions.</p>
+
+
+	
+
+
+    </li>
+  
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/19/Vision.html">&#9998; 19 Jun 20 : Vision</a></h3>
 	<p>A roadmap of modules I want to implement. Mostly as a todo list and a help if anyone decides they want to pitch in. (LOL)</p>
 
 
+	
+
+
     </li>
   
-    <li>
-      <h2><a href="/2020/06/19/notebook2script.html">19 June 2020 - notebook2script</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/19/notebook2script.html">&#9998; 19 Jun 20 : Notebook2script</a></h3>
 	<p>I want to convert my work as a script. Selectively.</p>
 
 
+	
+
+
     </li>
   
-    <li>
-      <h2><a href="/2020/06/19/trainTest.html">19 June 2020 - Oversample and Split</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/19/trainTest.html">&#9998; 19 Jun 20 : Oversample and split</a></h3>
 	<p>Defining a function to split the dataset into train/test bits and oversample it as well.</p>
 
 
+	
+
+
     </li>
   
-    <li>
-      <h2><a href="/2020/06/19/dataloader.html">19 June 2020 - Dataloader</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/19/dataloader.html">&#9998; 19 Jun 20 : Dataloader</a></h3>
 	<p>The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.</p>
 
 
+	
+
+
     </li>
   
-    <li>
-      <h2><a href="/2020/06/19/Initial-Steps.html">19 June 2020 - Initial Steps</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/19/Initial-Steps.html">&#9998; 19 Jun 20 : Initial steps</a></h3>
 	<p>What I started with and how I set up this blog</p>
 
 
+	
+
+
     </li>
   
-    <li>
-      <h2><a href="/2020/06/19/Defining-the-problem.html">19 June 2020 - Defining the project and outlining what is to come in the future</a></h2>
+
+
+    <li id="bul">
+  
+	
+	<h3><a href="/2020/06/19/Defining-the-problem.html">&#9998; 19 Jun 20 : Defining the project and outlining what is to come in the future</a></h3>
 	<p>An introduction to what I want to do and why.</p>
+
+
+	
 
 
     </li>
@@ -186,11 +637,10 @@ Lets define a test matrix.</p>
 </ul>
 
 
-      </section>
+
+
       <footer>
-       
-        <p>This project is maintained by <a href="https://github.com/SubhadityaMukherjee">SubhadityaMukherjee</a></p>
-   
+        
       </footer>
     </div>
     <script src="/assets/js/scale.fix.js"></script>

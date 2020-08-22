@@ -1,18 +1,35 @@
 ---
 layout: default
+categories: post
 ---
-# Posts in order
-- RSS feed link : [Click](https://subhadityamukherjee.github.io/feed.xml)
-- For anything you want to see the notebooks of. Please refer to the repository. Everything will be there. Link on the left. 
-- The posts are in the order of newer -> older 
-- Format : 
-Date | Title<br>
-TL; DR
-<ul>
+
+<ul >
+<h2> Articles  </h2>
+<!-- {{ site.posts.first.title }} -->
+
   {% for post in site.posts %}
-    <li>
-      <h2><a href="{{ post.url }}">{{post.date | date: "%-d %B %Y" }} - {{ post.title }}</a></h2>
+
+
+    <li id ="bul">
+  
+	{% if post.categories[0] == "book" %}
+	    <h3><a href="{{ post.url }}">&#128214; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
 	{{ post.excerpt }}
+	{% elsif post.categories[0] == "article" %}
+	    <h3><a href="{{ post.url }}">&#9883; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
+	{{ post.excerpt }}
+	
+	{% elsif post.categories[0] == "space" %}
+	    <h3><a href="{{ post.url }}">&#128640; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
+	{{ post.excerpt }}
+	{% else %}
+	<h3><a href="{{ post.url }}">&#9998; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
+	{{ post.excerpt }}
+	{% endif %}
+
+
     </li>
   {% endfor %}
 </ul>
+
+

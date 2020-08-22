@@ -9,6 +9,17 @@ body {
   font-weight:400;
 }
 
+input[id = "search-input"]{
+  margin-left: 1em;
+  border-radius: 5px;
+  // border: 2px;
+  // border: thin;
+  
+}
+li[id = "bul"]{
+  list-style:none;
+}
+
 h1, h2, h3, h4, h5, h6 {
   color:#222;
   margin:0 0 20px;
@@ -34,8 +45,12 @@ h3, h4, h5, h6 {
   color:#494949;
 }
 
+a[id="imp"]{
+  color: #C43B4A;
+}
+
 a {
-  color:#267CB9;
+  color:#4BAFB4;
   text-decoration:none;
 }
 
@@ -122,6 +137,7 @@ ul.downloads {
 }
 
 .downloads li {
+  
   width:89px;
   float:left;
   border-right:1px solid #e0e0e0;
