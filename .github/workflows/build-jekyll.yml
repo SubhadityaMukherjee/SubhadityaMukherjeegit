@@ -20,7 +20,9 @@ jobs:
             ${{ runner.os }}-gems-
 
       - uses: jeffreytse/jekyll-deploy-action@v0.1.1
-        env:
-          JEKYLL_PAT: ${{ secrets.JEKYLL_PAT }}
-          GITHUB_REPOSITORY: gh-pages
-          TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          provider: 'github'
+          token: ${{ secrets.GH_TOKEN }}
+          jekyll_src: './'
+          jekyll_cfg: '_config.yml'
+          cname: 'www.subhadityamukherjee.me'
