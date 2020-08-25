@@ -2,7 +2,7 @@
 layout: post
 title:  Differentiable Programming
 date:   2020-08-13 01:07:58 +0400
-tags:
+tags: deep learning dead physics math simulation gap ode
 ---
 
 Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)

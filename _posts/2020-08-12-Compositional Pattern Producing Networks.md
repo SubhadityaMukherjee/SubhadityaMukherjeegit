@@ -2,7 +2,7 @@
 layout: post
 title:  Compositional Pattern Producing Networks
 date:   2020-08-12 00:26:21 +0400
-tags:
+tags: cppn generative color abstract art
 ---
 
 Today we will talk about Compositional Pattern Producing Networks. 

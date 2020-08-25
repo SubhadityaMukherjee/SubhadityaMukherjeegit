@@ -13,7 +13,7 @@
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Loss Functions | Deconstructing Deep learning</title>
-<meta name="generator" content="Jekyll v3.8.7" />
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Loss Functions" />
 <meta name="author" content="Subhaditya Mukherjee" />
 <meta property="og:locale" content="en_US" />
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-30T00:01:59+04:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://localhost:4000/2020/06/30/loss-functions.html","dateModified":"2020-06-30T00:01:59+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/30/loss-functions.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"headline":"Loss Functions","description":"In this post we shall explore as many loss functions as I can find.","datePublished":"2020-06-30T00:01:59+04:00","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Loss Functions","dateModified":"2020-06-30T00:01:59+04:00","datePublished":"2020-06-30T00:01:59+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/06/30/loss-functions.html"},"author":{"@type":"Person","name":"Subhaditya Mukherjee"},"description":"In this post we shall explore as many loss functions as I can find.","url":"http://localhost:4000/2020/06/30/loss-functions.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
@@ -87,7 +87,7 @@
 <span class="reading-time" title="Estimated read time">
   
   
-    <h3>Reading time : ~22 mins</h3>
+    <h3>Reading time : ~21 mins</h3>
   
 </span>
 
@@ -133,14 +133,14 @@ Also note that the examples used are not necessarily the ones that will be used 
 
 <h2 id="log-softmax">Log softmax</h2>
 
-<script type="math/tex; mode=display">\log\left( \frac{e^{ŷ}}{\mathrm{sum}\left( e^{ŷ} \right)} \right)</script>
+\[\log\left( \frac{e^{ŷ}}{\mathrm{sum}\left( e^{ŷ} \right)} \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span><span class="o">/</span><span class="n">sum</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)))</span>
 </code></pre></div></div>
 
 <h2 id="bce-logits">BCE Logits</h2>
 
-<script type="math/tex; mode=display">\left(  - \mathrm{sum}\left( y \cdot \mathrm{logsoftmax}\left( ŷ \right) \cdot weight \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)</script>
+\[\left(  - \mathrm{sum}\left( y \cdot \mathrm{logsoftmax}\left( ŷ \right) \cdot weight \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bcelogits</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">weight</span><span class="x">)</span>  <span class="o">=-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span> <span class="o">.*</span> <span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">.*</span> <span class="n">weight</span><span class="x">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">//</span> <span class="n">size</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
 </code></pre></div></div>
@@ -153,7 +153,7 @@ Also note that the examples used are not necessarily the ones that will be used 
   <li>take avg</li>
 </ul>
 
-<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \mathrm{max}\left( 0, \left(  - y \right) \cdot x1 - x2 + margin \right) \right)</script>
+\[\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \mathrm{max}\left( 0, \left(  - y \right) \cdot x1 - x2 + margin \right) \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">marginranking</span><span class="x">(</span><span class="n">x1</span><span class="x">,</span><span class="n">x2</span><span class="x">,</span><span class="n">y</span><span class="x">,</span><span class="n">margin</span><span class="o">=</span><span class="mf">0.0</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="o">-</span><span class="n">y</span><span class="o">.*</span><span class="x">(</span><span class="n">x1</span><span class="o">.-</span><span class="n">x2</span><span class="x">)</span><span class="o">.+</span><span class="n">margin</span><span class="x">))</span>
 </code></pre></div></div>
@@ -165,13 +165,13 @@ Also note that the examples used are not necessarily the ones that will be used 
   <li>Fast RCNN</li>
 </ul>
 
-<p>if <script type="math/tex">\left( \left\|y - ŷ\right\| \lt 1.0 \right) >1</script></p>
+<p>if \(\left( \left\|y - ŷ\right\| \lt 1.0 \right) &gt;1\)</p>
 
-<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( 0.5 \cdot \left( y - ŷ \right)^{2} \right)</script>
+\[\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( 0.5 \cdot \left( y - ŷ \right)^{2} \right)\]
 
 <p>else</p>
 
-<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|y - ŷ\right\| - 0.5 \right)</script>
+\[\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|y - ŷ\right\| - 0.5 \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> huber</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> 
     
@@ -189,7 +189,7 @@ Also note that the examples used are not necessarily the ones that will be used 
   <li>Classification,  Smaller quicker training, Simple tasks.</li>
 </ul>
 
-<script type="math/tex; mode=display">- \mathrm{sum}\left( \log\left( y \right) \right)</script>
+\[- \mathrm{sum}\left( \log\left( y \right) \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nll</span><span class="x">(</span><span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="x">))</span>
 <span class="n">nll</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="x">))</span>
@@ -201,7 +201,7 @@ Also note that the examples used are not necessarily the ones that will be used 
   <li>classification 2 cat</li>
 </ul>
 
-<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( y \cdot \log\left( ŷ \right) + \log\left( 1 - y \right) \cdot \log\left( 1 - ŷ \right) \right)</script>
+\[\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( y \cdot \log\left( ŷ \right) + \log\left( 1 - y \right) \cdot \log\left( 1 - ŷ \right) \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bce</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span><span class="o">.+</span><span class="x">(</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">y</span><span class="x">)</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">ŷ</span><span class="x">)))</span>
 </code></pre></div></div>
@@ -212,16 +212,16 @@ Also note that the examples used are not necessarily the ones that will be used 
   <li>classification n cat</li>
 </ul>
 
-<script type="math/tex; mode=display">- \mathrm{sum}\left( y \cdot \log\left( ŷ \right) \right)</script>
+\[- \mathrm{sum}\left( y \cdot \log\left( ŷ \right) \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cce</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
 </code></pre></div></div>
 
 <h2 id="cosine-similarity">Cosine similarity</h2>
 
-<p>L2 norm is <script type="math/tex">\sqrt{\mathrm{sum}\left( \left( \left\|x\right\| \right)^{2} \right)}</script></p>
+<p>L2 norm is \(\sqrt{\mathrm{sum}\left( \left( \left\|x\right\| \right)^{2} \right)}\)</p>
 
-<p>Cosine similarity is <script type="math/tex">- \mathrm{sum}\left( \mathrm{l2norm}\left( y \right) \cdot \mathrm{l2norm}\left( ŷ \right) \right)</script></p>
+<p>Cosine similarity is \(- \mathrm{sum}\left( \mathrm{l2norm}\left( y \right) \cdot \mathrm{l2norm}\left( ŷ \right) \right)\)</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">l2_norm</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">sqrt</span><span class="o">.</span><span class="x">(</span><span class="n">sum</span><span class="x">((</span><span class="n">abs</span><span class="o">.</span><span class="x">(</span><span class="n">x</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span><span class="x">)))</span>
 <span class="k">function</span><span class="nf"> cosinesimilarity</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span>
@@ -235,13 +235,13 @@ Also note that the examples used are not necessarily the ones that will be used 
   <li>Same can be achieved with cross entropy with lesser computation, so avoid it.</li>
 </ul>
 
-<p>We first define xlogx for a weird edge case <script type="math/tex">x \cdot \log\left( x \right)</script></p>
+<p>We first define xlogx for a weird edge case \(x \cdot \log\left( x \right)\)</p>
 
-<p>Then entropy <script type="math/tex">\mathrm{sum}\left( \mathrm{xlogx}\left( y \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)</script></p>
+<p>Then entropy \(\mathrm{sum}\left( \mathrm{xlogx}\left( y \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)\)</p>
 
-<p>Then cce as defined before <script type="math/tex">- \mathrm{sum}\left( y \cdot \log\left( ŷ \right) \right)</script></p>
+<p>Then cce as defined before \(- \mathrm{sum}\left( y \cdot \log\left( ŷ \right) \right)\)</p>
 
-<p>Finally KLD <script type="math/tex">entropy + crossentropyloss</script></p>
+<p>Finally KLD \(entropy + crossentropyloss\)</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> xlogx</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
   <span class="n">result</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">log</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
@@ -260,11 +260,11 @@ Also note that the examples used are not necessarily the ones that will be used 
   <li>works like the MSE, but is smoothed towards large errors (presumably caused by outliers) so that the final error score isn’t impacted thoroughly.</li>
 </ul>
 
-<p>We first define the softplus function <script type="math/tex">\log\left( e^{x} + 1 \right)</script></p>
+<p>We first define the softplus function \(\log\left( e^{x} + 1 \right)\)</p>
 
-<p>Then , <script type="math/tex">x = ŷ - y</script></p>
+<p>Then , \(x = ŷ - y\)</p>
 
-<p>logcosh = <script type="math/tex">\mathrm{mean}\left( x + \mathrm{softplus}\left( -2 \cdot x \right) - \log\left( 2.0 \right) \right)</script></p>
+<p>logcosh = \(\mathrm{mean}\left( x + \mathrm{softplus}\left( -2 \cdot x \right) - \log\left( 2.0 \right) \right)\)</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">softplus</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">x</span><span class="x">)</span><span class="o">.+</span><span class="mi">1</span><span class="x">)</span>
 <span class="k">function</span><span class="nf"> logcosh</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span>
@@ -284,11 +284,11 @@ Also note that the examples used are not necessarily the ones that will be used 
 <p>There are two ways of doing this, mean and sum.
 For mean,</p>
 
-<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|y - ŷ\right\| \right)</script>
+\[\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|y - ŷ\right\| \right)\]
 
 <p>For sum,</p>
 
-<script type="math/tex; mode=display">\mathrm{sum}\left( \left\|y - ŷ\right\| \right)</script>
+\[\mathrm{sum}\left( \left\|y - ŷ\right\| \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> mae</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">reduction</span><span class="o">=</span> <span class="s">"mean"</span><span class="x">)</span> 
     <span class="k">if</span> <span class="n">reduction</span><span class="o">==</span><span class="s">"mean"</span>
@@ -305,7 +305,7 @@ For mean,</p>
   <li>mean absolute % error</li>
 </ul>
 
-<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|\frac{y - ŷ}{y}\right\| \right)</script>
+\[\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|\frac{y - ŷ}{y}\right\| \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mape</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span> <span class="n">abs</span><span class="o">.</span><span class="x">((</span><span class="n">y</span><span class="o">-</span><span class="n">ŷ</span><span class="x">)</span><span class="o">/</span><span class="n">y</span><span class="x">))</span>
 </code></pre></div></div>
@@ -317,7 +317,7 @@ For mean,</p>
   <li>Use MSLE when doing regression, believing that your target, conditioned on the input, is normally distributed, and you don’t want large errors to be significantly more penalized than small ones, in those cases where the range of the target value is large.</li>
 </ul>
 
-<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( \log\left( y + 1 \right) - \log\left( ŷ + 1 \right) \right)^{2} \right)</script>
+\[\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( \log\left( y + 1 \right) - \log\left( ŷ + 1 \right) \right)^{2} \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">msle</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">((</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">y</span><span class="o">.+</span><span class="mi">1</span><span class="x">)</span><span class="o">.-</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.+</span><span class="mi">1</span><span class="x">))</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
 </code></pre></div></div>
@@ -328,9 +328,9 @@ For mean,</p>
   <li>Regression</li>
   <li>Two types again with mean and no mean</li>
   <li>
-    <p>Mean <script type="math/tex">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)</script></p>
+    <p>Mean \(\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)\)</p>
   </li>
-  <li>Sum <script type="math/tex">\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)</script></li>
+  <li>Sum \(\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)\)</li>
 </ul>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> mse</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">reduction</span><span class="o">=</span> <span class="s">"mean"</span><span class="x">)</span> 
@@ -349,9 +349,9 @@ For mean,</p>
   <li>Regression</li>
   <li>Two types again with mean and no mean</li>
   <li>
-    <p>Mean <script type="math/tex">\sqrt{\frac{1}{2} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}</script></p>
+    <p>Mean \(\sqrt{\frac{1}{2} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}\)</p>
   </li>
-  <li>Sum <script type="math/tex">\sqrt{\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}</script></li>
+  <li>Sum \(\sqrt{\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}\)</li>
 </ul>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bcelogits</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">,</span><span class="n">weight</span><span class="x">)</span>  <span class="o">=-</span><span class="n">sum</span><span class="x">(</span><span class="n">y</span> <span class="o">.*</span> <span class="n">logsoftmax</span><span class="x">(</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">.*</span> <span class="n">weight</span><span class="x">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">//</span> <span class="n">size</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
@@ -363,7 +363,7 @@ For mean,</p>
   <li>When data is from poisson distr</li>
 </ul>
 
-<script type="math/tex; mode=display">\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( ŷ - \log\left( ŷ \right) \right)</script>
+\[\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( ŷ - \log\left( ŷ \right) \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">poisson</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">y</span><span class="x">))</span><span class="o">*</span><span class="n">sum</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.-</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
 </code></pre></div></div>
@@ -375,7 +375,7 @@ For mean,</p>
   <li>Categorical crossentropy</li>
 </ul>
 
-<script type="math/tex; mode=display">- \mathrm{sum}\left( ŷ \cdot \log\left( ŷ \right) \right)</script>
+\[- \mathrm{sum}\left( ŷ \cdot \log\left( ŷ \right) \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sparsece</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="x">(</span><span class="n">ŷ</span><span class="o">.*</span><span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">ŷ</span><span class="x">))</span>
 </code></pre></div></div>
@@ -388,7 +388,7 @@ For mean,</p>
   <li>maximum margin</li>
 </ul>
 
-<script type="math/tex; mode=display">\mathrm{sum}\left( \left( \mathrm{max}\left( 0, 1 - y \cdot ŷ \right) \right)^{2} \right)</script>
+\[\mathrm{sum}\left( \left( \mathrm{max}\left( 0, 1 - y \cdot ŷ \right) \right)^{2} \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">squaredhinge</span><span class="x">(</span><span class="n">y</span><span class="x">,</span><span class="n">ŷ</span><span class="x">)</span> <span class="o">=</span> <span class="n">sum</span><span class="x">(</span><span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span><span class="mi">1</span> <span class="o">.-</span><span class="x">(</span><span class="n">y</span><span class="o">.*</span><span class="n">ŷ</span><span class="x">))</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
 </code></pre></div></div>
@@ -400,13 +400,13 @@ For mean,</p>
   <li>alpha is the distance between positive and negative sample, arbitrarily set to 0.3</li>
 </ul>
 
-<p>We first find the positive distance <script type="math/tex">pos{distance} = \left( anchor - positive \right)^{2} -1</script></p>
+<p>We first find the positive distance \(pos{distance} = \left( anchor - positive \right)^{2} -1\)</p>
 
-<p>Then the negative distance <script type="math/tex">neg{distance} = \left( anchor - negative \right)^{2} -1</script></p>
+<p>Then the negative distance \(neg{distance} = \left( anchor - negative \right)^{2} -1\)</p>
 
-<p>Then the temporary loss <script type="math/tex">posdistance - negdistance + \alpha</script></p>
+<p>Then the temporary loss \(posdistance - negdistance + \alpha\)</p>
 
-<p>And the final loss <script type="math/tex">\mathrm{sum}\left( \mathrm{max}\left( loss_{1}, 0.0 \right) \right)</script></p>
+<p>And the final loss \(\mathrm{sum}\left( \mathrm{max}\left( loss_{1}, 0.0 \right) \right)\)</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> tripletloss</span><span class="x">(</span><span class="n">anchor</span> <span class="x">,</span> <span class="n">positive</span><span class="x">,</span> <span class="n">negative</span><span class="x">,</span> <span class="n">α</span> <span class="o">=</span> <span class="mf">0.3</span><span class="x">)</span>
     <span class="n">pos_distance</span> <span class="o">=</span> <span class="x">(</span><span class="n">anchor</span><span class="o">.-</span><span class="n">positive</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span> <span class="o">.+</span> <span class="x">(</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span>
@@ -424,7 +424,7 @@ For mean,</p>
   <li>the w are weights of the model (wow)</li>
 </ul>
 
-<script type="math/tex; mode=display">\mathrm{max}\left( 0, 1 + \mathrm{max}\left( w_{y} \cdot x - w_{t} \cdot x \right) \right)</script>
+\[\mathrm{max}\left( 0, 1 + \mathrm{max}\left( w_{y} \cdot x - w_{t} \cdot x \right) \right)\]
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hinge</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">w_y</span><span class="x">,</span><span class="n">w_t</span><span class="x">)</span> <span class="o">=</span> <span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span><span class="mi">1</span> <span class="o">.+</span> <span class="n">max</span><span class="o">.</span><span class="x">(</span><span class="n">w_y</span><span class="o">.*</span><span class="n">x</span> <span class="o">.-</span> <span class="n">w_t</span><span class="o">.*</span><span class="n">x</span><span class="x">))</span>
 </code></pre></div></div>
@@ -444,6 +444,10 @@ For mean,</p>
 <section>
 <!-- <ul> -->
 Related posts:&emsp;
+
+<!-- <li> -->
+  <a href=/2020/08/26/DCGAN.html> DCGAN&emsp; </a>
+  <!-- </li> -->
 
 <!-- <li> -->
   <a href=/2020/08/13/Differentiable-Programming.html> Differentiable Programming&emsp; </a>
@@ -479,10 +483,6 @@ Related posts:&emsp;
 
 <!-- <li> -->
   <a href=/article/2020/07/21/Low-Poly.html> Low Poly&emsp; </a>
-  <!-- </li> -->
-
-<!-- <li> -->
-  <a href=/2020/07/18/Universal-Approximation-theorem.html> Universal Approximation theorem&emsp; </a>
   <!-- </li> -->
 
 

@@ -45,6 +45,8 @@ GEM
       listen (~> 3.0)
     kramdown (2.3.0)
       rexml
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     liquid (4.0.3)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -78,6 +80,8 @@ DEPENDENCIES
   jekyll-graphviz
   jekyll-theme-minimal (~> 0.1.1)
   jekyll-toc (~> 0.14.0)
+  kramdown (>= 2.3.0)
+  kramdown-parser-gfm
   toc (~> 0.0.4)
   tzinfo (~> 1.2)
   tzinfo-data
