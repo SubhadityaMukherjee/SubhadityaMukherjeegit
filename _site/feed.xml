@@ -1,6 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-09-05T12:27:40+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Documentation using Documenter.jl</title><link href="http://localhost:4000/2020/09/05/Documentation.html" rel="alternate" type="text/html" title="Documentation using Documenter.jl" /><published>2020-09-05T00:41:00+04:00</published><updated>2020-09-05T00:41:00+04:00</updated><id>http://localhost:4000/2020/09/05/Documentation</id><content type="html" xml:base="http://localhost:4000/2020/09/05/Documentation.html">&lt;p&gt;Here we will talk about how to document your code using Documenter.jl and a few tips along the way.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-09-20T11:55:07+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Documentation using Documenter.jl</title><link href="http://localhost:4000/2020/09/05/Documentation.html" rel="alternate" type="text/html" title="Documentation using Documenter.jl" /><published>2020-09-05T00:41:00+04:00</published><updated>2020-09-05T00:41:00+04:00</updated><id>http://localhost:4000/2020/09/05/Documentation</id><content type="html" xml:base="http://localhost:4000/2020/09/05/Documentation.html">&lt;p&gt;Here we will talk about how to document your code using Documenter.jl and a few tips along the way.&lt;/p&gt;
 
 &lt;p&gt;Before we go on, look at this as an example. &lt;a href=&quot;https://subhadityamukherjee.github.io/DDL.jl/build/index.html&quot;&gt;Source&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[Edit] : Adding on to using the helpful hints from &lt;a href=&quot;https://discourse.julialang.org/t/step-by-step-documentation-tutorial/46093/4&quot;&gt;link&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;why&quot;&gt;Why&lt;/h2&gt;
 
@@ -32,6 +34,9 @@
  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;MyPkg&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;    
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
         &lt;p&gt;This will create a bunch of default folders which we will use.&lt;/p&gt;
+        &lt;blockquote&gt;
+          &lt;p&gt;Note that PkgTemplates can generate the documentation for you. It requires a bit of tinkering but you can skip a few steps if you want. (Go to step 8 directly :) )&lt;/p&gt;
+        &lt;/blockquote&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
@@ -69,6 +74,19 @@
         &lt;ul&gt;
           &lt;li&gt;make.jl&lt;/li&gt;
           &lt;li&gt;src&lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;Project.toml (To take care of related dependencies)&lt;/p&gt;
+
+            &lt;blockquote&gt;
+              &lt;p&gt;Tip: If you have a clean repo you can do this to speed up your workflow&lt;/p&gt;
+            &lt;/blockquote&gt;
+
+            &lt;div class=&quot;language-jl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;julia&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;project&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;docs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pkg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instantiate&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pkg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;julia&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;docs/make.jl&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;            &lt;/div&gt;
+          &lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
@@ -76,8 +94,7 @@
   &lt;li&gt;Inside the make.jl file, take this and modify it for your purpose.
     &lt;ul&gt;
       &lt;li&gt;
-        &lt;div class=&quot;language-jl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;push!&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;LOAD_PATH&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;../src/&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Documenter&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;classification&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Datasets&lt;/span&gt;
+        &lt;div class=&quot;language-jl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Documenter&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;classification&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Datasets&lt;/span&gt;
 
   &lt;span class=&quot;n&quot;&gt;Documenter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;makedocs&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;
       &lt;span class=&quot;n&quot;&gt;sitename&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;DDL Documentation&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;
@@ -116,7 +133,8 @@ end
       &lt;li&gt;Format all your docs to be this way&lt;/li&gt;
       &lt;li&gt;Then go to index.md and add this block
         &lt;div class=&quot;language-md highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;```&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;@autodocs
-&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;Modules = [modulename]```
+&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;Modules = [modulename]
+`` ` 
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
       &lt;/li&gt;
       &lt;li&gt;If you have done every step correctly, this should automatically get your documentation here&lt;/li&gt;
@@ -126,7 +144,7 @@ end
   &lt;/li&gt;
   &lt;li&gt;If you want to host this on github, upload the repo first&lt;/li&gt;
   &lt;li&gt;Then go to github.com/username/reponame&lt;/li&gt;
-  &lt;li&gt;Go to settings and then scroll down till you find “Github Pages”. Click publish and choose the folder as docs/&lt;/li&gt;
+  &lt;li&gt;Go to settings and then scroll down till you find “Github Pages”. Click publish and choose the gh-pages branch (Make a branch if you do not have one. It would save hassle later.)&lt;/li&gt;
   &lt;li&gt;Done! To access your site go to username.github.io/projectname/build/index.html&lt;/li&gt;
   &lt;li&gt;You can also mess around with the paths if you know how to. Or add extra features. But this will get you set up with all the needed basics!&lt;/li&gt;
 &lt;/ol&gt;
@@ -152,6 +170,10 @@ end
     &lt;h3 id=&quot;learn-markdown&quot;&gt;Learn markdown&lt;/h3&gt;
     &lt;p&gt;It will save your life over and over again.
 Here is the best cheat sheet I found to learn it &lt;a href=&quot;https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet&quot;&gt;CHEAT&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;h3 id=&quot;automation&quot;&gt;Automation!&lt;/h3&gt;
+    &lt;p&gt;If you want to automate this workflow, use a &lt;a href=&quot;https://discourse.julialang.org/t/step-by-step-documentation-tutorial/46093/4&quot;&gt;github action&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ol&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="document" /><category term="automation" /><category term="string" /><summary type="html">Here we will talk about how to document your code using Documenter.jl and a few tips along the way.</summary></entry><entry><title type="html">Dataset Bindings</title><link href="http://localhost:4000/2020/09/02/DatasetBindings.html" rel="alternate" type="text/html" title="Dataset Bindings" /><published>2020-09-02T09:29:00+04:00</published><updated>2020-09-02T09:29:00+04:00</updated><id>http://localhost:4000/2020/09/02/DatasetBindings</id><content type="html" xml:base="http://localhost:4000/2020/09/02/DatasetBindings.html">&lt;p&gt;Tiny post on datasets and a unified downloader for standard ones.&lt;/p&gt;
 

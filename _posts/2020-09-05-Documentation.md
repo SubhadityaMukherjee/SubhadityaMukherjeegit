@@ -9,6 +9,8 @@ Here we will talk about how to document your code using Documenter.jl and a few 
 
 Before we go on, look at this as an example. [Source](https://subhadityamukherjee.github.io/DDL.jl/build/index.html)
 
+[Edit] : Adding on to using the helpful hints from [link](https://discourse.julialang.org/t/step-by-step-documentation-tutorial/46093/4)
+
 ## Why
 
 I know. It is really boring and why would you bother anyway. Or. "This is only for me". Trust me I have been in your shoes for a majority part of my coding life. Which funnily enough has only been there for around 4 years. Of which the first doesn't even count.
@@ -37,6 +39,7 @@ The process is a bit wonky so the aim of this is to give you a nice flow of how 
     t("MyPkg")    
     ```
 This will create a bunch of default folders which we will use.
+> Note that PkgTemplates can generate the documentation for you. It requires a bit of tinkering but you can skip a few steps if you want. (Go to step 8 directly :) )
 2. Get the package
    ```jl
    ]add Documenter
@@ -57,9 +60,19 @@ This will create a bunch of default folders which we will use.
     - docs
       - make.jl
       - src
+      - Project.toml (To take care of related dependencies)
+
+        >Tip: If you have a clean repo you can do this to speed up your workflow
+
+        ```jl
+        $ julia --project=docs/
+        pkg> instantiate
+        pkg> dev .
+        julia> include("docs/make.jl")
+        ```
+
 6. Inside the make.jl file, take this and modify it for your purpose.
     - ```jl
-        push!(LOAD_PATH,"../src/")
         using Documenter, classification, Datasets
 
         Documenter.makedocs(
@@ -92,14 +105,15 @@ This will create a bunch of default folders which we will use.
     - Then go to index.md and add this block
     ```md
     ```@autodocs
-    Modules = [modulename]```
+    Modules = [modulename]
+    `` ` 
     ```
     - If you have done every step correctly, this should automatically get your documentation here
     - Style it or add whatever you want
     - When you are done, run the make.jl file once more
 11. If you want to host this on github, upload the repo first
 12. Then go to github.com/username/reponame
-13. Go to settings and then scroll down till you find "Github Pages". Click publish and choose the folder as docs/
+13. Go to settings and then scroll down till you find "Github Pages". Click publish and choose the gh-pages branch (Make a branch if you do not have one. It would save hassle later.) 
 14. Done! To access your site go to username.github.io/projectname/build/index.html
 15. You can also mess around with the paths if you know how to. Or add extra features. But this will get you set up with all the needed basics!
 
@@ -122,3 +136,5 @@ Some tips from experience..
 5. ### Learn markdown
 It will save your life over and over again.
 Here is the best cheat sheet I found to learn it [CHEAT](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+6. ### Automation!
+If you want to automate this workflow, use a [github action](https://discourse.julialang.org/t/step-by-step-documentation-tutorial/46093/4)
