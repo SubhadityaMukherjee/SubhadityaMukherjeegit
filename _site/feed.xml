@@ -1,4 +1,108 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-09-26T19:37:22+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Thank you and a rain check</title><link href="http://localhost:4000/2020/09/26/An.html" rel="alternate" type="text/html" title="Thank you and a rain check" /><published>2020-09-26T19:16:00+04:00</published><updated>2020-09-26T19:16:00+04:00</updated><id>http://localhost:4000/2020/09/26/An</id><content type="html" xml:base="http://localhost:4000/2020/09/26/An.html">&lt;p&gt;Hello dear reader, I share a quick rain check and announce my medium page :)&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-09-28T23:12:51+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">A murder mystery and Adversarial attack</title><link href="http://localhost:4000/2020/09/28/AdversarialAttack.html" rel="alternate" type="text/html" title="A murder mystery and Adversarial attack" /><published>2020-09-28T19:57:00+04:00</published><updated>2020-09-28T19:57:00+04:00</updated><id>http://localhost:4000/2020/09/28/AdversarialAttack</id><content type="html" xml:base="http://localhost:4000/2020/09/28/AdversarialAttack.html">&lt;p&gt;How smart are neural networks? And can we break them and fool them into doing dumb things?&lt;/p&gt;
+
+&lt;h1 id=&quot;our-friend-termy&quot;&gt;Our friend Termy&lt;/h1&gt;
+
+&lt;p&gt;Today we have a special guest. His name is Termy, he is a friendly robot from the year 2025. What is cool about him is that he has an AI and a really nice personality. He loves people and animals. (Or atleast is told to). He is programmed to never hurt them. The only thing he hates are guns. He will try to break them as soon as he finds them.&lt;/p&gt;
+
+&lt;p&gt;On the way sadly, his system was hacked. Termy, being from the future, has a failsafe so he managed to kick his attacker out. But in the process, the part of his brain that recognizes objects is affected a tiny bit. Now for every image, a few pixels are different.&lt;/p&gt;
+
+&lt;p&gt;Termy sees nothing wrong and continues his daily tasks. One day however, the police catch him trying to strangle a poor animal to death.&lt;/p&gt;
+
+&lt;p&gt;The only question is.. why?&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note that the code here is a toy example in JuliaLang. The entire code to train and generate such examples are at &lt;a href=&quot;https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/AdversarialFGSM&quot;&gt;this repository&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;meet-turty&quot;&gt;Meet Turty&lt;/h1&gt;
+
+&lt;p&gt;Let us take Turty, a cute little turtle. 
+We load his image, and convert it into a matrix from a matrix of RGB values.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/turtle.jpg&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-jl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Images&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ImageView&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Images&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;turtle.jpg&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imshow&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;new_img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;channelview&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;colorview&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RGB&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;attacked&quot;&gt;Attacked&lt;/h1&gt;
+
+&lt;p&gt;Now Termy happens to know what a turtle is. He also knows what a gun is. How does he do that? Well using a neural network of course.&lt;/p&gt;
+
+&lt;p&gt;He is using a network trained to recognize thousands of types of images. In the attack though, his network had a small corruption. Instead of just taking the gradients in the backward pass, a small value ϵ creeped into the function. This is what happened.&lt;/p&gt;
+
+&lt;div class=&quot;language-jl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; signtest&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;elseif&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; fgsm_attack&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ϵ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;sign_data_grad&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;signtest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data_grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;peturbed_img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ϵ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sign_data_grad&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;peturbed_img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;peturbed_img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;peturbed_img&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The attack is the function which represents the corruption by means of the peturbed image. 
+Signtest is just a simple function to return a specific value based on the if the value in the image matrix is +, - or 0.&lt;/p&gt;
+
+&lt;p&gt;peturbedimage = x + ϵ*sign(∇x J(θ, x, y))&lt;/p&gt;
+
+&lt;p&gt;Note that the last bit is the formula to find the gradient.&lt;/p&gt;
+
+&lt;p&gt;What is passed to this image identifier is generally the gradient of the image, the image itself and the function generally keeps the values between 0,1 and returns the image.
+Due to the peturbed function, the image now becomes this.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/attacked.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Apart from the color (which does not really matter), the image looks the same. But to Termy, this actually looks like a rifle!!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/attackedpaper.png&quot; alt=&quot;drawing&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is from the &lt;a href=&quot;https://arxiv.org/pdf/1707.07397.pdf&quot;&gt;paper&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;why&quot;&gt;Why?&lt;/h1&gt;
+
+&lt;p&gt;This happens because the gradient is altered to the network to appear as a bias. The probablities change, and the network actually feels more &lt;em&gt;confident&lt;/em&gt; towards its prediction. 
+Termy our dear friend, is now dangerous and must be put away…&lt;/p&gt;
+
+&lt;h1 id=&quot;the-power-in-your-hands&quot;&gt;The power in your hands&lt;/h1&gt;
+
+&lt;p&gt;As people who work with AI, we need to avoid the story of poor Termy. Because if you think about it, this is extremely scary. What if Termy thinks that a Stop sign is a Go? Or a person is a rifle? Or a rifle is a stick?&lt;/p&gt;
+
+&lt;p&gt;If Termy was driving, maybe he would hit a person because to him.. there is nobody there.&lt;/p&gt;
+
+&lt;p&gt;Scared?? This is called an Adversarial Attack.&lt;/p&gt;
+
+&lt;h1 id=&quot;what-do-we-do-now&quot;&gt;What do we do now?&lt;/h1&gt;
+
+&lt;p&gt;Now that we have looked at what happens, and why it happens. What do we do about it?
+The first thing, is to realize that it is a possibility. Deep learning has changed our world for good. In every aspect, every domain, neural networks have slowly crept in. But we have to take their power with a pinch of salt.. because.. it is us who hold this power.&lt;/p&gt;
+
+&lt;p&gt;There are many ways to counter this effect, the easiest is to include adversarial images in your training data itself. The function mentioned previously is called the &lt;a href=&quot;https://arxiv.org/abs/1412.6572&quot;&gt;Fast gradient sign method&lt;/a&gt;. 
+If you include these images in your set, there is a higher probability of defending against these attacks.&lt;/p&gt;
+
+&lt;p&gt;To be noted that this problem has not been fully solved. Majorly because it is hard for us to actually understand why this happens. To do that, we need to dig into the network and understand how it learns. Which we don’t yet.&lt;/p&gt;
+
+&lt;h1 id=&quot;a-word-of-warning&quot;&gt;A word of warning&lt;/h1&gt;
+
+&lt;p&gt;Note that this is not just a small issue. This method generalizes across all types of network architectures. But the good side to all this is that, including these images not only makes your model perform better, it also helps secure the future of consumer applications. 
+A lot of research is going on in this field. &lt;a href=&quot;https://www.sciencedirect.com/science/article/pii/S1877050918319884&quot;&gt;Like this paper&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;So the next time you make a system… try to add adversarial noise to it too and save poor Turty.&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><summary type="html">How smart are neural networks? And can we break them and fool them into doing dumb things?</summary></entry><entry><title type="html">Thank you and a rain check</title><link href="http://localhost:4000/2020/09/26/An.html" rel="alternate" type="text/html" title="Thank you and a rain check" /><published>2020-09-26T19:16:00+04:00</published><updated>2020-09-26T19:16:00+04:00</updated><id>http://localhost:4000/2020/09/26/An</id><content type="html" xml:base="http://localhost:4000/2020/09/26/An.html">&lt;p&gt;Hello dear reader, I share a quick rain check and announce my medium page :)&lt;/p&gt;
 
 &lt;h1 id=&quot;thank-you&quot;&gt;Thank you&lt;/h1&gt;
 
@@ -1572,142 +1676,4 @@ Loads of things to keep track of here. But the new things are just decay rates, 
     &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Yay we can use it nowww!!&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="grad" /><category term="descent" /><category term="ada" /><category term="sgd" /><category term="momen" /><summary type="html">Finally let us look at optimizers. Once that is done, we will be able to use Flux ML for a lot of things directly.</summary></entry><entry><title type="html">VAE</title><link href="http://localhost:4000/2020/07/25/VAE.html" rel="alternate" type="text/html" title="VAE" /><published>2020-07-25T22:50:19+04:00</published><updated>2020-07-25T22:50:19+04:00</updated><id>http://localhost:4000/2020/07/25/VAE</id><content type="html" xml:base="http://localhost:4000/2020/07/25/VAE.html">&lt;p&gt;A simple Variational Auto Encoder using just what we made so far!!&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Since we made everything in this from scratch already I will be using Flux directly. (I will attempt to do optimizers in the next post)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Okay so what is that? it is a neural network which is used for things like Image compression, Image generation etc etc. It is cool because it is pretty cheap computationally.&lt;/p&gt;
-
-&lt;p&gt;So what do we need to build it?&lt;/p&gt;
-&lt;h2 id=&quot;architecture&quot;&gt;Architecture&lt;/h2&gt;
-
-&lt;p&gt;-&lt;img src=&quot;/img/vae.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;This is the what makes the VAE special. If you notice, the conv sizes first start off huge (Encoder), then reduce to a really small point and then go back up huge again(Decoder).&lt;/li&gt;
-  &lt;li&gt;So the thing is, the Encoder is responsible for taking the input data and encoding it so to speak into what is called the latent space representation. In human terms it means that it tries to find a very high dimensional representation of the images. Aka it tries to “learn” what the image is so it can recreate it.&lt;/li&gt;
-  &lt;li&gt;The middle bit which has the smallest sizes is called the bottle neck (because it looks like one lol) and this is what helps in image compression. Since the Convolution and max pool layers fundamentally try to represent images in a very compressed manner, this is the effect. Now the fun part is that we can take the representation space (which the encoder pops things in) and sample from it to get representations of the initial data. These we pop into the decoder.&lt;/li&gt;
-  &lt;li&gt;The last bit of the architecture is the Decoder which is responsible for giving us back our images (albeit similar and not the same ones). What this does is takes the input as the probability distribution of the data (which is a single pixel in the Bernoulli distribution) and outputs a parameter for every pixel in the image. (aka what it thinks should be the image).&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;loss-function&quot;&gt;Loss function&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;This is a cool looking equation haha.
-\(l_i(\Theta,\Phi) = -\mathbb{E}_{q\Theta(z|x_i)}[log(p_\Theta(x_i|z)] + \mathbb{KL}(q_\Theta(z|x_i) || p(z))\)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Let us break it down or I will break down.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;\(l_i(\Theta,\Phi)\) =&amp;gt;  Greek way of writing the loss between two things. (Could be x and y if you are not awake yet).&lt;/li&gt;
-  &lt;li&gt;\(-\mathbb{E}_{q\Theta(z|x_i)}[log(p_\Theta(x_i|z)]\) =&amp;gt;
-likelihood of something happening -&amp;gt; the log of it -&amp;gt; negative of it -&amp;gt; Expected value of all this drama. This lets the network learn that it needs to remake the data again. Since the outputs are probabilities, it is a nice way of seeing how well we did&lt;/li&gt;
-  &lt;li&gt;\(\mathbb{KL}(q_\Theta(z|x_i) || p(z))\)
-This is the KL divergence. It is a nice measure to see how far away we are from what we need. Aka how much data is lost in translation so to speak. This acts as a regularizer and reduces the chances of mode collapse (everything is similar so output random nonsesense).&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;issues&quot;&gt;Issues&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;A lot of data is lost in translation because the decoder reconstructs from a reduced version of the image.&lt;/li&gt;
-  &lt;li&gt;Outputs are really blurry (This was fixed in a recent &lt;a href=&quot;https://arxiv.org/abs/2007.03898&quot;&gt;paper&lt;/a&gt;. I made notes for it but I havent pushed it yet)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;code&quot;&gt;Code&lt;/h2&gt;
-
-&lt;h3 id=&quot;libraries--data&quot;&gt;Libraries + data&lt;/h3&gt;
-
-&lt;p&gt;We load all required libraries. Batch the data and split it to train and test.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MNIST&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Statistics&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Optimise&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throttle&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hcat&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MNIST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;())&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&amp;gt;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; 
-&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Iterators&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;partition&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;encoder--bottleneck&quot;&gt;Encoder + Bottleneck&lt;/h3&gt;
-
-&lt;p&gt;We need to pick something from the sampled space and also run our encoder.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;(Dense(784, 500, tanh), Dense(500, 5), Dense(500, 5))&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Dz&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dh&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;μ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dense&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dh&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tanh&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dense&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dh&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dz&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dense&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dh&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dz&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; 
-
-&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;μ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)))&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; sample_z&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;μ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;eps&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;randn&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float32&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;μ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt; 
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;μ&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logσ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eps&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;decoder-aka-generative&quot;&gt;Decoder aka Generative&lt;/h3&gt;
-
-&lt;p&gt;We define the decoder here.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Chain(Dense(5, 500, tanh), Dense(500, 784, σ))&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Chain&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dense&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dz&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dh&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tanh&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dense&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dh&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;σ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;kl_q_p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;μ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5f0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2f0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;μ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.-&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1f0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; logp_x_z&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;z&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;z&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;ll&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eps&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float32&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1f0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eps&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float32&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ll&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;L̄&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;μ̂&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ̂&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logp_x_z&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sample_z&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;μ̂&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ̂&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kl_q_p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;μ̂&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ̂&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;loss-function-1&quot;&gt;Loss function&lt;/h3&gt;
-
-&lt;p&gt;Let us define the loss function. And also attempt to sample from the model.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;loss&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;L̄&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.01f0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; modelsample&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt;  
-  &lt;span class=&quot;n&quot;&gt;ϕ&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float32&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dz&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sample_z&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ϕ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ϕ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float32&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; 
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;loop-de-loop&quot;&gt;Loop de loop&lt;/h3&gt;
-
-&lt;p&gt;Now for the actual training. I will be using ADAM (yes cheating I know but I am trying really hard to get it done from scratch ): ). Also no GPU.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;evalcb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throttle&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@show&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;L̄&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)])),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ADAM&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;ps&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;μ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logσ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
-  &lt;span class=&quot;nd&quot;&gt;@info&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Epoch &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;i&quot;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;train!&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loss&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ps&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zip&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evalcb&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;output&quot;&gt;Output&lt;/h3&gt;
-
-&lt;p&gt;Finally let us visualize the outputs. Note that it was only for 10 epochs so it is kinda dumb but well.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Images&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Gray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reshape&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;sample&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hcat&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;modelsample&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sample.png&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sample&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;-&lt;img src=&quot;/img/vaeo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Finis&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="variational" /><category term="auto" /><category term="encoder" /><category term="generative" /><category term="image" /><category term="compression" /><category term="encoder" /><category term="decoder" /><summary type="html">A simple Variational Auto Encoder using just what we made so far!!</summary></entry></feed>
+&lt;p&gt;Yay we can use it nowww!!&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="grad" /><category term="descent" /><category term="ada" /><category term="sgd" /><category term="momen" /><summary type="html">Finally let us look at optimizers. Once that is done, we will be able to use Flux ML for a lot of things directly.</summary></entry></feed>
