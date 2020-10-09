@@ -2,10 +2,13 @@
 layout: post
 title: Federated Learning
 date: 2020-10-07T20:15+04:00
-tags: 
+tags: federated syft clusters secure
 ---
 
+Today we will talk about Federated Learning
+
 Want the smarts machine learning offers? That is awesome, but how secure is your data there really? And what if you could have the benefits without there being a chance of your data being leaked? 
+
 We will have a look at Federated Learning and understand how it works. We will also look at a few papers and what they have to say on the matter and take the library [Syft](https://github.com/OpenMined/PySyft/) for a whirl.
 
 # Why is this a problem?
