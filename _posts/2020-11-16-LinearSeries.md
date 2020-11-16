@@ -16,5 +16,13 @@ I will mostly be following 3Blue1Brown's youtube channel + other related article
 All resources I use will of course be mentioned here.
 
 # Topics
-The topics I mostly want to think a
+The topics I mostly want to think about are :
+- Linear Algebra
+- Vectors
+- Matrices
+- Differential eqs
+- Maybe Calculus
 
+# Resources
+
+- [3Blue1Browns playlists](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)

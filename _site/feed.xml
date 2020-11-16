@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-11-16T19:35:16+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Linear Algebra and Matrices</title><link href="http://localhost:4000/2020/11/16/LinearSeries.html" rel="alternate" type="text/html" title="Linear Algebra and Matrices" /><published>2020-11-16T19:26:00+04:00</published><updated>2020-11-16T19:26:00+04:00</updated><id>http://localhost:4000/2020/11/16/LinearSeries</id><content type="html" xml:base="http://localhost:4000/2020/11/16/LinearSeries.html">&lt;p&gt;A brief about the next few posts on Linear Algebra.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-11-16T19:36:56+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Linear Algebra and Matrices</title><link href="http://localhost:4000/2020/11/16/LinearSeries.html" rel="alternate" type="text/html" title="Linear Algebra and Matrices" /><published>2020-11-16T19:26:00+04:00</published><updated>2020-11-16T19:26:00+04:00</updated><id>http://localhost:4000/2020/11/16/LinearSeries</id><content type="html" xml:base="http://localhost:4000/2020/11/16/LinearSeries.html">&lt;p&gt;A brief about the next few posts on Linear Algebra.&lt;/p&gt;
 
 &lt;h1 id=&quot;why&quot;&gt;Why&lt;/h1&gt;
 &lt;p&gt;I came to a realization recently, I have slacked off quite a lot when it comes to math. Especially because the classes were really boring and I never paid attention. Now I am at a bottleneck which I have to cross.&lt;/p&gt;
@@ -9,7 +9,20 @@
 All resources I use will of course be mentioned here.&lt;/p&gt;
 
 &lt;h1 id=&quot;topics&quot;&gt;Topics&lt;/h1&gt;
-&lt;p&gt;The topics I mostly want to think a&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="intro" /><category term="linear" /><category term="start" /><category term="series" /><summary type="html">A brief about the next few posts on Linear Algebra.</summary></entry><entry><title type="html">Super resolution</title><link href="http://localhost:4000/2020/10/09/SuperRes.html" rel="alternate" type="text/html" title="Super resolution" /><published>2020-10-09T22:01:00+04:00</published><updated>2020-10-09T22:01:00+04:00</updated><id>http://localhost:4000/2020/10/09/SuperRes</id><content type="html" xml:base="http://localhost:4000/2020/10/09/SuperRes.html">&lt;p&gt;Today we will look at Super Resolution in Python.&lt;/p&gt;
+&lt;p&gt;The topics I mostly want to think about are :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Linear Algebra&lt;/li&gt;
+  &lt;li&gt;Vectors&lt;/li&gt;
+  &lt;li&gt;Matrices&lt;/li&gt;
+  &lt;li&gt;Differential eqs&lt;/li&gt;
+  &lt;li&gt;Maybe Calculus&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;resources&quot;&gt;Resources&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab&quot;&gt;3Blue1Browns playlists&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="intro" /><category term="linear" /><category term="start" /><category term="series" /><summary type="html">A brief about the next few posts on Linear Algebra.</summary></entry><entry><title type="html">Super resolution</title><link href="http://localhost:4000/2020/10/09/SuperRes.html" rel="alternate" type="text/html" title="Super resolution" /><published>2020-10-09T22:01:00+04:00</published><updated>2020-10-09T22:01:00+04:00</updated><id>http://localhost:4000/2020/10/09/SuperRes</id><content type="html" xml:base="http://localhost:4000/2020/10/09/SuperRes.html">&lt;p&gt;Today we will look at Super Resolution in Python.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://medium.com/@msubhaditya/fixing-small-photos-with-deep-learning-eeae87172a1b?source=friends_link&amp;amp;sk=93f69c860776e76ab641277937bfd886&quot;&gt;Medium link&lt;/a&gt;
 Do you use social media? Ever sent someone a picture and when you look at it later you find that the image is &lt;strong&gt;so&lt;/strong&gt; bad in quality? What if you could reverse that?&lt;/p&gt;
