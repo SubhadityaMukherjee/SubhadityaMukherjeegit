@@ -7,7 +7,9 @@ categories: post
   {% assign t = tag | first %}
   {% assign posts = tag | last %}
 
+<a href = "#top">Go Up</a>
 <h2 id={{ t|upcase }}> {{ t | upcase }} </h2>
+
 <ul>
 {% for post in posts %}
   {% if post.categories contains t %}
