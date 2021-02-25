@@ -1,5 +1,5 @@
 title: Deconstructing Deep learning
-description: Making a Deep Learning library from scratch in Julia and documenting it the whole way!
+description: Digging into deep learning books, papers and code
 theme: jekyll-theme-minimal
 author: Subhaditya Mukherjee
 plugins:
