@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Faster and more general Conv
 date:   2020-07-03 17:13:46 +0400

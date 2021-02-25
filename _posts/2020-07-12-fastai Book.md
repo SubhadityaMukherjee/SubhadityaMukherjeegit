@@ -2,7 +2,7 @@
 layout: post
 title:  fastai Book
 date:   2020-07-12 11:50:52 +0400
-categories: book
+categories: article
 tags:
 ---
 

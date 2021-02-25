@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Optimizers
 date:   2020-07-29 01:21:51 +0400

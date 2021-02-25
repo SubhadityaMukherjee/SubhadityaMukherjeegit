@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: Documentation using Documenter.jl
 date: 2020-09-05T00:41+04:00

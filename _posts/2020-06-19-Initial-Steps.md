@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: "Initial Steps"
 tags: introduction start blog setup

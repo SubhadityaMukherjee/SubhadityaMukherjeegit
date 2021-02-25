@@ -2,7 +2,7 @@
 layout: post 
 title: Dataloader 
 date: 2020-06-19 16:53:45 +0400 
-
+categories: article
 tags: start dataloader images tutorial
 ---
 

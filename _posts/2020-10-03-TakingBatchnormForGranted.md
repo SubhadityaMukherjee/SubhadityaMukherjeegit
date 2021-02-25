@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: Taking Batchnorm For Granted
 date: 2020-10-03T19:52+04:00

@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: Activation functions
 date:   2020-06-20 02:00:43 +0400

@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Initialization
 date:   2020-06-21 13:58:32 +0400

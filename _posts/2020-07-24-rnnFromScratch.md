@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  RNN from scratch
 date:   2020-07-24 11:41:02 +0400

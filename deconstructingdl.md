@@ -3,16 +3,16 @@ layout: default
 categories: post
 ---
 
-<ul >
-<h2> Articles  </h2>
-<!-- {{ site.posts.first.title }} -->
+{% for tag in site.categories  %}
+  {% assign t = tag | first %}
+  {% assign posts = tag | last %}
 
-  {% for post in site.posts %}
-
-
-    <li id ="bul">
-  
-	{% if post.categories[0] == "book" %}
+<h2 id={{ t|upcase }}> {{ t | upcase }} </h2>
+<ul>
+{% for post in posts %}
+  {% if post.categories contains t %}
+  <li>
+  {% if post.categories[0] == "paper" %}
 	    <h3><a href="{{ post.url }}">&#128214; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
 	{{ post.excerpt }}
 	{% elsif post.categories[0] == "article" %}
@@ -26,10 +26,8 @@ categories: post
 	<h3><a href="{{ post.url }}">&#9998; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
 	{{ post.excerpt }}
 	{% endif %}
-
-
-    </li>
-  {% endfor %}
+  </li>
+  {% endif %}
+{% endfor %}
 </ul>
-
-
+{% endfor %}

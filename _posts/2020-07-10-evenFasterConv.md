@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  My life is a lie + Even faster conv 
 date:   2020-07-10 22:24:36 +0400

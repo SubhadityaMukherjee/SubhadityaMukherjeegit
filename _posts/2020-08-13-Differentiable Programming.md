@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Differentiable Programming
 date:   2020-08-13 01:07:58 +0400

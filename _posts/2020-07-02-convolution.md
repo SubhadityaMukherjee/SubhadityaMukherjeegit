@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Basic Convolution
 date:   2020-07-02 17:38:00 +0400

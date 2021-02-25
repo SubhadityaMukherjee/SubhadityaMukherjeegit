@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Image Preprocessing
 date:   2020-07-17 00:56:06 +0400

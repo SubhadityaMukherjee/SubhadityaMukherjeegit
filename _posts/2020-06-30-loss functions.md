@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Loss Functions
 date:   2020-06-30 00:01:59 +0400

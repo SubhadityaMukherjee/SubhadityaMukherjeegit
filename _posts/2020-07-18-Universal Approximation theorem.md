@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Universal Approximation theorem
 date:   2020-07-18 10:42:41 +0400

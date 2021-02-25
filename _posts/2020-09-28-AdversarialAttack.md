@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: A murder mystery and Adversarial attack
 date: 2020-09-28T19:57+04:00

@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  notebook2script
 date:   2020-06-19 19:10:30 +0400

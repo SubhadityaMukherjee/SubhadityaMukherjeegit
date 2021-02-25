@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title:  Compositional Pattern Producing Networks
 date:   2020-08-12 00:26:21 +0400

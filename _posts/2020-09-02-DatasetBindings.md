@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: Dataset Bindings
 date: 2020-09-02T09:29+04:00

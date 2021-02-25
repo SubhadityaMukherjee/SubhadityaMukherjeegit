@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: latex from code 
 date: 2020-06-30 17:24:21 +0400

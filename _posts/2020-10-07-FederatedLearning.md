@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: Federated Learning
 date: 2020-10-07T20:15+04:00

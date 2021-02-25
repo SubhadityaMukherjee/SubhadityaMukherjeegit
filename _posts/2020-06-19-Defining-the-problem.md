@@ -1,4 +1,5 @@
 ---
+categories: article
 layout: post
 title: "Defining the project and outlining what is to come in the future"
 author: Subhaditya Mukherjee
