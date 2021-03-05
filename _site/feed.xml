@@ -1,4 +1,190 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-02-25T16:02:06+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Making a Deep Learning library from scratch in Julia and documenting it the whole way!</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">Super resolution</title><link href="http://localhost:4000/article/2020/10/09/SuperRes.html" rel="alternate" type="text/html" title="Super resolution" /><published>2020-10-09T22:01:00+04:00</published><updated>2020-10-09T22:01:00+04:00</updated><id>http://localhost:4000/article/2020/10/09/SuperRes</id><content type="html" xml:base="http://localhost:4000/article/2020/10/09/SuperRes.html">&lt;p&gt;Today we will look at Super Resolution in Python.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-03-06T01:05:16+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Digging into deep learning books, papers and code</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">More Deep Learning, Less Crying - A guide</title><link href="http://localhost:4000/article/2021/03/05/tricksFromLectures.html" rel="alternate" type="text/html" title="More Deep Learning, Less Crying - A guide" /><published>2021-03-05T18:42:00+04:00</published><updated>2021-03-05T18:42:00+04:00</updated><id>http://localhost:4000/article/2021/03/05/tricksFromLectures</id><content type="html" xml:base="http://localhost:4000/article/2021/03/05/tricksFromLectures.html">&lt;p&gt;This is a guide to make deep learning less messy and hopefully give you a way to use less tissues next time you code.&lt;/p&gt;
+
+&lt;h1 id=&quot;who-is-this-article-for-a-checklist&quot;&gt;Who is this article for? A checklist&lt;/h1&gt;
+&lt;p&gt;If you can answer yes to most of them. Read. Or cry. Your choice of course.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Do you work with deep learning models?&lt;/li&gt;
+  &lt;li&gt;Why are there 15 hyperparameters???!!!!&lt;/li&gt;
+  &lt;li&gt;Frequently run into bugs?&lt;/li&gt;
+  &lt;li&gt;Wish you didn’t have to open google every 5 minutes while coding?&lt;/li&gt;
+  &lt;li&gt;I just want a working model dammit!!!&lt;/li&gt;
+  &lt;li&gt;Please. Why am I getting 3% accuracy. It’s been 2 days. Please.&lt;/li&gt;
+  &lt;li&gt;I should have done an MBA. Why am I here. What is my purpose. (Okay maybe I can’t help you with this one)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Oh yay. You made it here. Wipe your eyes for one last time because this will be a ride :)&lt;/p&gt;
+
+&lt;p&gt;PS. This might be a long-ish checklist but trust me, it will save you many tears. A note that the materials were compiled from way too many papers and slides so I do not have the proper citation for every statement here. In the references section you can find a list of all the ones I could find.&lt;/p&gt;
+
+&lt;h1 id=&quot;what-is-covered-here&quot;&gt;What is covered here?&lt;/h1&gt;
+
+&lt;p&gt;In this article, I have tried to cover the major parts that frustrate me on a daily basis and their potential solutions.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;This is platform independant. So it does not matter if you are using pytorch/tensorflow/caffe/flux.jl or any of the others.&lt;/li&gt;
+  &lt;li&gt;We first talk about some sensible default architecture and training choices you can make to get up and running quickly.&lt;/li&gt;
+  &lt;li&gt;Then we look at some tricks to make life easier and train our models faster and preserve stability.&lt;/li&gt;
+  &lt;li&gt;After that we look at some hyper parameters and decide which to spend our time on.&lt;/li&gt;
+  &lt;li&gt;Then for the juicy bit, we look at some common bugs and how to overcome them. This includes memory errors, under/over fitting errors etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;sensible-defaults&quot;&gt;Sensible defaults&lt;/h1&gt;
+
+&lt;p&gt;Most of the time, contrary to popular belief we can actually get pretty great results by using some default values. Or sticking to simpler architectures before using some complicated one and messing everything up.&lt;/p&gt;
+
+&lt;h2 id=&quot;architecture&quot;&gt;Architecture&lt;/h2&gt;
+
+&lt;p&gt;Let us look at some defaults we can look at while building a network.
+Note that this goes from easy -&amp;gt; complicated&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Dataset with only images : Start with a LeNet like architecture -&amp;gt; ResNets -&amp;gt; Even more complicated ones&lt;/li&gt;
+  &lt;li&gt;Dataset with only sequences : Start with an LSTM with one hidden layer (or try with 1D convs) -&amp;gt; Attention or wave net based -&amp;gt; Transformers maybe&lt;/li&gt;
+  &lt;li&gt;Other : Start with a fully connected with 1 hidden layer -&amp;gt; This actually cannot be generalized&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;training-choices&quot;&gt;Training choices&lt;/h2&gt;
+
+&lt;p&gt;What about training? Once you have set up everything, you might be faced with endless options. What do you stick to?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Optimizer : Honestly, stick to an Adam optimizer with lr = 3e-4. (Or use AdamW+ learning rate finder)&lt;/li&gt;
+  &lt;li&gt;Activations : Use relu for fully connected and convolution layers and tanh if you have an LSTM.&lt;/li&gt;
+  &lt;li&gt;Initialization : He or Glorot normal should do fine.&lt;/li&gt;
+  &lt;li&gt;Regularization : None (as a start). Look at this only when everything else is okay.&lt;/li&gt;
+  &lt;li&gt;Normalization : None (as a start). Batchnorm causes a lot of bugs so use only when everything else is working.&lt;/li&gt;
+  &lt;li&gt;Consider using a subset of the data or reduced number of classes at first.&lt;/li&gt;
+  &lt;li&gt;Try to overfit a single batch first and compare with known results. (More on this below)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;tricks-to-use-while-training&quot;&gt;Tricks to use while training&lt;/h1&gt;
+
+&lt;p&gt;Now this is just beautiful. Do give &lt;a href=&quot;http://openaccess.thecvf.com/content_CVPR_2019/papers/He_Bag_of_Tricks_for_Image_Classification_with_Convolutional_Neural_Networks_CVPR_2019_paper.pdf&quot;&gt;this paper&lt;/a&gt; by Tong He et al a read. It’s amazing and covers these points in detail. So instead of repeating content, I have just given a tiny brief.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Learning rate finder : Why use a constant learning rate when you can vary it and identify the one which does the best. In a fraction of time.&lt;/li&gt;
+  &lt;li&gt;Test time augmentation : Apply augmentation during inference.&lt;/li&gt;
+  &lt;li&gt;Progressive resizing : One of my favorites. If you are training on a large image size, why start big? Start small -&amp;gt; resize -&amp;gt; transfer learn -&amp;gt; rinse and repeat.&lt;/li&gt;
+  &lt;li&gt;1 Cycle : Identify bounds for cyclic scheduling with a learning rate test. Then achieve superconvergence (sometimes)&lt;/li&gt;
+  &lt;li&gt;Gradual unfreezing : When transfer learning, freeze the pretrained layers and train the other layers to achieve better performance. Then gradually unfreeze the rest while traning.&lt;/li&gt;
+  &lt;li&gt;Choose the AdamW optimizer over Adam.&lt;/li&gt;
+  &lt;li&gt;Mixed precision training : Super easy to add. Basically uses float 16 for part of the components of the network. Your GPU will thank you trust me.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;hyperparams&quot;&gt;Hyperparams&lt;/h2&gt;
+&lt;p&gt;Have too many to choose from? Here are some you can look at in order of importance. (Thank you &lt;a href=&quot;https://scholar.google.com/scholar?hl=en&amp;amp;as_sdt=0%2C5&amp;amp;q=Josh+Tobin&amp;amp;btnG=&amp;amp;oq=josh+&quot;&gt;Josh Tobin&lt;/a&gt;).&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Spend most of your time on these : Learning rate, Learning rate schedules, Loss function and finally the Layer size.&lt;/li&gt;
+  &lt;li&gt;Spend a moderate amount of time on : Weight Initialization, Model depth, Layer parameters.&lt;/li&gt;
+  &lt;li&gt;If you still have time : Optimizer, Optimizer params, Batch size, Nonlinearity&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;bugs&quot;&gt;Bugs&lt;/h1&gt;
+
+&lt;p&gt;Some of the most common bugs we might face and how to begin solving them.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Incorrect tensor shapes : Use a debugger.&lt;/li&gt;
+  &lt;li&gt;No normalization : Well, add it.&lt;/li&gt;
+  &lt;li&gt;Way too much preprocessing : Use only a few common ones. (Don’t skip normalization)&lt;/li&gt;
+  &lt;li&gt;Incorrect inputs for loss functions : eg softmax will need loss with logits&lt;/li&gt;
+  &lt;li&gt;Set train/eval mode properly.&lt;/li&gt;
+  &lt;li&gt;Numerical instability : Check exp, log, div functions&lt;/li&gt;
+  &lt;li&gt;Out of memory errors : Scale back memory intensive operations one by one&lt;/li&gt;
+  &lt;li&gt;Check data type (eg fp32, fp16 etc). Especially if you are using mixed precision.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;tackling-out-of-memory-errors&quot;&gt;Tackling out of memory errors&lt;/h2&gt;
+
+&lt;p&gt;Sometimes your GPU starts cursing at you. Sometimes it’s your fault. Sometimes you just forgot the clear the cache. This is for the other times.&lt;/p&gt;
+
+&lt;h3 id=&quot;your-tensors-are-too-big&quot;&gt;Your tensors are too big&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Reduce your batch size&lt;/li&gt;
+  &lt;li&gt;Reduce fully connected layer sizes&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;you-have-stuffed-it-with-too-much-data&quot;&gt;You have stuffed it with too much data&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Use an input queue of sorts (Dataloader)&lt;/li&gt;
+  &lt;li&gt;Reduce buffer size for dataset creation&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;you-are-doing-the-same-thing-too-many-times-duplicated-operations&quot;&gt;You are doing the same thing too many times (Duplicated operations)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Memory leaks&lt;/li&gt;
+  &lt;li&gt;Check if calling a function multiple times (eg. Initialization of a new tensor everytime you are doing something)&lt;/li&gt;
+  &lt;li&gt;Allocate some empty tensors at the start (Not recommended for variable length tensors)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;single-batch-overfitting&quot;&gt;Single batch overfitting&lt;/h2&gt;
+&lt;p&gt;Want a quick way to identify a bunch of errors? Just pass the same data batch again and again. And check for these signs. (Talk about a hack). Basically just do the opposite if any of these happen.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Error goes up dramatically
+      - Flip signs of loss functions or gradients
+      - Do you have a high learning rate
+      - Wrong dimensions for softmax&lt;/li&gt;
+  &lt;li&gt;Your error pretends to be a pinata and explodes
+      - Check all your log, exp functions etc
+      - Do you have a high learning rate&lt;/li&gt;
+  &lt;li&gt;Oscillating error
+      - Corrupted labels
+      - Do you have a high learning rate&lt;/li&gt;
+  &lt;li&gt;Plateaus
+      - Might be too low a learning rate
+      - The gradients might not be passing properly through the model
+      - High regularization
+      - Incorrect inputs to loss functions
+      - Corrupted labels&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;how-well-do-you-fit&quot;&gt;How well do you fit?&lt;/h1&gt;
+&lt;p&gt;No I am not talking about that snazzy dress you got before the lockdown.&lt;/p&gt;
+
+&lt;h2 id=&quot;underfitting&quot;&gt;Underfitting&lt;/h2&gt;
+&lt;p&gt;Your model cries over test data.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Bulk up. Add more layers etc.&lt;/li&gt;
+  &lt;li&gt;Reduce regularization&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;overfitting&quot;&gt;Overfitting&lt;/h2&gt;
+&lt;p&gt;Your model just cries anyway.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add more data to your training&lt;/li&gt;
+  &lt;li&gt;Normalization&lt;/li&gt;
+  &lt;li&gt;Data augmentation&lt;/li&gt;
+  &lt;li&gt;Increase regularization&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;a-good-choice-for-either&quot;&gt;A good choice for either&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Choose a different (possibly more complex) model&lt;/li&gt;
+  &lt;li&gt;Check your hyper params&lt;/li&gt;
+  &lt;li&gt;Error analysis. (Maybe you did something not fun)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;okay-cool-now-what&quot;&gt;Okay cool.. now what?&lt;/h1&gt;
+&lt;p&gt;Well that about covers what I wanted to say here. It is by no means an exhaustive list. But that’s why we have stack overflow right?
+I sincerly hope this helped you out a bit. And made you feel a bit more confident. Do let me know!! You can always reach out in the comments or connect with me from my &lt;a href=&quot;https://www.subhadityamukherjee.me/&quot;&gt;website&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;references&quot;&gt;References&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=GwGTwPcG0YM&amp;amp;list=PL1T8fO7ArWlf6TWwdstb-PcwlubnlrKrm&amp;amp;index=1&quot;&gt;Full Stack Deep Learning bootcamp&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;He, T., Zhang, Z., Zhang, H., Zhang, Z., Xie, J., &amp;amp; Li, M. (2019). Bag of tricks for image classification with convolutional neural networks. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (pp. 558-567).&lt;/li&gt;
+  &lt;li&gt;Loshchilov, I., &amp;amp; Hutter, F. (2018). Fixing weight decay regularization in adam- Smith, L. N. (2017, March). Cyclical learning rates for training neural networks. In 2017 IEEE winter conference on applications of computer vision (WACV) (pp. 464-472). IEEE.&lt;/li&gt;
+  &lt;li&gt;Micikevicius, P., Narang, S., Alben, J., Diamos, G., Elsen, E., Garcia, D., … &amp;amp; Wu, H. (2017). Mixed precision training. arXiv preprint arXiv:1710.03740.&lt;/li&gt;
+  &lt;li&gt;A huge shout-out to the following people whos lectures I referred to while writing the article. Since I looked at the lectures, it’s actually not possible for me to cite every part of the article so I just decided to put a list of people instead. If there is any author you think should be here, please let me know. I will add it.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://scholar.google.com/scholar?q=jeremy%20howard&quot;&gt;Jeremy Howard&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://scholar.google.com/scholar?hl=en&amp;amp;as_sdt=0%2C5&amp;amp;q=Josh+Tobin&amp;amp;btnG=&amp;amp;oq=josh+&quot;&gt;Josh Tobin&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://scholar.google.com/scholar?hl=en&amp;amp;as_sdt=0%2C5&amp;amp;q=sergey+karayev&amp;amp;btnG=&amp;amp;oq=sergey+kar&quot;&gt;Sergey Karayev&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://scholar.google.com/scholar?hl=en&amp;amp;as_sdt=0%2C5&amp;amp;q=pieter+abbeel&amp;amp;btnG=&amp;amp;oq=pieter+abb&quot;&gt;Pieter Abbeel&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://scholar.google.com/scholar?q=andrew%20ng&quot;&gt;Andrew Ng&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://scholar.google.com/scholar?q=andrej%20karpathy&quot;&gt;Andrej Karpathy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="article" /><summary type="html">This is a guide to make deep learning less messy and hopefully give you a way to use less tissues next time you code.</summary></entry><entry><title type="html">Super resolution</title><link href="http://localhost:4000/article/2020/10/09/SuperRes.html" rel="alternate" type="text/html" title="Super resolution" /><published>2020-10-09T22:01:00+04:00</published><updated>2020-10-09T22:01:00+04:00</updated><id>http://localhost:4000/article/2020/10/09/SuperRes</id><content type="html" xml:base="http://localhost:4000/article/2020/10/09/SuperRes.html">&lt;p&gt;Today we will look at Super Resolution in Python.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://medium.com/@msubhaditya/fixing-small-photos-with-deep-learning-eeae87172a1b?source=friends_link&amp;amp;sk=93f69c860776e76ab641277937bfd886&quot;&gt;Medium link&lt;/a&gt;
 Do you use social media? Ever sent someone a picture and when you look at it later you find that the image is &lt;strong&gt;so&lt;/strong&gt; bad in quality? What if you could reverse that?&lt;/p&gt;
@@ -1522,117 +1708,4 @@ This is something like a de - convolution. Except that is a misnomer.&lt;/p&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=zLtKCBXhyAs&amp;amp;list=PLpmmExpJxZVRFPAXCYF8SKKFeKq-Dw6d5&amp;amp;index=7&amp;amp;t=0s&quot;&gt;Intersection of AI and Art&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/hindupuravinash/the-gan-zoo&quot;&gt;A whole list of types of GANs&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/soumith/ganhacks&quot;&gt;GAN Hax from the creator of Pytorch&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="article" /><category term="generative" /><category term="color" /><category term="abstract" /><category term="art" /><category term="gan" /><category term="dc" /><category term="create" /><category term="mnist" /><summary type="html">Here we will talk about Generative Networks and implement a simple version of DC GAN.</summary></entry><entry><title type="html">Differentiable Programming</title><link href="http://localhost:4000/article/2020/08/13/Differentiable-Programming.html" rel="alternate" type="text/html" title="Differentiable Programming" /><published>2020-08-13T01:07:58+04:00</published><updated>2020-08-13T01:07:58+04:00</updated><id>http://localhost:4000/article/2020/08/13/Differentiable%20Programming</id><content type="html" xml:base="http://localhost:4000/article/2020/08/13/Differentiable-Programming.html">&lt;p&gt;Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)&lt;/p&gt;
-
-&lt;h2 id=&quot;in-theory&quot;&gt;In theory&lt;/h2&gt;
-
-&lt;p&gt;So what was deep learning and why did we move on? Or did we?
-In summary, DL had the following steps -&amp;gt; Pick a bunch of inputs and outputs -&amp;gt; Start off by randomly defining a relationship -&amp;gt; Pass it through neural network -&amp;gt; perform gradient descent -&amp;gt; Optimize a loss function -&amp;gt; Repeat until it either works or blows up.&lt;/p&gt;
-
-&lt;p&gt;Now what? Well now we take this and realize that hey! What if we applied this to code itself??!! Crazy right? All it means is, why not take arbitrary (almost) code and if it can be differentiated, calculate its gradient and.. optimize it for a function!&lt;/p&gt;
-
-&lt;p&gt;Does that make sense? I guess not. So in other words. We can take existing equations which we say know parts of and then use this approach to fill in so to speak. What does this mean? We can apply domain knowledge and well defined laws and use data to find equations to model our system!&lt;/p&gt;
-
-&lt;p&gt;Say we have simulated a physics engine (many exist) and we run a simulation. Using a Neural ODE we can plug in the variables we need and compute an equation. “Theoretically”&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;I am still figuring things out so I will update this as I go along. If I get anything wrong now, hopefully I will learn enough to fix it. If not, please do tell me&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;lotka-volterra&quot;&gt;Lotka Volterra&lt;/h2&gt;
-
-&lt;p&gt;As an example, here is the most common one I found so far. The Lotka Volterra model. What is it? 
-Simply put, it is an ecological model which tries to describe the relationship between two species where one is a predator and the other is prey. It aims to model how the population changes over time.&lt;/p&gt;
-
-&lt;p&gt;Here we get some different packages. Along with our old friends Latexify, Flux and Plots.
-DiffEqFlux will allow us to use differential equation solvers. I do not think I will try to implement that from scratch as it is currently wayy out of scope for me.
-The only major thing I will try to atleast understand and write in depth about is Automatic Differentiation. (More explained throughout the course of this article)&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Latexify&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DiffEqFlux&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DiffEqSensitivity&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OrdinaryDiffEq&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Zygote&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Plots&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h2 id=&quot;what-is-it&quot;&gt;What is it&lt;/h2&gt;
-&lt;p&gt;Okay now let us model the system.&lt;/p&gt;
-
-&lt;p&gt;We have two populations and so we need two starting values which we set as x and y.
-We will also define a few parameters that we need.
-The first being the equation of the first population.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;We take α to be the growth rate.&lt;/li&gt;
-  &lt;li&gt;β to be the rate at which the prey is killed.&lt;/li&gt;
-  &lt;li&gt;δ to be the death rate of the predators&lt;/li&gt;
-  &lt;li&gt;γ rate at which the predators increase&lt;/li&gt;
-&lt;/ul&gt;
-
-\[dx = \left( \alpha - \beta \cdot y \right) \cdot x\]
-
-&lt;p&gt;The second being the equation of the second population.&lt;/p&gt;
-
-\[dy = \left( \delta \cdot x - \gamma \right) \cdot y\]
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; lotka_volterra&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;du&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;α&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;β&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;δ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;γ&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;du&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;α&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;β&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;du&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;δ&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;γ&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h2 id=&quot;modelling-it&quot;&gt;Modelling it&lt;/h2&gt;
-
-&lt;p&gt;Now that we have a model of our system, we set a few default values just to start with. Giving the inital populations a value of 1. And some default parameters for our rates.&lt;/p&gt;
-
-&lt;p&gt;We then pop this into what is known as an ODEProblem. This is a wrapper for allowing us to pose our function as an ODE. We can then attempt to solve it using an ODESolver. (I am still getting the details. When I understand it fully, there will be a post)&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;2.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;u0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;prob&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ODEProblem&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lotka_volterra&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;10.0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Our current plot looks something like this.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;img src=&quot;/img/dif1.png&quot; alt=&quot;im&quot; /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;So we write a tiny function to return an array with the solutions for that current timestep. We are also using the Tsit5(Tsitorous) solver. This seems to be part of something called Runge-Kutta. 
-A google says “Runge–Kutta method is an effective and widely used method for solving the initial-value problems of differential equations and can be used to construct high order accurate numerical method by functions’ self without needing the high order derivatives of functions.”.&lt;/p&gt;
-
-&lt;p&gt;I guess that roughly translates to -&amp;gt; Solve a higher order differential equation without much overhead?&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; predict_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prob&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Tsit5&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reltol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1e-4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Now for something more up my alley. Optimizers and loss!! We are using sum of squared absolute error here it seems. And our dear friend Adam.
-We also have a callback function to display the current loss and then try to remake the equation using the current parameters so we can plot it.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;loss_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;abs2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;())&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ADAM&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;cb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loss_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;())&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remake&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prob&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Tsit5&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ylim&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h2 id=&quot;train&quot;&gt;Train!!&lt;/h2&gt;
-&lt;p&gt;Finally we can train the network.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;train!&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loss_rd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Iterators&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;repeated&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;((),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cb&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;outputs&quot;&gt;Outputs&lt;/h2&gt;
-&lt;p&gt;As time goes by we get.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;img src=&quot;/img/dif2.png&quot; alt=&quot;im&quot; /&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;img src=&quot;/img/dif3.png&quot; alt=&quot;im&quot; /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;And finally.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;img src=&quot;/img/dif4.png&quot; alt=&quot;im&quot; /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Yay! We have successfully modelled an equation using a neural network with barely any data. This is a first step duh. Long way to go before I get anywhere substantial. But baby steps right?&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="article" /><category term="deep" /><category term="learning" /><category term="dead" /><category term="physics" /><category term="math" /><category term="simulation" /><category term="gap" /><category term="ode" /><summary type="html">Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="article" /><category term="generative" /><category term="color" /><category term="abstract" /><category term="art" /><category term="gan" /><category term="dc" /><category term="create" /><category term="mnist" /><summary type="html">Here we will talk about Generative Networks and implement a simple version of DC GAN.</summary></entry></feed>
