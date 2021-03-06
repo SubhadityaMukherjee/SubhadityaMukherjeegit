@@ -9,7 +9,7 @@ def sizer(x):
 
 
 for i in tqdm(tem):
-    if "resized" not in i:
+    if "rename" not in i:
         cursize = sizer(i)
         #  print(cursize)
         if cursize >= 2 and cursize <= 3:

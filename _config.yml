@@ -18,5 +18,5 @@ github: [metadata]
 minima:
   skin: dark
 
-imagesurl: "artworks/"
-thumbsurl: "thumbs/"
+imagesurl: "./artworks/"
+thumbsurl: "./thumbs/"
