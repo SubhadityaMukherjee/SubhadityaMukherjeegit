@@ -490,6 +490,9 @@ ul.downloads {
   border: 1px solid #e0e0e0;
   width: 270px; }
 
+.grid-container {
+  display: grid; }
+
 .downloads li {
   width: 89px;
   float: left;
