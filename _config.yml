@@ -17,3 +17,6 @@ markdown: kramdown
 github: [metadata]
 minima:
   skin: dark
+
+imagesurl: "artworks"
+thumbsurl: "thumbs"

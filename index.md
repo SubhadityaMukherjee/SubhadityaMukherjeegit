@@ -19,5 +19,6 @@ categories: post
 <h1><a href = "{{ "art.html"| absolute_url  }}">Art</a></h1>
 <h1><a href = "https://msubhaditya.medium.com/">Blogs (Medium)</a></h1>
 <h1><a href = "https://github.com/SubhadityaMukherjee/">Github</a></h1>
+<h1><a href = "https://www.linkedin.com/in/subhaditya-mukherjee-a36883100/">Linkedin</a></h1>
 <h1><a href = "mailto: msubhaditya@gmail.com">Email me</a></h1>
 

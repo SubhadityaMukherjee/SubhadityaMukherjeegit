@@ -2,3 +2,6 @@
 .bundle
 .sass-cache
 _site
+artworks/*
+artworks
+
