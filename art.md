@@ -5,5 +5,5 @@ description: "Here is my work"
 
 photos:
     set : berlin
-    size: 40
+    size: 20
 ---
