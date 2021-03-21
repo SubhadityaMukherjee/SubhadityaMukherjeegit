@@ -14,7 +14,7 @@ Wow I finally got to this article after 4 days. Just havent been feeling like wo
 
 So what is an "optimizer"? So remember the loss? Every network has a loss landscape, which basically means that if we plot all the possible losses, we will get something like this.
 
-![img](/img/grad.png) (Got this from wikipedia)
+![img](/assets/img/grad.png) (Got this from wikipedia)
 
 Our objective is to reach the least point in this landscape. The optimizer helps us get there faster. You can think of it like walking down a hill. You need to get to the bottom but how fast you get there depends on how you walk. If you know the way, you can reach faster right? But here we do not know the way, so all we can do is guess. The better the optimizer, the better we can "guess" our way down.
 This is called Gradient Descent. (pun intended lol)

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-03-09T09:16:42+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Digging into deep learning books, papers and code</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">AI Superpowers Kai Fu Lee</title><link href="http://localhost:4000/book/2021/03/09/AISuperpowersKaiFuLee.html" rel="alternate" type="text/html" title="AI Superpowers Kai Fu Lee" /><published>2021-03-09T09:04:00+04:00</published><updated>2021-03-09T09:04:00+04:00</updated><id>http://localhost:4000/book/2021/03/09/AISuperpowersKaiFuLee</id><content type="html" xml:base="http://localhost:4000/book/2021/03/09/AISuperpowersKaiFuLee.html">&lt;p&gt;Notes on the book.&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="book" /><summary type="html">Notes on the book.</summary></entry><entry><title type="html">Digital Minimalism Cal Newport</title><link href="http://localhost:4000/book/2021/03/07/DigitalMinimalismCalNewport.html" rel="alternate" type="text/html" title="Digital Minimalism Cal Newport" /><published>2021-03-07T16:24:00+04:00</published><updated>2021-03-07T16:24:00+04:00</updated><id>http://localhost:4000/book/2021/03/07/DigitalMinimalismCalNewport</id><content type="html" xml:base="http://localhost:4000/book/2021/03/07/DigitalMinimalismCalNewport.html">&lt;p&gt;Notes on the book.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-03-21T20:31:26+04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Deconstructing Deep learning</title><subtitle>Digging into deep learning books, papers and code</subtitle><author><name>Subhaditya Mukherjee</name></author><entry><title type="html">AI Superpowers Kai Fu Lee</title><link href="http://localhost:4000/book/2021/03/09/AISuperpowersKaiFuLee.html" rel="alternate" type="text/html" title="AI Superpowers Kai Fu Lee" /><published>2021-03-09T09:04:00+04:00</published><updated>2021-03-09T09:04:00+04:00</updated><id>http://localhost:4000/book/2021/03/09/AISuperpowersKaiFuLee</id><content type="html" xml:base="http://localhost:4000/book/2021/03/09/AISuperpowersKaiFuLee.html">&lt;p&gt;Notes on the book.&lt;/p&gt;</content><author><name>Subhaditya Mukherjee</name></author><category term="book" /><summary type="html">Notes on the book.</summary></entry><entry><title type="html">Digital Minimalism Cal Newport</title><link href="http://localhost:4000/book/2021/03/07/DigitalMinimalismCalNewport.html" rel="alternate" type="text/html" title="Digital Minimalism Cal Newport" /><published>2021-03-07T16:24:00+04:00</published><updated>2021-03-07T16:24:00+04:00</updated><id>http://localhost:4000/book/2021/03/07/DigitalMinimalismCalNewport</id><content type="html" xml:base="http://localhost:4000/book/2021/03/07/DigitalMinimalismCalNewport.html">&lt;p&gt;Notes on the book.&lt;/p&gt;
 
 &lt;h2 id=&quot;things-i-liked-in-the-book&quot;&gt;Things I liked in the book.&lt;/h2&gt;
 
@@ -827,7 +827,7 @@ BatchNorm does play an important part in the network. And this somehow proves ou
 &lt;p&gt;Let us take Turty, a cute little turtle. 
 We load his image, and convert it into a matrix from a matrix of RGB values.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/turtle.jpg&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/deconstrucImages/turtle.jpg&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;language-jl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Images&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ImageView&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flux&lt;/span&gt;
@@ -874,11 +874,11 @@ Signtest is just a simple function to return a specific value based on the if th
 &lt;p&gt;What is passed to this image identifier is generally the gradient of the image, the image itself and the function generally keeps the values between 0,1 and returns the image.
 Due to the peturbed function, the image now becomes this.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/attacked.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/deconstrucImages/attacked.png&quot; alt=&quot;drawing&quot; width=&quot;200&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Apart from the color (which does not really matter), the image looks the same. But to Termy, this actually looks like a rifle!!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/deconstrucImages/attackedpaper.png&quot; alt=&quot;drawing&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/deconstrucImages/attackedpaper.png&quot; alt=&quot;drawing&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This is from the &lt;a href=&quot;https://arxiv.org/pdf/1707.07397.pdf&quot;&gt;paper&lt;/a&gt;&lt;/p&gt;
 
@@ -1171,7 +1171,7 @@ frac = percentage of values to remove
 
 &lt;p&gt;This&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/docu.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/docu.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;how&quot;&gt;How&lt;/h2&gt;
 

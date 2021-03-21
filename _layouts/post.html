@@ -1,10 +1,9 @@
 ---
-layout: default
+layout: default_without_search
 ---
 <a href = "/deeplearning.html">Go to index</a><br><br>
 
 
-<small>{{ page.date | date: "%-d %B %Y" }}</small>
 <h1>{{ page.title }}</h1>
 
 <span class="reading-time" title="Estimated read time">
@@ -22,14 +21,10 @@ layout: default
 {{ content }}
 
 <section>
-<!-- <ul> -->
 Related posts:&emsp;
 {% for p in site.related_posts %}
-<!-- <li> -->
   <a href={{ p.url }}> {{ p.title }}&emsp; </a>
-  <!-- </li> -->
 {% endfor %}
 
 </section>
-<!-- </ul> -->
 

@@ -107,9 +107,9 @@ We will not touch this image right now but we will create a test image and a ker
 img = [0 1 2 ; 3 4 5; 6 7 8]
 kernel = [0 1 ; 2 3]
 ```
-Our Image is : <img src="{{site.baseurl}}/img/deconstrucImages/img_p1.png" alt="drawing" width="200"/>
+Our Image is : <img src="{{site.baseurl}}/assets/img/deconstrucImages/img_p1.png" alt="drawing" width="200"/>
 
-Our kernel is : <img src="{{site.baseurl}}/img/deconstrucImages/kernel.png" alt="drawing" width="200"/>
+Our kernel is : <img src="{{site.baseurl}}/assets/img/deconstrucImages/kernel.png" alt="drawing" width="200"/>
 
 Okay let us take stride = 1 and give ourselves the option of setting a kernel and choosing a padding. Valid means no padding and same means that the returned dimensions should be the same as the image aka there will be padding.
 
@@ -153,7 +153,7 @@ function conv2d(img, kernel, stride = 1, padding = "valid")
     end
 ```
 
-Our padded image is <img src="{{site.baseurl}}/img/deconstrucImages/padded.png" alt="drawing" width="200"/>
+Our padded image is <img src="{{site.baseurl}}/assets/img/deconstrucImages/padded.png" alt="drawing" width="200"/>
 
 Now we will follow steps 7 to 9.
 
@@ -182,7 +182,7 @@ end
 conv2d(img , kernel)
 ```
 
-We then get :<img src="{{site.baseurl}}/img/deconstrucImages/temp.png" alt="drawing" width="200"/>
+We then get :<img src="{{site.baseurl}}/assets/img/deconstrucImages/temp.png" alt="drawing" width="200"/>
 
 How did I save the images?
 
@@ -247,14 +247,14 @@ end
 Cool! Let us do it for an image. Note that Julia stores images in arrays and since our example only works for 2D matrices, we convert the image into grayscale first and then apply the channelview function.
 
 We are using a really cute mandrill for our example.
-<img src="{{site.baseurl}}/img/deconstrucImages/mandorig.png" alt="drawing" width="200"/>
+<img src="{{site.baseurl}}/assets/img/deconstrucImages/mandorig.png" alt="drawing" width="200"/>
 
 ``` julia
 img = testimage("mandrill");
 kernel_blur = [-2 -1 0; -1 1 1; 0 1 2]
 imshow(conv2d(channelview(Gray.(img)),kernel_blur))
 ```
-We get  :<img src="{{site.baseurl}}/img/deconstrucImages/mandblur.png" alt="drawing" width="200"/>
+We get  :<img src="{{site.baseurl}}/assets/img/deconstrucImages/mandblur.png" alt="drawing" width="200"/>
 
 Wow. What happened to the poor thing. Notice the weird numbers? Those are a specific kernel to do this.
 But why?

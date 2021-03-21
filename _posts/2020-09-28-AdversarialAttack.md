@@ -25,7 +25,7 @@ The only question is.. why?
 Let us take Turty, a cute little turtle. 
 We load his image, and convert it into a matrix from a matrix of RGB values.
 
-<img src="{{site.baseurl}}/img/deconstrucImages/turtle.jpg" alt="drawing" width="200"/>
+<img src="{{site.baseurl}}/assets/img/deconstrucImages/turtle.jpg" alt="drawing" width="200"/>
 
 ```jl
 using Images, ImageView
@@ -74,11 +74,11 @@ Note that the last bit is the formula to find the gradient.
 What is passed to this image identifier is generally the gradient of the image, the image itself and the function generally keeps the values between 0,1 and returns the image.
 Due to the peturbed function, the image now becomes this.
 
-<img src="{{site.baseurl}}/img/deconstrucImages/attacked.png" alt="drawing" width="200"/>
+<img src="{{site.baseurl}}/assets/img/deconstrucImages/attacked.png" alt="drawing" width="200"/>
 
 Apart from the color (which does not really matter), the image looks the same. But to Termy, this actually looks like a rifle!!
 
-<img src="{{site.baseurl}}/img/deconstrucImages/attackedpaper.png" alt="drawing" width="300"/>
+<img src="{{site.baseurl}}/assets/img/deconstrucImages/attackedpaper.png" alt="drawing" width="300"/>
 
 This is from the [paper](https://arxiv.org/pdf/1707.07397.pdf)
 

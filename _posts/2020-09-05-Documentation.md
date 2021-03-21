@@ -22,7 +22,7 @@ But we are coders! So how do we go about making it easy to maintain.
 
 This
 
-![img](/img/docu.png)
+![img](/assets/img/docu.png)
 
 ## How 
 
