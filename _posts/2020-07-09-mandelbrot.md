@@ -99,7 +99,7 @@ end
 
 After this we have an output like this.
 
-<img src="{{site.baseurl}}/img/frac2.png" alt="drawing" width="500"/>
+<img src="{{site.baseurl}}/assets/img/frac2.png" alt="drawing" width="500"/>
 
 What if we wanted to add noise to the output?
 
@@ -129,8 +129,8 @@ heatmap(fractal_img, fillcolor = :blues)
 
 Aren't these pretty??
 
-<img src="{{site.baseurl}}/img/frac3.png" alt="drawing" width="500"/>
+<img src="{{site.baseurl}}/assets/img/frac3.png" alt="drawing" width="500"/>
 
-<img src="{{site.baseurl}}/img/madel.png" alt="drawing" width="500"/>
+<img src="{{site.baseurl}}/assets/img/madel.png" alt="drawing" width="500"/>
 
-<img src="{{site.baseurl}}/img/madel2.png" alt="drawing" width="500"/>
+<img src="{{site.baseurl}}/assets/img/madel2.png" alt="drawing" width="500"/>

@@ -108,8 +108,8 @@ Flux.train!(loss_rd, Flux.params(p), Iterators.repeated((), 100), opt, cb = cb)
 
 ## Outputs
 As time goes by we get. 
-- ![im](/img/dif2.png)
-- ![im](/img/dif3.png)
+- ![im](/assets/img/dif2.png)
+- ![im](/assets/img/dif3.png)
 
 And finally.
 

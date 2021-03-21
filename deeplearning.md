@@ -15,19 +15,15 @@ categories: post
   {% if post.categories contains t %}
   <li>
   {% if post.categories[0] == "paper" %}
-	    <h3><a href="{{ post.url }}">&#128214; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
-	{{ post.excerpt }}
+	    <h3><a href="{{ post.url }}"> {{ post.title | capitalize}}</a></h3>
 	{% elsif post.categories[0] == "article" %}
-	    <h3><a href="{{ post.url }}">&#9883; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
+	    <h3><a href="{{ post.url }}"> {{ post.title | capitalize}} : {{ post.date | date: '%b %Y' }} </a></h3>
 	{{ post.excerpt }}
-	
 	{% elsif post.categories[0] == "space" %}
-	    <h3><a href="{{ post.url }}">&#128640; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
+	    <h3><a href="{{ post.url }}"> {{ post.title | capitalize}} : {{ post.date | date: '%b %Y' }} </a></h3>
 	{{ post.excerpt }}
 	{% elsif post.categories[0] == "book" %}
-	    <h3><a href="{{ post.url }}">&#128640; {{ post.date | date: '%-d %b %y' }} : {{ post.title | capitalize}}</a></h3>
-	{{ post.excerpt }}
-
+	    <h3><a href="{{ post.url }}"> {{ post.title | capitalize}} : {{ post.date | date: '%b %Y' }} </a></h3>
 	{% endif %}
   </li>
   {% endif %}

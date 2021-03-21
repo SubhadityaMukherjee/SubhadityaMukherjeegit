@@ -62,7 +62,7 @@ end
 So lets test it out!
 Let us take our beloved mandrill using testimages.
 
-<img src="{{site.baseurl}}/img/deconstrucImages/mandorig.png" alt="drawing" width="200"/>
+<img src="{{site.baseurl}}/assets/img/deconstrucImages/mandorig.png" alt="drawing" width="200"/>
 
 Then we can apply channelview on it and convert the values to Float32. Let us also just index out the 1st dimension. (since it is a colored image, there are 3 dimensions).
 Then we do an im2col on it with the same dimension as that of the image.
@@ -105,7 +105,7 @@ end
 write_to_png(out1, "/home/subhaditya/Desktop/GITHUB/SubhadityaMukherjee.github.io/img/deconstrucImages/imconv.png")
 ```
 
-<img src="{{site.baseurl}}/img/deconstrucImages/imconv.png" alt="drawing" width="200"/>
+<img src="{{site.baseurl}}/assets/img/deconstrucImages/imconv.png" alt="drawing" width="200"/>
 
 Fun.
 
