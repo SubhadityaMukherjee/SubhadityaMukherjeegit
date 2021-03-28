@@ -12,10 +12,10 @@
 
 {% seo %}
 
-    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+    <link rel="stylesheet" href="{{ "/assets/css/landing.css?v=" | append: site.github.build_revision | relative_url }}">
   </head>
   <body>
-    <div class="wrapper">
+    <div class="col-md-4">
       <header>
         <h2><a id = "imp" href="{{ "/" | absolute_url }}">Home page</a></h2>
         <p>Deconstructing Deep Learning +  δeviations</p>
@@ -40,7 +40,9 @@
       </header>
       
       <hr>
+    </div>
 <section>
+      <div class="col-md-5">
   {{ content }}
     </div>
   </body>
