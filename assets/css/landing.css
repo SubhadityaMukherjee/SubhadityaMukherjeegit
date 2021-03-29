@@ -79,7 +79,7 @@ h1 {
 }
 
 mark {
-	color: #000;
+	color: #222;
 	background: #ff0
 }
 
@@ -232,7 +232,7 @@ th {
 
 @media print {
 	* {
-		color: #000!important;
+		color: #222!important;
 		text-shadow: none!important;
 		background: 0 0!important;
 		-webkit-box-shadow: none!important;
@@ -285,14 +285,14 @@ th {
 	}
 	.table td,
 	.table th {
-		background-color: #fff!important
+		background-color: #222!important
 	}
 	.btn>.caret,
 	.dropup>.btn>.caret {
-		border-top-color: #000!important
+		border-top-color: #222!important
 	}
 	.label {
-		border: 1px solid #000
+		border: 1px solid #222
 	}
 	.table {
 		border-collapse: collapse!important
@@ -1144,7 +1144,7 @@ body {
 	font-size: 14px;
 	line-height: 1.42857143;
 	color: #333;
-	background-color: #fff
+	background-color: #222
 }
 
 button,
@@ -1201,7 +1201,7 @@ img {
 	height: auto;
 	padding: 4px;
 	line-height: 1.42857143;
-	background-color: #fff;
+	background-color: #222;
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	-webkit-transition: all .2s ease-in-out;
@@ -1256,7 +1256,7 @@ h6 {
 	font-family: inherit;
 	font-weight: 500;
 	line-height: 1.1;
-	color: inherit
+	color: #fff
 }
 
 .h1 .small,
@@ -1681,7 +1681,7 @@ code {
 kbd {
 	padding: 2px 4px;
 	font-size: 90%;
-	color: #fff;
+	color: #222;
 	background-color: #333;
 	border-radius: 3px;
 	-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);
@@ -1705,14 +1705,14 @@ pre {
 	word-break: break-all;
 	word-wrap: break-word;
 	background-color: #f5f5f5;
-	border: 1px solid #ccc;
+	border: 1px solid #ddd;
 	border-radius: 4px
 }
 
 pre code {
 	padding: 0;
 	font-size: inherit;
-	color: inherit;
+	color: white;
 	white-space: pre-wrap;
 	background-color: transparent;
 	border-radius: 0
@@ -2588,7 +2588,7 @@ th {
 }
 
 .table .table {
-	background-color: #fff
+	background-color: #222
 }
 
 .table-condensed>tbody>tr>td,
@@ -2880,7 +2880,7 @@ output {
 	font-size: 14px;
 	line-height: 1.42857143;
 	color: #555;
-	background-color: #fff;
+	background-color: #222;
 	background-image: none;
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -3353,7 +3353,7 @@ fieldset[disabled] .btn {
 
 .btn-default {
 	color: #333;
-	background-color: #fff;
+	background-color: #222;
 	border-color: #ccc
 }
 
@@ -3388,7 +3388,7 @@ fieldset[disabled] .btn-default.active,
 fieldset[disabled] .btn-default:active,
 fieldset[disabled] .btn-default:focus,
 fieldset[disabled] .btn-default:hover {
-	background-color: #fff;
+	background-color: #222;
 	border-color: #ccc
 }
 
@@ -3486,7 +3486,7 @@ fieldset[disabled] .btn-success:hover {
 
 .btn-success .badge {
 	color: #5cb85c;
-	background-color: #fff
+	background-color: #222
 }
 
 .btn-info {
@@ -3532,7 +3532,7 @@ fieldset[disabled] .btn-info:hover {
 
 .btn-info .badge {
 	color: #5bc0de;
-	background-color: #fff
+	background-color: #222
 }
 
 .btn-warning {
@@ -3763,7 +3763,7 @@ tbody.collapse.in {
 	position: absolute;
 	top: 100%;
 	left: 0;
-	z-index: 1000;
+	z-index: 1222;
 	display: none;
 	float: left;
 	min-width: 160px;
@@ -4608,7 +4608,7 @@ textarea.input-group-sm>.input-group-btn>.btn {
 }
 
 .navbar-static-top {
-	z-index: 1000;
+	z-index: 1222;
 	border-width: 0 0 1px
 }
 
@@ -5427,13 +5427,13 @@ a.list-group-item.active>.badge {
 .jumbotron {
 	padding: 30px;
 	margin-bottom: 30px;
-	color: inherit;
-	background-color: #eee
+	color: white;
+	background-color: #222
 }
 
 .jumbotron .h1,
 .jumbotron h1 {
-	color: inherit
+	color: white
 }
 
 .jumbotron p {
@@ -6397,14 +6397,14 @@ a.list-group-item-danger.active:hover {
 	font-size: 21px;
 	font-weight: 700;
 	line-height: 1;
-	color: #000;
+	color: #222;
 	text-shadow: 0 1px 0 #fff;
 	opacity: .2
 }
 
 .close:focus,
 .close:hover {
-	color: #000;
+	color: #222;
 	text-decoration: none;
 	cursor: pointer;
 	opacity: .5
@@ -6481,7 +6481,7 @@ button.close {
 	bottom: 0;
 	left: 0;
 	z-index: 1040;
-	background-color: #000
+	background-color: #222
 }
 
 .modal-backdrop.fade {
@@ -6599,7 +6599,7 @@ button.close {
 	color: #fff;
 	text-align: center;
 	text-decoration: none;
-	background-color: #000;
+	background-color: #222;
 	border-radius: 4px
 }
 
@@ -6616,21 +6616,21 @@ button.close {
 	left: 50%;
 	margin-left: -5px;
 	border-width: 5px 5px 0;
-	border-top-color: #000
+	border-top-color: #222
 }
 
 .tooltip.top-left .tooltip-arrow {
 	bottom: 0;
 	left: 5px;
 	border-width: 5px 5px 0;
-	border-top-color: #000
+	border-top-color: #222
 }
 
 .tooltip.top-right .tooltip-arrow {
 	right: 5px;
 	bottom: 0;
 	border-width: 5px 5px 0;
-	border-top-color: #000
+	border-top-color: #222
 }
 
 .tooltip.right .tooltip-arrow {
@@ -6638,7 +6638,7 @@ button.close {
 	left: 0;
 	margin-top: -5px;
 	border-width: 5px 5px 5px 0;
-	border-right-color: #000
+	border-right-color: #222
 }
 
 .tooltip.left .tooltip-arrow {
@@ -6646,7 +6646,7 @@ button.close {
 	right: 0;
 	margin-top: -5px;
 	border-width: 5px 0 5px 5px;
-	border-left-color: #000
+	border-left-color: #222
 }
 
 .tooltip.bottom .tooltip-arrow {
@@ -6654,21 +6654,21 @@ button.close {
 	left: 50%;
 	margin-left: -5px;
 	border-width: 0 5px 5px;
-	border-bottom-color: #000
+	border-bottom-color: #222
 }
 
 .tooltip.bottom-left .tooltip-arrow {
 	top: 0;
 	left: 5px;
 	border-width: 0 5px 5px;
-	border-bottom-color: #000
+	border-bottom-color: #222
 }
 
 .tooltip.bottom-right .tooltip-arrow {
 	top: 0;
 	right: 5px;
 	border-width: 0 5px 5px;
-	border-bottom-color: #000
+	border-bottom-color: #222
 }
 
 .popover {
@@ -6884,20 +6884,20 @@ button.close {
 }
 
 .carousel-control.left {
-	background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .0001) 100%);
-	background-image: -o-linear-gradient(left, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .0001) 100%);
-	background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, .0001)));
-	background-image: linear-gradient(to right, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .0001) 100%);
+	background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .2221) 100%);
+	background-image: -o-linear-gradient(left, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .2221) 100%);
+	background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, .2221)));
+	background-image: linear-gradient(to right, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .2221) 100%);
 	background-repeat: repeat-x
 }
 
 .carousel-control.right {
 	right: 0;
 	left: auto;
-	background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0, rgba(0, 0, 0, .5) 100%);
-	background-image: -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0, rgba(0, 0, 0, .5) 100%);
-	background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 0, 0, .5)));
-	background-image: linear-gradient(to right, rgba(0, 0, 0, .0001) 0, rgba(0, 0, 0, .5) 100%);
+	background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .2221) 0, rgba(0, 0, 0, .5) 100%);
+	background-image: -o-linear-gradient(left, rgba(0, 0, 0, .2221) 0, rgba(0, 0, 0, .5) 100%);
+	background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .2221)), to(rgba(0, 0, 0, .5)));
+	background-image: linear-gradient(to right, rgba(0, 0, 0, .2221) 0, rgba(0, 0, 0, .5) 100%);
 	background-repeat: repeat-x
 }
 
@@ -8397,12 +8397,12 @@ body {
 	padding-top: 20px;
 	padding-bottom: 60px;
 	font-size: 16px;
-	color: #222;
-	background-color: #fffffd
+	color: #fff;
+	background-color: #222
 }
 
 .hljs {
-	background-color: #ffffea!important
+	background-color: #222!important
 }
 
 a {
@@ -8415,8 +8415,10 @@ a:hover {
 }
 
 pre {
-	background-color: #ffffea;
+	background-color: #222;
 	border: 0
+    color:#fff
+
 }
 
 h1 {
@@ -8438,7 +8440,7 @@ h4 {
 
 code {
 	font-family: Iosevka, monospace;
-	color: #000;
+	color: #222;
 	background-color: #ffffea
 }
 
@@ -8463,7 +8465,7 @@ figcaption {
 	margin: 0 0 40px;
 	padding: 20px 10px 30px;
 	text-align: center;
-	background-color: #fffffd
+	background-color: #222
 }
 
 .jumbotron h1 {
