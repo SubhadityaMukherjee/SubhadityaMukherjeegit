@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>swish | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="swish" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/swish.html","@type":"BlogPosting","headline":"swish","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/swish.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>swish</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~1 min</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#notes">Notes</a>
+    <ul>
+      <li><a href="#tips-for-activation-fns">Tips for activation fns</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[24]</strong> swish</p>
+<ul>
+  <li>Ramachandran, P., Zoph, B., &amp; Le, Q. V. (2017). Searching for activation functions. arXiv preprint arXiv:1710.05941. <a href="https://arxiv.org/pdf/1710.05941;%20http://arxiv.org/abs/1710.05941">Paper</a></li>
+</ul>
+
+<h1 id="notes">Notes</h1>
+<ul>
+  <li>Supposedly does better than selu and relu sometimes (Nope)</li>
+  <li>Slower than relu</li>
+  <li>f (x) = x · sigmoid(βx)</li>
+  <li>found using RL techniques using “core units”</li>
+  <li>simple search space inspired by the optimizer search space
+of Bello et al. (2017) that composes unary and binary functions to construct the activation function</li>
+  <li>activation function is constructed by repeatedly composing the the “core
+unit”, which is defined as b(u1 (x1 ), u2 (x2 )). The core unit takes in two scalar inputs, passes each
+input independently through an unary function, and combines the two unary outputs with a binary
+function that outputs a scalar
+    <h2 id="tips-for-activation-fns">Tips for activation fns</h2>
+  </li>
+  <li>Complicated activation functions consistently underperform simpler activation functions,
+potentially due to an increased difficulty in optimization.</li>
+  <li>A common structure shared by the top activation functions is the use of the raw preactiva-
+tion x as input to the final binary function</li>
+  <li>The searches discovered activation functions that utilize periodic functions, such as sin and
+cos.</li>
+  <li>Functions that use division tend to perform poorly because the output explodes when the
+denominator is near 0</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

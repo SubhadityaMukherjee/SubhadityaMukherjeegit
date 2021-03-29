@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>fastai Book | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="fastai Book" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD” by Jeremy Howard (Author), Sylvain Gugger (Author)" />
+<meta property="og:description" content="What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD” by Jeremy Howard (Author), Sylvain Gugger (Author)" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-12T07:50:52+00:00" />
+<script type="application/ld+json">
+{"description":"What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD” by Jeremy Howard (Author), Sylvain Gugger (Author)","url":"/article/2020/07/12/fastai-Book.html","@type":"BlogPosting","headline":"fastai Book","dateModified":"2020-07-12T07:50:52+00:00","datePublished":"2020-07-12T07:50:52+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/12/fastai-Book.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>fastai Book</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~1 min</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#drive-train-approach">Drive train approach</a></li>
+  <li><a href="#data-issues">Data issues</a></li>
+  <li><a href="#deplyoment">Deplyoment</a></li>
+  <li><a href="#general-points">General points</a></li>
+  <li><a href="#ethics">Ethics</a></li>
+  <li><a href="#technicalmath">Technical/Math</a></li>
+</ul>
+
+<p>What I found interesting from the book “Deep Learning for Coders with fastai and PyTorch: AI Applications Without a PhD”
+by Jeremy Howard  (Author), Sylvain Gugger (Author)</p>
+
+<p><a href="https://www.amazon.com/Deep-Learning-Coders-fastai-PyTorch/dp/1492045527">Link to the book</a></p>
+
+<blockquote>
+  <p>I will not be adding any codes here as those will be part of the projects/deeper blog posts.</p>
+</blockquote>
+
+<h2 id="drive-train-approach">Drive train approach</h2>
+<ul>
+  <li>Define an objective</li>
+  <li>Find out what inputs you can control</li>
+  <li>Find out what data can be collected</li>
+</ul>
+
+<h2 id="data-issues">Data issues</h2>
+<ul>
+  <li>Out of domain data</li>
+  <li>Different lighting conditions</li>
+  <li>Corrupted images</li>
+  <li>Type of image the model sees change over time</li>
+</ul>
+
+<h2 id="deplyoment">Deplyoment</h2>
+<ul>
+  <li>The model itself might change behavior of the place where it is deployed</li>
+  <li>Gradual expansion of users</li>
+  <li>Parallel human process</li>
+  <li>Consider what could go wrong</li>
+  <li>Look for feedback loops</li>
+</ul>
+
+<h2 id="general-points">General points</h2>
+
+<ul>
+  <li>If it isnt an image, you can still make it one if you are creative xD</li>
+  <li>Train a model, then use the trained model to find errors in data. Its faster.</li>
+  <li>Sometimes things are just not solvable using Deep Learning or do not need it</li>
+  <li>NLP : Not that great yet</li>
+  <li>BLOG!! (Lol considering this is one)</li>
+  <li>Keep checking shapes of layers/inputs as you go</li>
+  <li>Large models arent necessarily better models. Start small and then scale up.</li>
+</ul>
+
+<h2 id="ethics">Ethics</h2>
+
+<ul>
+  <li>Well founded standards of right or wrong</li>
+  <li>Context dependent</li>
+  <li>Many perspectives of stakeholders</li>
+  <li>Mistakes in software implementation</li>
+  <li>Feedback loops -&gt; might lead to worse outcomes/incorrect predictions</li>
+  <li>“To the blind technocrat, the means were more important than the end”</li>
+  <li>Consider the entire pipeline</li>
+  <li>Work closely with people who will end up using the research</li>
+</ul>
+
+<h2 id="technicalmath">Technical/Math</h2>
+<ul>
+  <li>difference between L1 norm and mean squared error (MSE) is that the latter will penalize bigger mistakes more heavily than the former (and be more lenient with small mistakes).</li>
+  <li>Regression -&gt; Add y range. aka (min,max). that does better</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

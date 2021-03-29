@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Backprop | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Backprop" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Looking at backpropagation from scratch because somehow I have not done that yet." />
+<meta property="og:description" content="Looking at backpropagation from scratch because somehow I have not done that yet." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-24T05:51:59+00:00" />
+<script type="application/ld+json">
+{"description":"Looking at backpropagation from scratch because somehow I have not done that yet.","url":"/article/2020/07/24/backprop.html","@type":"BlogPosting","headline":"Backprop","dateModified":"2020-07-24T05:51:59+00:00","datePublished":"2020-07-24T05:51:59+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/24/backprop.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Backprop</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~15 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#data">Data</a></li>
+  <li><a href="#one-hot">One hot</a></li>
+  <li><a href="#constants-and-activations">Constants and activations</a></li>
+  <li><a href="#forward-prop--dropout">Forward prop + dropout</a></li>
+  <li><a href="#backprop">Backprop</a></li>
+  <li><a href="#entire-code">Entire code</a></li>
+</ul>
+
+<p>Looking at backpropagation from scratch because somehow I have not done that yet.</p>
+
+<p>So I realized we cheated and used Zygote the last time around and so I wanted to do backprop from scratch. Also, I found some more nice things which I did not know so oh well why not.</p>
+
+<h2 id="data">Data</h2>
+
+<p>First let us load our data. For this we use a package for now. (I might do a separate one on loading different types of data and maybe fixing our dataloader at some point). We just load the train and test directly. We are going with MNIST which is basically a set of images of numbers from 1 to 10 in black and white.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">MLDatasets</span>
+<span class="n">train_x</span><span class="x">,</span> <span class="n">train_y</span> <span class="o">=</span> <span class="n">MNIST</span><span class="o">.</span><span class="n">traindata</span><span class="x">()</span>
+<span class="n">test_x</span><span class="x">,</span>  <span class="n">test_y</span>  <span class="o">=</span> <span class="n">MNIST</span><span class="o">.</span><span class="n">testdata</span><span class="x">();</span>
+</code></pre></div></div>
+
+<h2 id="one-hot">One hot</h2>
+<p>Now we need to one hot encode the labels. This means that we make a dataframe of sorts with 10 rows and if the current element is present in it, we just put a 1 there and leave the rest of the rows blank. We do this for the entire dataset. 
+Another thing to notice is the reshape. So for our test, we take just 1000 examples. We also reshape the entire array into (n<em>n, num_of_data) where n is the size of the image. Here all our images are 28x28 so we take (28</em>28 = 784, 1000).
+We then apply one hot to them.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">images</span><span class="x">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="x">(</span><span class="n">reshape</span><span class="x">(</span><span class="n">train_x</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000</span><span class="x">],</span> <span class="x">(</span><span class="mi">28</span><span class="o">*</span><span class="mi">28</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)),</span> <span class="n">train_y</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000</span><span class="x">])</span>
+<span class="n">one_hot_labels</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">(</span><span class="mi">10</span><span class="x">,</span><span class="n">length</span><span class="x">(</span><span class="n">labels</span><span class="x">))</span>
+<span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span><span class="n">l</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">labels</span><span class="x">)</span>
+    <span class="n">one_hot_labels</span><span class="x">[</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="k">end</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">one_hot_labels</span>
+</code></pre></div></div>
+
+<p>Rinse and repeat for test set.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">test_images</span> <span class="o">=</span> <span class="n">reshape</span><span class="x">(</span><span class="n">test_x</span><span class="x">,</span> <span class="x">(</span><span class="mi">28</span><span class="o">*</span><span class="mi">28</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">test_x</span><span class="x">,</span><span class="mi">3</span><span class="x">)))</span>
+<span class="n">test_labels</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">((</span><span class="mi">10</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">test_x</span><span class="x">,</span><span class="mi">3</span><span class="x">)))</span>
+
+<span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span><span class="n">l</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">test_y</span><span class="x">)</span>
+    <span class="n">test_labels</span><span class="x">[</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="constants-and-activations">Constants and activations</h2>
+
+<p>We now define ReLU and its derivative. \(\frac{\mathrm{d}\left( x \right)}{dx} = 1\)</p>
+
+<p>We also define some constants like batch size (number of elements taken at once). Learning rate α and number of iterations/epochs. Pixels per image is just 28*28 and we have 10 labels. As for hidden size, that is a parameter which defines how deep our network will be.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">relu</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">relu2deriv</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">α</span><span class="x">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="x">(</span><span class="mf">0.001</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span>
+<span class="n">pixels_per_image</span><span class="x">,</span> <span class="n">num_labels</span><span class="x">,</span> <span class="n">hidden_size</span> <span class="o">=</span> <span class="x">(</span><span class="mi">784</span><span class="x">,</span> <span class="mi">10</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>We initialize our weights with a custom function here. (Could replace with He Inuit)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">weights_0_1</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">.*</span> <span class="n">rand</span><span class="x">(</span><span class="n">pixels_per_image</span><span class="x">,</span><span class="n">hidden_size</span><span class="x">)</span> <span class="o">.-</span> <span class="mf">0.1</span>
+<span class="n">weights_1_2</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">.*</span> <span class="n">rand</span><span class="x">(</span><span class="n">hidden_size</span><span class="x">,</span><span class="n">num_labels</span><span class="x">)</span> <span class="o">.-</span> <span class="mf">0.1</span>
+</code></pre></div></div>
+
+<p>Now for the main loop.</p>
+
+<h2 id="forward-prop--dropout">Forward prop + dropout</h2>
+
+<p>We iterate till the number of iterations and then for every batch in the data.
+The first bit is forward propagation.
+We first take the batch of images as an array and then run them through a Linear layer and apply relu.on it. After that we also add dropout. This is randomly choosing a certain number of weights and initializing them to 0. This regulates the weights and prevents the network from becoming over confident.
+We also calculate the total loss using Mean squared error and store that away as well.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">iterations</span>
+    <span class="n">Error</span><span class="x">,</span> <span class="n">Correct_cnt</span> <span class="o">=</span> <span class="x">(</span><span class="mf">0.0</span><span class="x">,</span> <span class="mi">0</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">images</span><span class="x">,</span><span class="mi">2</span><span class="x">)</span><span class="o">-</span><span class="n">batch_size</span>
+        <span class="n">batch_start</span><span class="x">,</span> <span class="n">batch_end</span> <span class="o">=</span> <span class="n">i</span><span class="x">,</span> <span class="n">i</span><span class="o">+</span><span class="n">batch_size</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">layer_0</span> <span class="o">=</span> <span class="n">images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span>
+        <span class="n">layer_1</span> <span class="o">=</span> <span class="n">relu</span><span class="o">.</span><span class="x">(</span><span class="n">layer_0</span><span class="err">'</span> <span class="o">*</span> <span class="n">weights_0_1</span><span class="x">)</span>
+        
+        <span class="n">dropout_mask</span> <span class="o">=</span> <span class="n">bitrand</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">layer_1</span><span class="x">))</span>
+        <span class="n">layer_1</span> <span class="o">.*=</span> <span class="x">(</span><span class="n">dropout_mask</span> <span class="o">.*</span> <span class="mi">2</span><span class="x">)</span>
+        <span class="n">layer_2</span> <span class="o">=</span> <span class="n">layer_1</span> <span class="o">*</span> <span class="n">weights_1_2</span>
+        
+        <span class="n">Error</span> <span class="o">+=</span> <span class="n">sum</span><span class="x">((</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">.^</span> <span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="backprop">Backprop</h2>
+
+<p>Time for backprop. If you notice, all we are doing is calculating the derivatives.
+After we do that we apply dropout and most importantly, update our weights. Note that this is GD and so there is no momentum term or anything like that. A simple vanilla network.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span>
+            <span class="n">Correct_cnt</span> <span class="o">+=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">argmax</span><span class="x">(</span><span class="n">layer_2</span><span class="x">[</span><span class="n">k</span><span class="x">,</span> <span class="o">:</span><span class="x">])</span> <span class="o">==</span> <span class="n">argmax</span><span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">]))[]</span>
+            <span class="n">layer_2_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">./</span><span class="n">batch_size</span>
+            <span class="n">layer_1_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">layer_2_delta</span> <span class="o">*</span> <span class="n">weights_1_2</span><span class="err">'</span><span class="x">)</span> <span class="o">.*</span> <span class="n">relu2deriv</span><span class="o">.</span><span class="x">(</span><span class="n">layer_1</span><span class="x">)</span>
+
+            <span class="n">layer_1_delta</span> <span class="o">.*=</span> <span class="n">dropout_mask</span>
+
+            <span class="n">weights_1_2</span> <span class="o">+=</span> <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_1</span><span class="err">'</span> <span class="o">*</span> <span class="n">layer_2_delta</span>
+            <span class="n">weights_0_1</span> <span class="o">+=</span> <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_0</span> <span class="o">*</span> <span class="n">layer_1_delta</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="entire-code">Entire code</h2>
+
+<p>This is technically the whole loop. Every few epochs we can calculate the error on the test set, this makes it much easier for us to work with it so we can see how the functions work.
+Here is the entire code.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">iterations</span>
+    <span class="n">Error</span><span class="x">,</span> <span class="n">Correct_cnt</span> <span class="o">=</span> <span class="x">(</span><span class="mf">0.0</span><span class="x">,</span> <span class="mi">0</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">images</span><span class="x">,</span><span class="mi">2</span><span class="x">)</span><span class="o">-</span><span class="n">batch_size</span>
+        <span class="n">batch_start</span><span class="x">,</span> <span class="n">batch_end</span> <span class="o">=</span> <span class="n">i</span><span class="x">,</span> <span class="n">i</span><span class="o">+</span><span class="n">batch_size</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">layer_0</span> <span class="o">=</span> <span class="n">images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span>
+        <span class="n">layer_1</span> <span class="o">=</span> <span class="n">relu</span><span class="o">.</span><span class="x">(</span><span class="n">layer_0</span><span class="err">'</span> <span class="o">*</span> <span class="n">weights_0_1</span><span class="x">)</span>
+        
+        <span class="n">dropout_mask</span> <span class="o">=</span> <span class="n">bitrand</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">layer_1</span><span class="x">))</span>
+        <span class="n">layer_1</span> <span class="o">.*=</span> <span class="x">(</span><span class="n">dropout_mask</span> <span class="o">.*</span> <span class="mi">2</span><span class="x">)</span>
+        <span class="n">layer_2</span> <span class="o">=</span> <span class="n">layer_1</span> <span class="o">*</span> <span class="n">weights_1_2</span>
+        
+        <span class="n">Error</span> <span class="o">+=</span> <span class="n">sum</span><span class="x">((</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">.^</span> <span class="mi">2</span><span class="x">)</span>
+        
+        <span class="k">for</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span>
+            <span class="n">Correct_cnt</span> <span class="o">+=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">argmax</span><span class="x">(</span><span class="n">layer_2</span><span class="x">[</span><span class="n">k</span><span class="x">,</span> <span class="o">:</span><span class="x">])</span> <span class="o">==</span> <span class="n">argmax</span><span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">]))[]</span>
+            <span class="n">layer_2_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">./</span><span class="n">batch_size</span>
+            <span class="n">layer_1_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">layer_2_delta</span> <span class="o">*</span> <span class="n">weights_1_2</span><span class="err">'</span><span class="x">)</span> <span class="o">.*</span> <span class="n">relu2deriv</span><span class="o">.</span><span class="x">(</span><span class="n">layer_1</span><span class="x">)</span>
+
+            <span class="n">layer_1_delta</span> <span class="o">.*=</span> <span class="n">dropout_mask</span>
+
+            <span class="n">weights_1_2</span> <span class="o">-=</span> <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_1</span><span class="err">'</span> <span class="o">*</span> <span class="n">layer_2_delta</span>
+            <span class="n">weights_0_1</span> <span class="o">-=</span> <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_0</span> <span class="o">*</span> <span class="n">layer_1_delta</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+        
+    <span class="k">if</span> <span class="x">(</span><span class="n">j</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="x">)</span>
+        <span class="n">test_Error</span><span class="x">,</span> <span class="n">test_Correct_cnt</span> <span class="o">=</span> <span class="x">(</span><span class="mf">0.0</span><span class="x">,</span> <span class="mi">0</span><span class="x">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">test_images</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+
+            <span class="n">layer_0</span> <span class="o">=</span> <span class="n">test_images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span>
+            <span class="n">layer_1</span> <span class="o">=</span> <span class="n">relu</span><span class="o">.</span><span class="x">(</span><span class="n">layer_0</span><span class="err">'</span> <span class="o">*</span> <span class="n">weights_0_1</span><span class="x">)</span>
+            <span class="n">layer_2</span> <span class="o">=</span> <span class="n">layer_1</span> <span class="o">*</span> <span class="n">weights_1_2</span>
+
+            <span class="n">test_Error</span> <span class="o">+=</span> <span class="n">sum</span><span class="x">((</span><span class="n">test_labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">.^</span> <span class="mi">2</span><span class="x">)</span>
+            <span class="n">test_Correct_cnt</span> <span class="o">+=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">argmax</span><span class="x">(</span><span class="n">layer_2</span><span class="x">[</span><span class="mi">1</span><span class="x">,</span><span class="o">:</span><span class="x">])</span> <span class="o">==</span> <span class="n">argmax</span><span class="x">(</span><span class="n">test_labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">i</span><span class="x">]))</span>
+        <span class="k">end</span>
+        <span class="n">println</span><span class="x">(</span><span class="s">"I: </span><span class="si">$(j) </span><span class="s">Train error: </span><span class="si">$</span><span class="s">(Error/size(images, 2)) Train accuracy: </span><span class="si">$</span><span class="s">(Correct_cnt/size(images, 2)) Test-Err:: </span><span class="si">$</span><span class="s">(test_Error/size(test_images, 2)) Test-Acc:: </span><span class="si">$</span><span class="s">(test_Correct_cnt/size(test_images, 2))"</span><span class="x">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>I loved this repository and I found a lot of it from here. <a href="https://github.com/deepaksuresh/Grokking-Deep-Learning-with-Julia/blob/master/">Link</a></p>
+</blockquote>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

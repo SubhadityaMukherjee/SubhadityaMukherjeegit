@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Super resolution | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Super resolution" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Today we will look at Super Resolution in Python." />
+<meta property="og:description" content="Today we will look at Super Resolution in Python." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-09T18:01:00+00:00" />
+<script type="application/ld+json">
+{"description":"Today we will look at Super Resolution in Python.","url":"/article/2020/10/09/SuperRes.html","@type":"BlogPosting","headline":"Super resolution","dateModified":"2020-10-09T18:01:00+00:00","datePublished":"2020-10-09T18:01:00+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/10/09/SuperRes.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Super resolution</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~22 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#what-if">What if</a></li>
+  <li><a href="#what-else-could-we-do">What else could we do</a></li>
+  <li><a href="#where-could-we-use-this">Where could we use this?</a></li>
+  <li><a href="#the-technical-side">The technical side</a></li>
+  <li><a href="#get-data">Get data.</a></li>
+  <li><a href="#create-the-network">Create the network</a></li>
+  <li><a href="#train">Train!</a></li>
+  <li><a href="#run-it">Run it!</a></li>
+  <li><a href="#bonus">Bonus</a></li>
+  <li><a href="#some-thoughts-from-the-paper">Some thoughts from the paper</a></li>
+  <li><a href="#next-steps">Next steps</a></li>
+</ul>
+
+<p>Today we will look at Super Resolution in Python.</p>
+
+<p><a href="https://medium.com/@msubhaditya/fixing-small-photos-with-deep-learning-eeae87172a1b?source=friends_link&amp;sk=93f69c860776e76ab641277937bfd886">Medium link</a>
+Do you use social media? Ever sent someone a picture and when you look at it later you find that the image is <strong>so</strong> bad in quality? What if you could reverse that?</p>
+
+<h1 id="what-if">What if</h1>
+<p>The main objective -&gt; Take an image and upsample it by 3x (That means if an image is initally 100x100 by the end we have a 300x300 image) without losing any information. Now if we decided that we want the image to be 100x100 we could resize it but it would be of a much higher resolution than before.</p>
+
+<h1 id="what-else-could-we-do">What else could we do</h1>
+
+<p>Suppose you do not want to use deep learning for this. What do you do then? Well you have a few options. (None of which I recommend)</p>
+
+<ol>
+  <li>Become a Photoshop master (although now even that uses Deep learning)</li>
+  <li>Go back in time and make sure you took a better picture</li>
+  <li>Deal with it</li>
+  <li>(Recommended) Read this post</li>
+</ol>
+
+<h1 id="where-could-we-use-this">Where could we use this?</h1>
+
+<ul>
+  <li>Games! Imagine Mario in 1080p :o</li>
+  <li>Whatsapp junk</li>
+  <li>Better video calls maybe? Instead of compressing and sending the video, we could take a potentially low resolution video and have it appear in pretty high quality</li>
+  <li>Have some old pictures you want to upscale? Run it!</li>
+</ul>
+
+<h1 id="the-technical-side">The technical side</h1>
+
+<p>Now that we have that out of the way. Let us further define the problem. We will try to explore it from a <a href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Shi_Real-Time_Single_Image_CVPR_2016_paper.pdf">paper</a>.
+Shi, Wenzhe, et al. “Real-time single image and video super-resolution using an efficient sub-pixel convolutional neural network.” Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.</p>
+
+<p>The technical version of the objective goes something like this. Consider we have two “spaces”. One which is of a high resolution, and another which is of a low resolution. Our network should learn how to convert the pixels from the low resolution space to the other one. Efficiently.</p>
+
+<p>To do this we need to follow standard deep learning training procedures along with a bit of modification. 
+(Note that the total code is too long to post here so you can find all of it on my <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/SuperRes">repo</a>)</p>
+
+<h1 id="get-data">Get data.</h1>
+
+<p>Step 1 as usual would be to get data. For our purpose we can use the <a href="http://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/BSDS300-images.tgz">BSDS300 dataset</a>. Just get it and extract it.</p>
+
+<p>Now we need to be able to load the data. To do that, we need a few things.</p>
+<ul>
+  <li>We need to check if the image is a file and load it. We need to perform transforms. And we need to load the data.</li>
+  <li>Since most of it is just standard code, let us look at the new things only</li>
+  <li>Center Cropping. 
+To crop an image we need to identify a valid size to crop to.
+    <div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">calculate_valid_crop_size</span><span class="p">(</span><span class="n">crop_size</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">crop_size</span> <span class="o">-</span> <span class="p">(</span><span class="n">crop_size</span> <span class="o">%</span> <span class="n">upscale_factor</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>We can call this using CenterCrop(crop_size) in our transforms pipeline.</p>
+
+<ul>
+  <li>The main DataLoader. This would enable us to read the dataset and use it for our needs. 
+Note that we actually have <strong>two</strong> images. One is the input image, the other is the target we need to convert it to. 
+We basically load both of them, perform the required transforms and return them as a <strong>tuple</strong>. This is the important part. And the major difference from something like classification. We return not only one, but two things in the main dataloader.</li>
+  <li>Now we would have a pair of images, one in the low res space and another in the high res space.</li>
+</ul>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DatasetFromFolder</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_dir</span><span class="p">,</span> <span class="n">input_transform</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">target_transform</span> <span class="o">=</span>
+                 <span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DatasetFromFolder</span><span class="p">,</span> <span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">image_filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span>
+                               <span class="k">if</span> <span class="n">is_image_file</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">input_transform</span> <span class="o">=</span> <span class="n">input_transform</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">target_transform</span> <span class="o">=</span> <span class="n">target_transform</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="nb">input</span> <span class="o">=</span> <span class="n">load_img</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">image_filenames</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="nb">input</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">input_transform</span><span class="p">:</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">input_transform</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">target_transform</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">target_transform</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="nb">input</span><span class="p">,</span> <span class="n">target</span>
+    
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">image_filenames</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="create-the-network">Create the network</h1>
+
+<p>Welcome to the deep end. 
+Our network is actually simple since we are using pytorch. We have 4 conv layers, 4 ReLUs and a special layer called PixelShuffle.</p>
+
+<p>What is PixelShuffle. Well it is the defining moment for the paper we are considering. So defining in fact that PyTorch actually has it inbuilt. In simple terms, this layer is a shuffler. It takes the the tensor of shape H(height) x W(width) x C(channel) . r^2(no of activation) and gives us back a tensor of shape rH x rW x rC. “Shuffle” aka a sub pixel convolutional layer. This is useful because now everything is parallelizable.</p>
+
+<p>We also need to initalize our weights. This is done to make sure that our network starts off on a good foot. We use orthogonal initialization here.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="n">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="n">F</span>
+<span class="kn">import</span> <span class="nn">torch.nn.init</span> <span class="k">as</span> <span class="n">init</span>
+
+<span class="c1"># Main network
+</span><span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Net</span><span class="p">,</span> <span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv3</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv4</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pixel_shuffle</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">PixelShuffle</span><span class="p">(</span><span class="n">upscale_factor</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">_initialize_weights</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">conv3</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">pixel_shuffle</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">conv4</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">init</span><span class="p">.</span><span class="n">orthogonal_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">conv1</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">init</span><span class="p">.</span><span class="n">calculate_gain</span><span class="p">(</span><span class="s">'relu'</span><span class="p">))</span>
+        <span class="n">init</span><span class="p">.</span><span class="n">orthogonal_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span><span class="n">init</span><span class="p">.</span><span class="n">calculate_gain</span><span class="p">(</span><span class="s">'relu'</span><span class="p">))</span>
+        <span class="n">init</span><span class="p">.</span><span class="n">orthogonal_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">conv3</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span><span class="n">init</span><span class="p">.</span><span class="n">calculate_gain</span><span class="p">(</span><span class="s">'relu'</span><span class="p">))</span>
+        <span class="n">init</span><span class="p">.</span><span class="n">orthogonal_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">conv4</span><span class="p">.</span><span class="n">weight</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="train">Train!</h1>
+
+<p>Wow, we are almost halfway done. Now for the main training. We first load everything we need, import our Net with an upscale factor (aka how many x we need to upscale).
+We then initalize our Optimizer. We will be using Adam here because it works the best.
+We also need a loss function.</p>
+
+<p>Well if you think about it, since we are trying to find a pixel wise difference, why not use exactly that.. MSELoss.</p>
+
+<p>We follow the simple strategy of : batch -&gt; push to GPU -&gt; zero the optimizers gradients -&gt; Calculate the loss -&gt; Backprop -&gt; Step through the optimizer.
+(P.S If there is anything here you do not understand, have a look at my <a href="https://www.subhadityamukherjee.me/deconstructingdl.html">blog</a>)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span><span class="n">model</span><span class="p">,</span>  <span class="n">epoch</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">criterion</span><span class="p">):</span>
+    <span class="n">epoch_loss</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">device</span><span class="p">(</span><span class="s">"cuda"</span><span class="p">)</span> <span class="c1"># Sending to GPU
+</span>    <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
+        <span class="nb">input</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="p">.</span><span class="n">zero_grad</span><span class="p">()</span> <span class="c1"># zero gradients
+</span>        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">),</span> <span class="n">target</span><span class="p">)</span> <span class="c1"># calc loss
+</span>        <span class="n">epoch_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="p">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">loss</span><span class="p">.</span><span class="n">backward</span><span class="p">()</span> <span class="c1">#backprop
+</span>        <span class="n">optimizer</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s">f"Iteration: </span><span class="si">{</span><span class="n">batch_idx</span><span class="si">}</span><span class="s">, Loss: </span><span class="si">{</span><span class="n">loss</span><span class="si">}</span><span class="s"> "</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">f"Avg epoch_loss: </span><span class="si">{</span><span class="n">epoch</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The test loop is very similar to that here so no need to talk about it specifically.
+We save the model after it is done training.</p>
+
+<h1 id="run-it">Run it!</h1>
+
+<p>Now that we have a really cool model which works. How about putting it to use?</p>
+
+<p>To do that, let us take an image, preprocess it, convert it to a tensor. After that we can load the model and send this image to the GPU.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="n">opt</span><span class="p">.</span><span class="n">input_image</span><span class="p">).</span><span class="n">convert</span><span class="p">(</span><span class="s">'YCbCr'</span><span class="p">)</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">cb</span><span class="p">,</span> <span class="n">cr</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">split</span><span class="p">()</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">opt</span><span class="p">.</span><span class="n">model</span><span class="p">)</span>
+<span class="n">img_to_tensor</span> <span class="o">=</span> <span class="n">ToTensor</span><span class="p">()</span>
+<span class="nb">input</span> <span class="o">=</span> <span class="n">img_to_tensor</span><span class="p">(</span><span class="n">y</span><span class="p">).</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">if</span> <span class="n">opt</span><span class="p">.</span><span class="n">cuda</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">cuda</span><span class="p">()</span>
+        <span class="nb">input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">.</span><span class="n">cuda</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Then we pass it through our model. We get a weird output now. To fix that, we make it a numpy array and perform some operations which will make our image into a proper one. Basically we alter the values so that we have a range in the RGB value range. This will allow us to plot it or do whatever we want.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">.</span><span class="n">cpu</span><span class="p">()</span>
+<span class="n">out_img_y</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">detach</span><span class="p">().</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">out_img_y</span> <span class="o">*=</span> <span class="mf">255.0</span>
+<span class="n">out_img_y</span> <span class="o">=</span> <span class="n">out_img_y</span><span class="p">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+<span class="n">out_img_y</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">out_img_y</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">mode</span><span class="o">=</span><span class="s">'L'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We can now resize and save the image to wherever we want to.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">out_img_cb</span> <span class="o">=</span> <span class="n">cb</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">out_img_y</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">Image</span><span class="p">.</span><span class="n">BICUBIC</span><span class="p">)</span>
+<span class="n">out_img_cr</span> <span class="o">=</span> <span class="n">cr</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">out_img_y</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">Image</span><span class="p">.</span><span class="n">BICUBIC</span><span class="p">)</span>
+<span class="n">out_img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="s">'YCbCr'</span><span class="p">,</span> <span class="p">[</span><span class="n">out_img_y</span><span class="p">,</span> <span class="n">out_img_cb</span><span class="p">,</span>
+                            <span class="n">out_img_cr</span><span class="p">]).</span><span class="n">convert</span><span class="p">(</span><span class="s">'RGB'</span><span class="p">)</span>
+
+<span class="n">out_img</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">opt</span><span class="p">.</span><span class="n">output_filename</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'output image saved to '</span><span class="p">,</span> <span class="n">opt</span><span class="p">.</span><span class="n">output_filename</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>And we are done!</p>
+
+<h1 id="bonus">Bonus</h1>
+
+<p>I also converted the script to work with videos. :)
+Go check out the <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/SuperRes">repo</a></p>
+
+<h1 id="some-thoughts-from-the-paper">Some thoughts from the paper</h1>
+
+<ul>
+  <li>Super res is used in Medical imagery, face recognition, satellite images</li>
+  <li>We aim to learn implicit redundancy in the data</li>
+  <li>The filters learnt are a much better representation of the upsampling than a single filter</li>
+  <li>Using variable learning rates from 0.01 to 0.0001 works very well</li>
+  <li>Each pixel in the original image is represented only once to preserve the efficiency of the network</li>
+</ul>
+
+<h1 id="next-steps">Next steps</h1>
+
+<p>Thank you for reading this far! Hope you liked the article and it helped you understand the topic better. I would sincerely recommend you read the paper. It is an easy read. 
+Super resolution is something I have been interested in a long time and just today I found an <a href="https://github.com/jixiaozhong/RealSR">even better network</a> for this task.</p>
+
+<p>Do reach out if you liked the article or have any feedback for future ones. Hope you have a great day!</p>
+
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+  <a href=/article/2020/09/02/DatasetBindings.html> Dataset Bindings&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

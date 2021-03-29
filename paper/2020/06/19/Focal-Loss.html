@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Focal Loss | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Focal Loss" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/Focal-Loss.html","@type":"BlogPosting","headline":"Focal Loss","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/Focal-Loss.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Focal Loss</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~1 min</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#notes">Notes</a></li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[19]</strong> Focal Loss
+Lin, T. Y., Goyal, P., Girshick, R., He, K., &amp; Dollár, P. (2017). Focal loss for dense object detection. In Proceedings of the IEEE international conference on computer vision (pp. 2980-2988).</p>
+
+<h2 id="notes">Notes</h2>
+
+<ul>
+  <li>CE(p,y) = -log(p) if y = 1 else -log(1-p)</li>
+  <li>
+    <p>FL(p_l) = -alpha(1- p_t)^gamma * log(p_t)</p>
+  </li>
+  <li>Its good for huge imbalance apparently</li>
+  <li>one-stage detectors that are applied over a regular, dense sampling of possible object locations have the potential to be faster and simpler</li>
+  <li>extreme foreground-background class imbalance encountered during training of dense detectors</li>
+  <li>We propose to address this class imbalance by reshaping the standard cross entropy loss such that it down-weights the loss assigned to well-classified examples.</li>
+  <li>focuses training on a sparse set of hard examples and prevents the vast number of easy negatives from overwhelm- ing the detector during training</li>
+  <li>A common method for addressing class imbalance is to introduce a weighting factor α</li>
+  <li>Easily classified negatives comprise the majority of the loss and dominate the gradient. While α balances the importance of positive/negative examples, it does not differentiate between easy/hard examples. Instead, we propose to reshape the loss function to down-weight easy examples and thus focus training on hard negatives.</li>
+  <li>Binary classification models are by default initialized to have equal probability of outputting either y = −1 or 1. Under such an initialization, in the presence of class imbal- ance, the loss due to the frequent class can dominate total loss and cause instability in early training. To counter this, we introduce the concept of a ‘prior’ for the value of p es- timated by the model for the rare class (foreground) at the start of training.</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

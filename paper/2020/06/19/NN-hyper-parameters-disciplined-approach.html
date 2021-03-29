@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>A disciplined approach to neural network hyper-parameters | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="A disciplined approach to neural network hyper-parameters" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/NN-hyper-parameters-disciplined-approach.html","@type":"BlogPosting","headline":"A disciplined approach to neural network hyper-parameters","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/NN-hyper-parameters-disciplined-approach.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>A disciplined approach to neural network hyper-parameters</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~4 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#notes">Notes</a></li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[14]</strong> A disciplined approach to neural network hyper-parameters</p>
+<ul>
+  <li>Smith, L. N. (2018). A disciplined approach to neural network hyper-parameters: Part 1–learning rate, batch size, momentum, and weight decay. arXiv preprint arXiv:1803.09820.
+<a href="https://arxiv.org/pdf/1803.09820">Paper</a></li>
+</ul>
+
+<h2 id="notes">Notes</h2>
+<ul>
+  <li>examine the training validation/test loss function for subtle
+clues of underfitting and overfitting</li>
+  <li>The test/validation loss is a good indicator of the network’s convergence</li>
+  <li>Achieving the horizontal part of the test loss is the goal of hyper-
+parameter tuning.
+<img src="fig1.png" alt="img" /></li>
+  <li>If the hyper-parameters are set well at the beginning, they will perform well through the entire training process. In addition, if the hyper- parameters are set using only a few epochs, a significant time savings is possible in the search for hyper-parameters.</li>
+  <li>Increasing the learning rate moves the training from underfitting towards overfitting</li>
+  <li>Test loss decreases more rapidly during the initial iterations and is then horizontal. This is one of the early positive clues that indicates that this curve’s configuration will produce a better final accuracy than the other configuration, which it does.</li>
+  <li>Use Cyclical learning rates (CLR) and the learning rate range test (LR range test)</li>
+  <li>Take note that there is a maximum speed the learning rate can increase without the training becoming unstable, which effects your choices for the minimum and maximum learning rates</li>
+  <li>always use one cycle that is smaller than the total number of iterations/epochs and allow the learning rate to decrease several orders of magnitude less than the initial learning rate for the remaining iterations. We named this learning rate policy “1cycle”</li>
+  <li>MNIST, Cifar10, Cifar-100, and Imagenet, and various architectures,
+such as shallow nets, resnets, wide resnets, densenets, inception-resnet, show that all can be trained more quickly with large learning rates, provided other forms of regularizations are reduced to an optimal balance point.</li>
+  <li>larger batch size when using the 1cycle learning rate schedule. Larger batch sizes used larger learning rates</li>
+  <li>Although the larger batch sizes have lower loss values early in the training, the final loss values are lower as the batch sizes decrease, which is the opposite performance as accuracy results</li>
+  <li>Although the increasing momentum stabilizes the convergence to a larger learning rate, the
+minimum test loss is higher than the minimum test loss for the constant momentum case.</li>
+  <li>With either cyclical learning rate or constant learning rate, a good procedure is to test momentum values in the range of 0.9 to 0.99 and choose a value that performs best</li>
+  <li>complex dataset requires less regularization so test smaller weight decay values, such as
+10−4 , 10−5, 10−6, 0. A shallow architecture requires more regularization so test larger
+weight decay values, such as 10−2 , 10−3, 10−4</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

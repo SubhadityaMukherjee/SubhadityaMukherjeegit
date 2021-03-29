@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Bag Of Tricks | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Bag Of Tricks" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/bagOfTricks.html","@type":"BlogPosting","headline":"Bag Of Tricks","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/bagOfTricks.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Bag Of Tricks</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~5 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#training-procedure">Training procedure</a></li>
+  <li><a href="#large-batch-training">Large batch training</a></li>
+  <li><a href="#zero-gamma">Zero gamma</a></li>
+  <li><a href="#no-bias-decay">No bias decay</a></li>
+  <li><a href="#fp16">FP16</a></li>
+  <li><a href="#xresnet">XResnet</a></li>
+  <li><a href="#one-cycle">One cycle</a></li>
+  <li><a href="#label-smoothing-ce">Label Smoothing CE</a></li>
+  <li><a href="#distillation">Distillation</a></li>
+  <li><a href="#use-mixup">Use mixup</a></li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[24]</strong> Bag Of Tricks</p>
+<ul>
+  <li>He, T., Zhang, Z., Zhang, H., Zhang, Z., Xie, J., &amp; Li, M. (2019). Bag of tricks for image classification with convolutional neural networks. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (pp. 558-567). <a href="http://openaccess.thecvf.com/content_CVPR_2019/papers/He_Bag_of_Tricks_for_Image_Classification_with_Convolutional_Neural_Networks_CVPR_2019    _paper.pdf">Paper</a></li>
+</ul>
+
+<h2 id="training-procedure">Training procedure</h2>
+<ul>
+  <li>
+    <ol>
+      <li>Randomly sample an image and decode it into 32-bit
+floating point raw pixel values in [0, 255].</li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Randomly crop a rectangular region whose aspect ratio
+is randomly sampled in [3/4, 4/3] and area randomly
+sampled in [8%, 100%], then resize the cropped region
+into a 224-by-224 square image.</li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Flip horizontally with 0.5 probability.</li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Scale hue, saturation, and brightness with coefficients
+uniformly drawn from [0.6, 1.4].</li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Add PCA noise with a coefficient sampled from a nor-
+mal distribution N (0, 0.1).</li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Normalize RGB channels by subtracting 123.68,
+116.779, 103.939 and dividing by 58.393, 57.12,
+57.375, respectively.</li>
+    </ol>
+  </li>
+  <li>initialized with the Xavier algorithm</li>
+  <li>All biases are initialized to 0. For batch normaliza-
+tion layers, γ vectors are initialized to 1 and β vectors0.</li>
+  <li>Nesterov Accelerated Gradient (NAG) descent</li>
+  <li>The learning rate is initialized to 0.1 and divided by 10 at the
+30th, 60th, and 90th epochs</li>
+</ul>
+
+<h2 id="large-batch-training">Large batch training</h2>
+<ul>
+  <li>For convex problems, convergence
+rate decreases as batch size increases</li>
+  <li>In other
+words, for the same number of epochs, training with a large
+batch size results in a model with degraded validation accu-
+racy compared to the ones trained with smaller batch sizes.</li>
+  <li>In other words, a large batch
+size reduces the noise in the gradient, so we may increase
+the learning rate to make a larger progress along the op-
+posite of the gradient direction</li>
+  <li>a gradual warmup
+strategy that increases the learning rate from 0 to the initial
+learning rate linearly.</li>
+</ul>
+
+<h2 id="zero-gamma">Zero gamma</h2>
+<ul>
+  <li>In the zero γ initialization heuristic, we initialize
+γ = 0 for all BN layers that sit at the end of a residual block.
+Therefore, all residual blocks just return their inputs, mim-
+ics network that has less number of layers and is easier to
+train at the initial stage.</li>
+</ul>
+
+<h2 id="no-bias-decay">No bias decay</h2>
+<ul>
+  <li>Other parameters, including the biases
+and γ and β in BN layers, are left unregularized</li>
+</ul>
+
+<h2 id="fp16">FP16</h2>
+<ul>
+  <li>the overall training speed is acceler-
+ated by 2 to 3 times after switching from FP32 to FP16 on
+V100</li>
+</ul>
+
+<h2 id="xresnet">XResnet</h2>
+<ul>
+  <li>Empirically, we found
+adding a 2×2 average pooling layer with a stride of 2 before
+the convolution, whose stride is changed to 1, works well
+in practice and impacts the computational cost little</li>
+</ul>
+
+<h2 id="one-cycle">One cycle</h2>
+<ul>
+  <li>As can be seen, the cosine decay
+decreases the learning rate slowly at the beginning, and then
+becomes almost linear decreasing in the middle, and slows
+down again at the end.</li>
+</ul>
+
+<h2 id="label-smoothing-ce">Label Smoothing CE</h2>
+<ul>
+  <li>It is clear that with label smoothing the distribution centers
+at the theoretical value and has fewer extreme values.</li>
+</ul>
+
+<h2 id="distillation">Distillation</h2>
+<ul>
+  <li>we use a teacher model
+to help train the current model, which is called the student
+model. The teacher model is often a pre-trained model with
+higher accuracy, so by imitation, the student model is able
+to improve its own accuracy while keeping the model com-
+plexity the same.</li>
+  <li>distillation loss to penalize
+the difference between the softmax outputs from the teacher
+model and the learner model.</li>
+</ul>
+
+<h2 id="use-mixup">Use mixup</h2>
+
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

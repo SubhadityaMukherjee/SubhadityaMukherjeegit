@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Federated Learning | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Federated Learning" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Today we will talk about Federated Learning" />
+<meta property="og:description" content="Today we will talk about Federated Learning" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-07T16:15:00+00:00" />
+<script type="application/ld+json">
+{"description":"Today we will talk about Federated Learning","url":"/article/2020/10/07/FederatedLearning.html","@type":"BlogPosting","headline":"Federated Learning","dateModified":"2020-10-07T16:15:00+00:00","datePublished":"2020-10-07T16:15:00+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/10/07/FederatedLearning.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Federated Learning</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~13 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#why-is-this-a-problem">Why is this a problem?</a></li>
+  <li><a href="#enter-federated-learning">Enter Federated Learning</a></li>
+  <li><a href="#what-is-this-magic">What is this magic?</a></li>
+  <li><a href="#yay-what-does-this-do">Yay! What does this do?</a></li>
+  <li><a href="#can-i-add-this-to-my-model">Can I add this to my model?</a></li>
+  <li><a href="#great-so-where-is-it-used">Great, so where is it used?</a></li>
+  <li><a href="#use-it">Use it!</a></li>
+  <li><a href="#resources">Resources</a></li>
+</ul>
+
+<p>Today we will talk about Federated Learning</p>
+
+<p>Want the smarts machine learning offers? That is awesome, but how secure is your data there really? And what if you could have the benefits without there being a chance of your data being leaked?</p>
+
+<p>We will have a look at Federated Learning and understand how it works. We will also look at a few papers and what they have to say on the matter and take the library <a href="https://github.com/OpenMined/PySyft/">Syft</a> for a whirl.</p>
+
+<h1 id="why-is-this-a-problem">Why is this a problem?</h1>
+
+<p>Think about this from the perspective of an app that connects you with your doctor. It is a great app, and even has the ability to forecast future appointments and sometimes even suggest common medication. Now one fine day the company gets sold and all your data is in someone else’s hands. And not just medical information, but what the Deep Learning algorithm learned about you and your behaviour. 
+Just data privacy is great for standard data like medical reports etc. But what about a DL algorithm?
+What about a model that learns how you speak, how you text your friends, what food you like?</p>
+
+<p>Scary isn’t it? 
+Now let us look at how we can prevent Company X from having more information on you than you have about yourself.</p>
+
+<h1 id="enter-federated-learning">Enter Federated Learning</h1>
+
+<p>Drumroll.. 
+Let us first understand what we want to do. 
+Consider a keyboard app. Say we have 200 users of our keyboard app.(Not very popular sadly). Now this is an intelligent keyboard and as time goes by, it learns how the users type, what words they use and is even able to predict what they might say to a given sentence. We want to make sure that if there is a leak, it should not be possible for whoever gets it to identify a unique model for the user.</p>
+
+<p>You might think, hey that’s easy. Let’s just train the network on their phones!
+You are right. Almost.
+The only issue is that our phones cannot afford to train the entire model. And if we use a pretrained one? Well.. the predictions are just not personalized enough.</p>
+
+<p>So how about we train the model first on huge clusters of computers and then send the pretrained ones to the phones? Perfect. How about personalization? Why not <strong>update</strong> the model on the phone? 
+That’s great. But how will the main model get better? If we send the model this phone has learnt, it would defeat our purpose.
+How about we aggregate the learning across users?</p>
+
+<p>There we go.. lets call that federated learning :)</p>
+
+<p>P.S (The keyboard example is from the <a href="https://arxiv.org/pdf/1903.10635.pdf">Google keyboard paper</a>)</p>
+
+<h1 id="what-is-this-magic">What is this magic?</h1>
+
+<p>Let us dig into the steps involved in making a Deep learning algorithm and identify what changes we need to make</p>
+
+<ol>
+  <li>Get data (Hopefully a lot)</li>
+  <li>Preprocess (aka clean up) the data</li>
+  <li>Find/create an architecture</li>
+  <li>Train the model using the data(1) and the architecture(3). This step is done once. And then periodically updated as the data changes over time. Keep this in mind.</li>
+  <li>Push the model out to n users</li>
+  <li>Collect data about how well the model did. (Bye bye privacy)</li>
+  <li>Send this data back to the main model.
+7 (#new). Find the difference between the original model and the personalized one’s parameters. Do this for multiple users. Remove identifiable information.
+7.1 (#new). Aggregate (eg. average) the information and then send that to the main model</li>
+  <li>Retrain the model on new data</li>
+</ol>
+
+<h1 id="yay-what-does-this-do">Yay! What does this do?</h1>
+
+<ul>
+  <li>All your information is locally stored and is never sent anywhere</li>
+  <li>Saves your personalized data from being leaked</li>
+  <li>Removes all connections to you</li>
+  <li>Allows the model to be updated and become better without compromizing on privacy</li>
+  <li>Nobody “owns” your data except you</li>
+</ul>
+
+<h1 id="can-i-add-this-to-my-model">Can I add this to my model?</h1>
+
+<p>Yes! There are many ways but the easiest by far is by using a library in Pytorch called Syft. It is as easy as adding a few lines to your code.</p>
+
+<p>(Since the entire code is huge, I will only put snippets here. For the entire code, refer to my <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/FederatedLearningPySyft">repository</a>)</p>
+
+<ol>
+  <li>Do look at this <a href="https://blog.openmined.org/upgrade-to-federated-learning-in-10-lines/">article</a> by Open Mined</li>
+  <li>Let us take a simple architecture with 2 Conv layers and 2 linear (fully connected) layers</li>
+  <li>Import the library(along with the other pytorch ones) and add 2 users
+    <div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">syft</span> <span class="k">as</span> <span class="n">sy</span>
+<span class="n">hook</span> <span class="o">=</span> <span class="n">sy</span><span class="p">.</span><span class="n">TorchHook</span><span class="p">(</span><span class="n">torch</span><span class="p">)</span>
+<span class="n">bob</span> <span class="o">=</span> <span class="n">sy</span><span class="p">.</span><span class="n">VirtualWorker</span><span class="p">(</span><span class="n">hook</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">"bob"</span><span class="p">)</span>  <span class="c1"># person1
+</span><span class="n">alice</span> <span class="o">=</span> <span class="n">sy</span><span class="p">.</span><span class="n">VirtualWorker</span><span class="p">(</span><span class="n">hook</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">"alice"</span><span class="p">)</span>  <span class="c1"># person2
+</span></code></pre></div>    </div>
+  </li>
+  <li>Modify the pytorch train dataloader in this way. The test does not change because it is local.
+    <div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">train_loader</span> <span class="o">=</span> <span class="n">sy</span><span class="p">.</span><span class="n">FederatedDataLoader</span><span class="p">(</span> <span class="c1"># this is now a FederatedDataLoader
+</span> <span class="n">datasets</span><span class="p">.</span><span class="n">MNIST</span><span class="p">(</span><span class="s">'/home/eragon/Documents/datasets'</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+         <span class="n">transform</span><span class="o">=</span><span class="n">transforms</span><span class="p">.</span><span class="n">Compose</span><span class="p">([</span>
+                    <span class="n">transforms</span><span class="p">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+                    <span class="n">transforms</span><span class="p">.</span><span class="n">Normalize</span><span class="p">((</span><span class="mf">0.1307</span><span class="p">,),</span> <span class="p">(</span><span class="mf">0.3081</span><span class="p">,))</span>
+                   
+         <span class="p">]))</span>
+ <span class="p">.</span><span class="n">federate</span><span class="p">((</span><span class="n">bob</span><span class="p">,</span> <span class="n">alice</span><span class="p">)),</span> <span class="c1"># This will simulate a federated learning system
+</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span> <span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Modify the main training loop like this
+    <div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+ <span class="n">model</span><span class="p">.</span><span class="n">train</span><span class="p">()</span>  <span class="c1"># Setting model to train
+</span> <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">device</span><span class="p">(</span><span class="s">"cuda"</span><span class="p">)</span>  <span class="c1"># Sending to GPU
+</span> <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)):</span>
+     <span class="n">model</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">location</span><span class="p">)</span>  <span class="c1"># Send to location (worker)
+</span>     <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">target</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+     <span class="n">optimizer</span><span class="p">.</span><span class="n">zero_grad</span><span class="p">()</span>  <span class="c1"># Reset grads
+</span>     <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># Passing batch through model
+</span>
+     <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">nll_loss</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span> <span class="p">)</span>
+
+     <span class="n">loss</span><span class="p">.</span><span class="n">backward</span><span class="p">()</span>  <span class="c1"># Backprop
+</span>     <span class="n">optimizer</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>  <span class="c1"># Pass through optimizer
+</span>     <span class="n">model</span><span class="p">.</span><span class="n">get</span><span class="p">()</span>  <span class="c1"># Get it back
+</span>
+     <span class="k">if</span> <span class="n">batch_idx</span> <span class="o">%</span> <span class="n">args</span><span class="p">.</span><span class="n">log_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span><span class="p">.</span><span class="n">get</span><span class="p">()</span>
+         <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">dry_run</span><span class="p">:</span>
+             <span class="k">break</span>
+</code></pre></div>    </div>
+  </li>
+  <li>The test loop remains the same</li>
+  <li>Train the model!!</li>
+  <li>Write a blog post about it and cry when nobody reads it</li>
+</ol>
+
+<h1 id="great-so-where-is-it-used">Great, so where is it used?</h1>
+
+<p>It <strong>could</strong> be used in a lot of places but for now it is still in testing stage. Although there have been a few early adopters. Some of the ones I found are:</p>
+<ul>
+  <li>Google Keyboard (Gboard) : They used it to update their predictions and learn words that were not in the initial dataset (like lmao).</li>
+  <li>Digital health Companies <a href="https://doi.org/10.1038/s41746-020-00323-1">Paper</a>  ; Huge promise here</li>
+  <li>Military (Not sureof any use cases obviously but I did read that it was being used)</li>
+  <li>Companies like OpenMined (who made the library), Nvidia, Google, Apple etc</li>
+</ul>
+
+<h1 id="use-it">Use it!</h1>
+
+<p>This is an upcoming field and there are many things left to be done. Contribute to the libraries if you can, or just learn how things work and why they do. Want to read further? Look at the resources section. You will find many interesting links.</p>
+
+<p>Thank you! Do reach out if you have any queries.</p>
+
+<h1 id="resources">Resources</h1>
+
+<ul>
+  <li><a href="https://blog.openmined.org/upgrade-to-federated-learning-in-10-lines/">OpenMined Blog</a></li>
+  <li><a href="https://blogs.nvidia.com/blog/2019/10/13/what-is-federated-learning/">Nvidia</a></li>
+  <li><a href="https://www.unite.ai/what-is-federated-learning/">Unite.ai</a></li>
+  <li><a href="https://ai.googleblog.com/2017/04/federated-learning-collaborative.html">Google blog</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Federated_learning">Wiki</a></li>
+  <li>Digital health : Rieke, N., Hancox, J., Li, W. et al. The future of digital health with federated learning. npj Digit. Med. 3, 119 (2020). https://doi.org/10.1038/s41746-020-00323-1</li>
+  <li>Gboard : Chen, M., Mathews, R., Ouyang, T., &amp; Beaufays, F. (2019). Federated learning of out-of-vocabulary words. arXiv preprint arXiv:1903.10635. <a href="https://arxiv.org/pdf/1903.10635.pdf">Paper</a></li>
+  <li>Chen, M., Mathews, R., Ouyang, T., &amp; Beaufays, F. (2019). Federated learning of out-of-vocabulary words. arXiv preprint arXiv:1903.10635.</li>
+</ul>
+
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+  <a href=/article/2020/09/02/DatasetBindings.html> Dataset Bindings&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

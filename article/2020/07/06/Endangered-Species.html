@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Endangered Species | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Endangered Species" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Here we will talk about spreading awareness about endangered species through AI powered art." />
+<meta property="og:description" content="Here we will talk about spreading awareness about endangered species through AI powered art." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-06T01:59:00+00:00" />
+<script type="application/ld+json">
+{"description":"Here we will talk about spreading awareness about endangered species through AI powered art.","url":"/article/2020/07/06/Endangered-Species.html","@type":"BlogPosting","headline":"Endangered Species","dateModified":"2020-07-06T01:59:00+00:00","datePublished":"2020-07-06T01:59:00+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/06/Endangered-Species.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Endangered Species</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~11 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#art">Art</a></li>
+  <li><a href="#what-we-need-for-it">What we need for it</a></li>
+  <li><a href="#data-collection">Data collection</a></li>
+  <li><a href="#nst">NST</a></li>
+  <li><a href="#website">Website</a></li>
+</ul>
+
+<p>Here we will talk about spreading awareness about endangered species through AI powered art.</p>
+
+<p>Have a look at this website before we start -&gt; <a href="/endangered.html">Link</a></p>
+
+<blockquote>
+  <p>This will also be in Python.</p>
+</blockquote>
+
+<p>Over the past few centuries, we have wreaked havoc on this planet. Most of the species affected by our expansion are already dead but there are some which aren’t. Our job is to make sure that this stays that way. 
+How deep is this impact? Let us find out. <a href="https://www.worldwildlife.org/">WWO</a></p>
+
+<h2 id="art">Art</h2>
+
+<p>Why art? 
+Well, art is an amazing medium to spread awareness. Maybe this project goes nowhere, maybe it does. At the end of the day.. I tried to do something in my own small way.</p>
+
+<p>Our objective is to first identify endangered animals, get their information and images and then use neural style transfer to convert them into artistic pictures.</p>
+
+<p>Like these</p>
+
+<p><img src="/outputs/african-elephant.jpg" alt="drawing" width="200" /></p>
+
+<h2 id="what-we-need-for-it">What we need for it</h2>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">requests</span> <span class="kn">import</span> <span class="n">get</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+</code></pre></div></div>
+<p>Pandas will allow us to make a table and read it.
+Requests and urrlib allow us to save the html of a website
+bs4 is a web scraping library which will allow us to identify content from the page.
+tqdm is a fancy wrapper for making progress bars pretty (I mean.. why not)</p>
+
+<h2 id="data-collection">Data collection</h2>
+
+<p>Okay let us first get the data. I went to <a href="https://www.worldwildlife.org/">WWO</a> and scraped the data using bs4.
+Then I save it to a csv file so I can read it again.</p>
+
+<p>Now to find out the names of the animals.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">animals</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"data/animals.csv"</span><span class="p">)</span>
+<span class="n">animals</span><span class="p">[</span><span class="s">"Common name  "</span><span class="p">]</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">animals</span><span class="p">[</span><span class="s">"Common name  "</span><span class="p">].</span><span class="n">values</span>
+</code></pre></div></div>
+
+<p>Turns out the website has the names saved like “amur-leopard” and the data we have right now has it as “Amur Leopard” so let us fix that as well by splitting the string, converting it to lower case and adding a - between the words.</p>
+
+<p>After that we apply this function to the whole column.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">names</span> <span class="o">=</span> <span class="n">animals</span><span class="p">[</span><span class="s">"Common name  "</span><span class="p">].</span><span class="n">values</span>
+<span class="k">def</span> <span class="nf">conve</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="s">"-"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="n">strip</span><span class="p">().</span><span class="n">lower</span><span class="p">().</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">))</span>
+<span class="n">animals</span><span class="p">[</span><span class="s">"Common name  "</span><span class="p">]</span> <span class="o">=</span> <span class="n">animals</span><span class="p">[</span><span class="s">"Common name  "</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="n">conve</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="p">.</span><span class="n">text</span><span class="p">.</span><span class="n">strip</span><span class="p">().</span><span class="n">replace</span><span class="p">(</span><span class="s">","</span><span class="p">,</span><span class="s">""</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now we also want to scrape the status of the animals aka endangered etc. Here we use beautiful soup. I had a look at the url and this is how we can format it to work out. We save the html in our cache and then use bs4 to find all images and divs (this is how webscraping works and you can identify the exact ones using “inspect element”).</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">f"species/</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s">"</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">html_soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">text</span><span class="p">,</span> <span class="s">'html.parser'</span><span class="p">)</span>
+    <span class="n">html_soup</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">conv2</span><span class="p">,</span><span class="n">html_soup</span><span class="p">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'div'</span><span class="p">,</span> <span class="n">class_</span> <span class="o">=</span> <span class="s">'container'</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])),</span><span class="n">html_soup</span><span class="p">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'img'</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="s">"src"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>After we have this, we save the images to a folder for easy access, same way as above.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">urllib</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">status</span><span class="p">(</span><span class="n">a</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span><span class="s">f"data/</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">.jpg"</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    
+</code></pre></div></div>
+
+<p>Done!</p>
+
+<h2 id="nst">NST</h2>
+
+<p>Now let us get to using style transfer. What is that? Simply put, it is taking one image and applying its style to another. Something like taking a painting and making a photo look like a painting.</p>
+
+<p>There are many ways to do it, and I have done it so many times at this point I’d rather just take an efficient implementation of it. More explanation about NST -&gt; <a href="https://github.com/SubhadityaMukherjee/neural_style_transfer">A repo of mine</a></p>
+
+<p>Okay so I will be using <a href="https://github.com/zhanghang1989/PyTorch-Multi-Style-Transfer">this</a> implementation.</p>
+
+<p>To do that, we first import os (which allows us to access files) and the random module (will allow us to choose a style at random)</p>
+
+<p>Now for a bit of complicated code.
+Since this person has actually made his code as a script, I need to call it using the terminal (aka bash).</p>
+
+<p>Obviously I do not want to do that, so I use the !python3 command. The ! lets me use the system shell directly.
+All I am doing is using python strings to choose a random style image and then using a pretrained style transfer model to transfer my image into that style.
+The weird strings are fancy string formats and {} basically allows me to replace that with a variable directly.</p>
+
+<p>I also have a GPU, so I can use CUDA.</p>
+
+<p>Here goes!</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="n">fils</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="s">"data/"</span><span class="p">)[</span><span class="mi">2</span><span class="p">::]</span>
+
+<span class="n">styles</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="s">"/home/subhaditya/Downloads/PyTorch-Multi-Style-Transfer-master/experiments/images/21styles/"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">fils</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s">"csv"</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+        <span class="err">!</span><span class="n">python3</span> <span class="s">"/home/subhaditya/Downloads/PyTorch-Multi-Style-Transfer-master/experiments/main.py"</span> <span class="nb">eval</span> <span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="n">image</span> <span class="s">"data/{a}"</span> <span class="o">--</span><span class="n">style</span><span class="o">-</span><span class="n">image</span> <span class="s">"/home/subhaditya/Downloads/PyTorch-Multi-Style-Transfer-master/experiments/images/21styles/{random.choice(styles)}"</span> <span class="o">--</span><span class="n">output</span><span class="o">-</span><span class="n">image</span> <span class="s">"outputs/{a}"</span> <span class="o">--</span><span class="n">model</span> <span class="s">"/home/subhaditya/Downloads/PyTorch-Multi-Style-Transfer-master/experiments/models/21styles.model"</span> <span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="n">size</span> <span class="mi">1024</span> <span class="o">--</span><span class="n">cuda</span> <span class="mi">1</span>
+    
+</code></pre></div></div>
+
+<p>Wow that was messed up.</p>
+
+<h2 id="website">Website</h2>
+
+<p>Now this part is funny. I am too lazy to code a website, so I will use python to do it for me.</p>
+
+<p>First we create a black html file and write the title of the site. 
+Then we iterate over the list of names and convert our formatted name to plain text again. Then we write the image along with the name of the animal and the status of it.</p>
+
+<p>We run this until it is done and now we have our site. (This is how I made the site shown above)</p>
+
+<p><img src="/outputs/screen1.png" alt="drawing" width="200" /></p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Faster and more general Conv | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Faster and more general Conv" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Here we will look at the various ways of implementing convolutions and benchmark them." />
+<meta property="og:description" content="Here we will look at the various ways of implementing convolutions and benchmark them." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-03T13:13:46+00:00" />
+<script type="application/ld+json">
+{"description":"Here we will look at the various ways of implementing convolutions and benchmark them.","url":"/article/2020/07/03/fasterConv.html","@type":"BlogPosting","headline":"Faster and more general Conv","dateModified":"2020-07-03T13:13:46+00:00","datePublished":"2020-07-03T13:13:46+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/03/fasterConv.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Faster and more general Conv</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~16 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#our-old-method">Our old method</a></li>
+  <li><a href="#optimize-p1-did-not-work">Optimize P1 (Did not work)</a></li>
+  <li><a href="#fft">FFT</a></li>
+  <li><a href="#fourier-transform">Fourier transform</a></li>
+  <li><a href="#conv2d-using-fft">Conv2D using FFT</a></li>
+  <li><a href="#cuda">CUDA</a></li>
+  <li><a href="#testing-limits">Testing limits</a></li>
+</ul>
+
+<p>Here we will look at the various ways of implementing convolutions and benchmark them.</p>
+
+<p>Let us define a huge image and a smallish kernel first to let us compare them.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">img</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="mi">1000</span><span class="x">,</span><span class="mi">1000</span><span class="x">)</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="mi">15</span><span class="x">,</span><span class="mi">15</span><span class="x">);</span>
+</code></pre></div></div>
+
+<h2 id="our-old-method">Our old method</h2>
+
+<p>We already implemented Conv2D once. So let us just take that and run it for these images as a benchmark. I think 10kx10k is a pretty crazy huge operation but anyway let us see what happens.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">ih</span><span class="x">,</span> <span class="n">iw</span> <span class="o">=</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span> <span class="n">result_h</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span> <span class="n">result_w</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">kernel_h</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">kernel_w</span>
+                    <span class="n">result</span><span class="x">[</span><span class="n">i</span><span class="x">,</span><span class="n">j</span><span class="x">]</span> <span class="o">+=</span> <span class="n">img</span><span class="x">[</span><span class="n">ih</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="n">iw</span><span class="o">+</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">kernel</span><span class="x">[</span><span class="n">k</span><span class="x">,</span><span class="n">l</span><span class="x">]</span>
+                <span class="k">end</span>
+            <span class="k">end</span>
+            <span class="n">ih</span><span class="o">+=</span><span class="n">stride</span>
+        <span class="k">end</span>
+        <span class="n">iw</span><span class="o">+=</span> <span class="n">stride</span>
+        <span class="n">ih</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+</code></pre></div></div>
+<p>Time taken -&gt;</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="mf">0.536841</span> <span class="n">seconds</span> <span class="x">(</span><span class="mf">53.66</span> <span class="n">k</span> <span class="n">allocations</span><span class="o">:</span> <span class="mf">10.141</span> <span class="n">MiB</span><span class="x">)</span>
+</code></pre></div></div>
+<p>Okay that’s good but toooo slow xD</p>
+
+<h2 id="optimize-p1-did-not-work">Optimize P1 (Did not work)</h2>
+
+<p>Let us remove those loops. First let us remove the inner loop with k and l.</p>
+
+<p>We have our new code..</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">ih</span><span class="x">,</span> <span class="n">iw</span> <span class="o">=</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span> <span class="n">result_h</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span> <span class="n">result_w</span>
+                <span class="x">[</span><span class="n">result</span><span class="x">[</span><span class="n">i</span><span class="x">,</span><span class="n">j</span><span class="x">]</span> <span class="o">+=</span> <span class="n">img</span><span class="x">[</span><span class="n">ih</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="n">iw</span><span class="o">+</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">kernel</span><span class="x">[</span><span class="n">k</span><span class="x">,</span><span class="n">l</span><span class="x">]</span> <span class="k">for</span> <span class="n">k</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">kernel_h</span><span class="x">,</span> <span class="n">l</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">kernel_w</span><span class="x">]</span>
+            <span class="n">ih</span><span class="o">+=</span><span class="n">stride</span>
+        <span class="k">end</span>
+        <span class="n">iw</span><span class="o">+=</span> <span class="n">stride</span>
+        <span class="n">ih</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+</code></pre></div></div>
+<p>Time taken -&gt;</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="mf">34.546620</span> <span class="n">seconds</span> <span class="x">(</span><span class="mf">1.09</span> <span class="n">G</span> <span class="n">allocations</span><span class="o">:</span> <span class="mf">18.201</span> <span class="n">GiB</span><span class="x">,</span> <span class="mf">3.21</span><span class="o">%</span> <span class="n">gc</span> <span class="n">time</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Wow okay that went crazy pretty fast. That did not work xD</p>
+
+<h2 id="fft">FFT</h2>
+
+<p>So I did a <a href="https://en.wikipedia.org/wiki/Convolution_theorem">google search </a> and turns out the way to increase speed is by using the Convolution algorithm. Basically this says</p>
+
+\[f*g= ℱ^{-1}\big\{ℱ\{f\}\cdot ℱ\{g\}\big\}\]
+
+<p>where \(ℱ\) is the fourier transform operation. And we first take the FT of both the image and the kernel. Then we perform point wise multiplication. And then we finally do an inverse FT.</p>
+
+<p>FFT stands for fast fourier transform.</p>
+
+<p>The sad part is that to do this, both the image and the kernel need to be of the same size, which means that we need to apply padding.</p>
+
+<blockquote>
+  <p>So I will take a break from this post and make another one padding and then come back when I have achieved that.</p>
+</blockquote>
+
+<h2 id="fourier-transform">Fourier transform</h2>
+<p>But before that I want to write a bit more about the FT. Let us see what it does I am curious.</p>
+
+<p>Here is an awesome video I found. <a href="https://www.youtube.com/watch?v=spUNpyF58BY">3Blue1Brown</a></p>
+
+<ul>
+  <li>What does it do : Take any function and decompose it into its parts</li>
+  <li>For example music -&gt; Decompose into separate waves</li>
+  <li>How? Apply a “winding” function which basically means that for every point on the wave, try to plot it in the form of a circle(sort of)</li>
+  <li>So for the whole time duration, if a stable graph is obtained at any frequency, that will allow us to decompose the wave.</li>
+  <li>Math? Take a function g(x) and multiply it using Eulers fomula</li>
+  <li>
+\[g(t)e^{-2 \cdot {\pi}ift}\]
+  </li>
+  <li>Note that these are in the complex plane.</li>
+  <li>Sample a whole bunch of points from the domain and take the integral of them.</li>
+  <li>
+\[\mathrm{\int}g\left( t \right) \cdot e^{-2 \cdot {\pi}ift \cdot dt}\]
+  </li>
+  <li>This would give the center of mass of the wound up graph, scaled up by some amount</li>
+  <li>The effect is that it would be multiplied by the duration of the portion of the graph being considered.</li>
+  <li>If a particular frequency spans for a long time, then the FT at that point is scaled up more.</li>
+</ul>
+
+<h2 id="conv2d-using-fft">Conv2D using FFT</h2>
+
+<p>Okay so I managed to solve the padding issue. (Check the next post)
+For now, I will take the example of constant padding.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Images</span><span class="x">,</span><span class="n">ImageView</span><span class="x">,</span> <span class="n">Plots</span><span class="x">,</span><span class="n">LinearAlgebra</span><span class="x">,</span><span class="n">Statistics</span><span class="x">,</span> <span class="n">FFTW</span><span class="x">,</span><span class="n">TestImages</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="mi">1000</span><span class="x">,</span><span class="mi">1000</span><span class="x">)</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="mi">15</span><span class="x">,</span><span class="mi">15</span><span class="x">);</span>
+
+<span class="k">function</span><span class="nf"> pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span><span class="n">kernel</span><span class="x">,</span><span class="n">constant</span><span class="o">=</span><span class="mi">0</span><span class="x">)</span>
+    <span class="n">kernel_h</span><span class="x">,</span> <span class="n">kernel_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">kernel</span><span class="x">)</span>
+    <span class="n">img_h</span><span class="x">,</span> <span class="n">img_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">img</span><span class="x">)</span>
+    <span class="n">padded_kernel</span><span class="o">=</span> <span class="n">ones</span><span class="x">(</span><span class="n">img_h</span><span class="x">,</span><span class="n">img_w</span><span class="x">)</span><span class="o">.*</span><span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="x">(</span><span class="mi">1</span><span class="o">+</span><span class="n">exp</span><span class="x">(</span><span class="o">-</span><span class="n">constant</span><span class="x">)));</span>
+    <span class="n">pad_h</span><span class="x">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">padded_kernel</span><span class="x">)</span>
+    <span class="n">center_x</span><span class="x">,</span><span class="n">center_y</span> <span class="o">=</span> <span class="n">pad_w</span> <span class="o">÷</span><span class="mi">2</span><span class="x">,</span> <span class="n">pad_h</span> <span class="o">÷</span><span class="mi">2</span>
+    <span class="n">tmp_x</span> <span class="o">=</span> <span class="n">center_x</span><span class="o">-</span><span class="x">(</span><span class="n">kernel_w÷2</span><span class="x">)</span>
+    <span class="n">tmp_y</span> <span class="o">=</span> <span class="n">center_y</span><span class="o">-</span><span class="x">(</span><span class="n">kernel_h÷2</span><span class="x">)</span>
+    <span class="n">padded_kernel</span><span class="x">[</span><span class="n">collect</span><span class="x">(</span><span class="n">tmp_x</span><span class="o">:</span><span class="n">tmp_x</span><span class="o">+</span><span class="n">kernel_w</span><span class="o">-</span><span class="mi">1</span><span class="x">),</span><span class="n">collect</span><span class="x">(</span><span class="n">tmp_y</span><span class="o">:</span><span class="n">tmp_y</span><span class="o">+</span><span class="n">kernel_h</span><span class="o">-</span><span class="mi">1</span><span class="x">)]</span> <span class="o">=</span> <span class="n">kernel</span><span class="x">;</span>
+    <span class="k">return</span> <span class="n">padded_kernel</span>
+<span class="k">end</span>
+
+<span class="n">ker_pad</span> <span class="o">=</span> <span class="n">pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span> <span class="n">kernel</span><span class="x">,</span> <span class="o">.</span><span class="mi">3</span><span class="x">);</span>
+<span class="nd">@time</span> <span class="n">ifft</span><span class="x">(</span><span class="n">fft</span><span class="x">(</span><span class="n">channelview</span><span class="x">(</span><span class="n">img</span><span class="x">))</span><span class="o">.*</span><span class="n">fft</span><span class="x">(</span><span class="n">ker_pad</span><span class="x">))</span>
+</code></pre></div></div>
+<p>Now I am not sure if this is the perfect approach but I will trust the internet for now.</p>
+
+<p>Speed?</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="mf">0.063075</span> <span class="n">seconds</span> <span class="x">(</span><span class="mi">190</span> <span class="n">allocations</span><span class="o">:</span> <span class="mf">76.304</span> <span class="n">MiB</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Wait. <strong>WHAT</strong>.
+That is around 8 times faster. What even.</p>
+
+<p>Okay let us try this for a 10000x10000 array then. Just because we can. xD</p>
+
+<p>Okay so our old method took</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mf">53.943691</span> <span class="n">seconds</span> <span class="x">(</span><span class="mf">59.00</span> <span class="n">k</span> <span class="n">allocations</span><span class="o">:</span> <span class="mf">763.824</span> <span class="n">MiB</span><span class="x">,</span> <span class="mf">0.08</span><span class="o">%</span> <span class="n">gc</span> <span class="n">time</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>And FFT takes</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="mf">0.075766</span> <span class="n">seconds</span> <span class="x">(</span><span class="mi">190</span> <span class="n">allocations</span><span class="o">:</span> <span class="mf">76.304</span> <span class="n">MiB</span><span class="x">,</span> <span class="mf">5.42</span><span class="o">%</span> <span class="n">gc</span> <span class="n">time</span><span class="x">)</span>
+</code></pre></div></div>
+<p><strong>Um</strong></p>
+
+<h2 id="cuda">CUDA</h2>
+
+<p>GPUs were meant for performance. So how about we try to do our implementation on a GPU? I have an Nvidia RTX2070 which is pretty great. CUDA? Compute Unified Device Architecture is a programming paradigm by Nvidia. It allows massive parallelism which gives the boost we need for Deep Learning.</p>
+
+<p>I have never actually used a CUDA array directly and I need to find out how to do it first.</p>
+
+<p>Okay so let us use the FFT thing from CUDA. We can’t use the old method because it has scalar indexing. (Aka non vectorized operations)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">CUDA</span><span class="o">.</span><span class="n">CUFFT</span><span class="x">,</span><span class="n">CUDA</span><span class="x">,</span><span class="n">Images</span>
+
+<span class="k">function</span><span class="nf"> pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span><span class="n">kernel</span><span class="x">,</span><span class="n">constant</span><span class="o">=</span><span class="mi">0</span><span class="x">)</span>
+    <span class="n">kernel_h</span><span class="x">,</span> <span class="n">kernel_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">kernel</span><span class="x">)</span>
+    <span class="n">img_h</span><span class="x">,</span> <span class="n">img_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">img</span><span class="x">)</span>
+    <span class="n">padded_kernel</span><span class="o">=</span> <span class="n">CUDA</span><span class="o">.</span><span class="n">ones</span><span class="x">(</span><span class="n">img_h</span><span class="x">,</span><span class="n">img_w</span><span class="x">)</span><span class="o">.*</span><span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="x">(</span><span class="mi">1</span><span class="o">+</span><span class="n">exp</span><span class="x">(</span><span class="o">-</span><span class="n">constant</span><span class="x">)));</span>
+    <span class="n">pad_h</span><span class="x">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">padded_kernel</span><span class="x">)</span>
+    <span class="n">center_x</span><span class="x">,</span><span class="n">center_y</span> <span class="o">=</span> <span class="n">pad_w</span> <span class="o">÷</span><span class="mi">2</span><span class="x">,</span> <span class="n">pad_h</span> <span class="o">÷</span><span class="mi">2</span>
+    <span class="n">tmp_x</span> <span class="o">=</span> <span class="n">center_x</span><span class="o">-</span><span class="x">(</span><span class="n">kernel_w÷2</span><span class="x">)</span>
+    <span class="n">tmp_y</span> <span class="o">=</span> <span class="n">center_y</span><span class="o">-</span><span class="x">(</span><span class="n">kernel_h÷2</span><span class="x">)</span>
+    <span class="n">padded_kernel</span><span class="x">[</span><span class="n">collect</span><span class="x">(</span><span class="n">tmp_x</span><span class="o">:</span><span class="n">tmp_x</span><span class="o">+</span><span class="n">kernel_w</span><span class="o">-</span><span class="mi">1</span><span class="x">),</span><span class="n">collect</span><span class="x">(</span><span class="n">tmp_y</span><span class="o">:</span><span class="n">tmp_y</span><span class="o">+</span><span class="n">kernel_h</span><span class="o">-</span><span class="mi">1</span><span class="x">)]</span> <span class="o">=</span> <span class="n">kernel</span><span class="x">;</span>
+    <span class="k">return</span> <span class="n">CuArray</span><span class="x">(</span><span class="n">padded_kernel</span><span class="x">)</span>
+<span class="k">end</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">CuArray</span><span class="x">(</span><span class="n">channelview</span><span class="x">(</span><span class="n">rand</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="mi">1000</span><span class="x">,</span><span class="mi">1000</span><span class="x">)));</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">CuArray</span><span class="x">(</span><span class="n">rand</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="mi">15</span><span class="x">,</span><span class="mi">15</span><span class="x">));</span>
+
+<span class="n">ker_pad</span> <span class="o">=</span> <span class="n">pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span> <span class="n">kernel</span><span class="x">,</span> <span class="o">.</span><span class="mi">3</span><span class="x">);</span>
+
+<span class="nd">@time</span> <span class="n">ifft</span><span class="x">(</span><span class="n">fft</span><span class="x">(</span><span class="n">img</span><span class="x">)</span><span class="o">*</span><span class="n">fft</span><span class="x">(</span><span class="n">ker_pad</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p>So that took…</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mf">0.018873</span> <span class="n">seconds</span> <span class="x">(</span><span class="mi">851</span> <span class="n">allocations</span><span class="o">:</span> <span class="mf">26.781</span> <span class="n">KiB</span><span class="x">)</span>
+</code></pre></div></div>
+<p>Okay……….</p>
+
+<h2 id="testing-limits">Testing limits</h2>
+
+<p>How about for a 10k x 10k array</p>
+
+<p>Oh no.. I do not think my GPU can take this ):</p>
+
+<p>Okay 9k x 9k</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mf">23.501186</span> <span class="n">seconds</span> <span class="x">(</span><span class="mi">973</span> <span class="n">allocations</span><span class="o">:</span> <span class="mf">31.203</span> <span class="n">KiB</span><span class="x">,</span> <span class="mf">1.67</span><span class="o">%</span> <span class="n">gc</span> <span class="n">time</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Heh. I guess it took time to send it to the GPU. And bring it back :/
+I am confusion.</p>
+
+<p>Ah yes it was that. Once it did go to the GPU, it took 1 second. Which means that it could take lesser on the next run, except my dear ol GPU wont let me do it for such a huge array.</p>
+
+<p>But I guess I should be satsified with 1k x 1k. I mean come on, do we even use such huge images for DL. (Unless you work at Google LOL)</p>
+
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Action recognition part 1 | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Action recognition part 1" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I try to reimplement Video recognition from Link and explain the code as I go along." />
+<meta property="og:description" content="I try to reimplement Video recognition from Link and explain the code as I go along." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-06T16:34:52+00:00" />
+<script type="application/ld+json">
+{"description":"I try to reimplement Video recognition from Link and explain the code as I go along.","url":"/article/2020/07/06/Video-Classification.html","@type":"BlogPosting","headline":"Action recognition part 1","dateModified":"2020-07-06T16:34:52+00:00","datePublished":"2020-07-06T16:34:52+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/06/Video-Classification.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Action recognition part 1</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~17 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#get-data-and-fix-it-to-required-format">Get data and fix it to required format.</a></li>
+  <li><a href="#defining-the-network">Defining the network</a></li>
+  <li><a href="#initialization">Initialization</a></li>
+</ul>
+
+<p>I try to reimplement Video recognition from <a href="https://github.com/jfzhang95/pytorch-video-recognition">Link</a> and explain the code as I go along.</p>
+
+<blockquote>
+  <p>This will be rather long so I will split it into parts. Since it has a lot of parts and I want to make sense of each, I will try to explain everything as I go along</p>
+</blockquote>
+
+<p>Lets go!!!!</p>
+
+<h2 id="get-data-and-fix-it-to-required-format">Get data and fix it to required format.</h2>
+
+<p>Let us use the UCF101 video dataset for this task. It has 101 categories of actions that were taken from youtube videos.
+We first get our data from <a href="http://www.thumos.info/download.html">here</a> since the main site of the dataset is down.</p>
+
+<p>Since these are just files, we need to put them in the required format of folders and the videos inside them. How do we do that? Well for starters we make a list of all the videos. Then we extract the names from them and pop them into a unique set. 
+Now we have 101 names and we make a folder for each.</p>
+
+<p>Once that is done, we use shutil to move each video to its respective folder just by virtue of its name. Done :)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="n">dirs</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="s">"/home/subhaditya/Desktop/Datasets/UCF101/"</span><span class="p">)</span>
+<span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dirs</span> <span class="k">if</span> <span class="s">".avi"</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">dirs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">get_dir</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">unique_dirs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">get_dir</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">]))</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_dirs</span><span class="p">))</span>
+<span class="c1"># [os.makedirs(x) for x in unique_dirs]
+</span><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">dirs</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="p">.</span><span class="n">move</span><span class="p">(</span><span class="s">f"/home/subhaditya/Desktop/Datasets/UCF101/</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">"</span><span class="p">,</span><span class="s">f"/home/subhaditya/Desktop/Datasets/UCF101/</span><span class="si">{</span><span class="n">get_dir</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="si">}</span><span class="s">/"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>tqdm is fancy progress bars
+os allows us to interact with the system
+and shutil makes file operations like copy/move easier</p>
+
+<p>We will get back to these videos later</p>
+
+<h2 id="defining-the-network">Defining the network</h2>
+
+<p>The model is obviously the most important thing here, so let us first define the network.
+The classes are actually just pytorch syntax so we just follow it.</p>
+
+<p>Let us first define what we need,
+Conv3d - Wait what. 3d? I have only used 2d so far. What is 3d now? 
+Wow okay this is the 3d cross correlation operation. It applies the convolution when there are several input planes.
+It is used with 3D image data such as MRI, CT scans and event detection. 
+So apparently they are not just limited to 3d space but also work with 2d space but I am not sure how well they will perform.</p>
+
+<p>MaxPool -&gt; we have talked about this before. It basically takes the max of slices of input data and pools together all of them in the form of a single 3d matrix.</p>
+
+<p>Relu -&gt; Non linearity which we introduce so the neural network can learn more complex functions.</p>
+
+<p>Linear -&gt; Basic Dense layer which we talked about</p>
+
+<p>Last Linear layer -&gt; SInce we have 101 classes, and we want a softmax at the end somewhere, we use num_classes as the final no of channels</p>
+
+<p>Dropout -&gt; We havent talked about this but simply put, it randomly drops a percentage of the connections in every layer. This helps prevent overfitting and helps the network generalize more.</p>
+
+<blockquote>
+  <p>See how the network grows from smaller to larger? That helps a lot when choosing model architectures. Sometimes they even go back up to smaller heights.</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">mode</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">mypath</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">class</span> <span class="nc">C3D</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">C3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pool1</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">MaxPool3d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">(</span>
+            <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pool2</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">MaxPool3d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv3a</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">(</span>
+            <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv3b</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">(</span>
+            <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pool3</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">MaxPool3d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv4a</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">(</span>
+            <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv4b</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">(</span>
+            <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pool4</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">MaxPool3d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv5a</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">(</span>
+            <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv5b</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">(</span>
+            <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pool5</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">MaxPool3d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span>
+            <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">fc6</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8192</span><span class="p">,</span> <span class="mi">4096</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">fc7</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="mi">4096</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">fc8</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">ReLU</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">__init_weight</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">pretrained</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">__load_pretrained_weights</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<h2 id="initialization">Initialization</h2>
+
+<p>All you need is a good init! <a href="https://arxiv.org/abs/1511.06422">Link</a> I mean not really but you still need a good one.
+We are using kaiming init which we also discussed before. Notice that we using it only for the conv3d layers. for batchnorm3d (which we do not have here but might have later), we just fill it with 1s and make the bias 0.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">__init_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nn</span><span class="p">.</span><span class="n">Conv3d</span><span class="p">):</span>
+                <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">init</span><span class="p">.</span><span class="n">kaiming_normal_</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">weight</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nn</span><span class="p">.</span><span class="n">BatchNorm3d</span><span class="p">):</span>
+                <span class="n">m</span><span class="p">.</span><span class="n">weight</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">fill_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">m</span><span class="p">.</span><span class="n">bias</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">zero_</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>We now make generators to yield our data as and when we need it. In this case we get parameters for the convs and the final classification layer.
+Also note that we enable gradient computing here.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_1x_lr_params</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">.</span><span class="n">conv1</span><span class="p">,</span> <span class="n">model</span><span class="p">.</span><span class="n">conv2</span><span class="p">,</span> <span class="n">model</span><span class="p">.</span><span class="n">conv3a</span><span class="p">,</span><span class="n">model</span><span class="p">.</span><span class="n">conv3b</span><span class="p">,</span> <span class="n">model</span><span class="p">.</span><span class="n">conv4a</span><span class="p">,</span><span class="n">model</span><span class="p">.</span><span class="n">conv4b</span><span class="p">,</span><span class="n">model</span><span class="p">.</span><span class="n">conv5a</span><span class="p">,</span> <span class="n">model</span><span class="p">.</span><span class="n">conv5b</span><span class="p">,</span> <span class="n">model</span><span class="p">.</span><span class="n">fc6</span><span class="p">,</span> <span class="n">model</span><span class="p">.</span><span class="n">fc7</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span><span class="p">.</span><span class="n">requires_grad</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">k</span>
+
+<span class="k">def</span> <span class="nf">get_10x_lr_params</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">.</span><span class="n">fc8</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span><span class="p">.</span><span class="n">requires_grad</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">k</span>
+</code></pre></div></div>
+
+<p>Now for the final part today, something to check if the module works or not.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"main__"</span><span class="p">:</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">112</span><span class="p">)</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">C3D</span><span class="p">(</span><span class="n">num_classes</span> <span class="o">=</span> <span class="mi">101</span><span class="p">,</span> <span class="n">pretrained</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">net</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>   
+</code></pre></div></div>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>DRL and neuroscience (Just notes | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="DRL and neuroscience (Just notes" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/DRlNeuro.html","@type":"BlogPosting","headline":"DRL and neuroscience (Just notes","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/DRlNeuro.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>DRL and neuroscience (Just notes</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~4 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#introduction">introduction</a></li>
+  <li><a href="#representation-learning">representation learning</a></li>
+  <li><a href="#model-based-reinforcement-learning">model-based reinforcement learning</a></li>
+  <li><a href="#memory">memory</a></li>
+  <li><a href="#exploration">exploration</a></li>
+  <li><a href="#cognition">cognition</a></li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[30]</strong> DRL and neuroscience (Just notes</p>
+<ul>
+  <li>Botvinick, M., Wang, J. X., Dabney, W., Miller, K. J., &amp; Kurth-Nelson, Z. (2020). Deep Reinforcement Learning and Its Neuroscientific Implications. Neuron. <a href="https://arxiv.org/pdf/2007.03750">Paper</a></li>
+</ul>
+
+<h1 id="introduction">introduction</h1>
+<ul>
+  <li>using deep reinforcement learning it is now possible for brain science to have a new set of research tools</li>
+  <li>a relationship between deep reinforcement learning and brain function was identified</li>
+  <li>turns out that neural networks are a good model of neural representation.</li>
+  <li>Multiple small neural networks with handcrafted structures can actually provide good models of how the brain regions interact to guide a decision making and eventually learning</li>
+  <li>meta reinforcement learning is basically training a recurrent deep reinforcement learning networks with forced choice decision tasks of interrelated types which allows the network to adapt to new tasks without changing existing weights</li>
+  <li>to make decisions under risk, It is essential to account for distribution and uncertainty of rewards</li>
+</ul>
+
+<h1 id="representation-learning">representation learning</h1>
+<ul>
+  <li>representation learning is basically a reward based learning which shapes internal representations which help to influence later decision making based on reward.</li>
+  <li>in the brain, visual stimuli is represented in the prefrontal cortex based on which task the animal performs and this also affects neural responses.</li>
+  <li>This kind of rewards are generally sparse which might lead to overfitting</li>
+  <li>a sort of solution is to use So supervised learning or unsupervised which also allows the ability to transfer learn</li>
+</ul>
+
+<h1 id="model-based-reinforcement-learning">model-based reinforcement learning</h1>
+<ul>
+  <li>sometimes it is possible for systems using model free RL to have behavior and processes resembling model based systems</li>
+  <li>The attempt is to find out the balance between them</li>
+</ul>
+
+<h1 id="memory">memory</h1>
+<ul>
+  <li>experience replay seems to be similar to the replay events which are absorbed in the brain but are non-uniform as compared to systems in the computer</li>
+  <li>aside from online decision making, episodeic memory as well as maintenance and retrieval and consolidation is also important</li>
+  <li>working memory maintenance in regarding neural networks seems to be similar to that of neuroscience</li>
+  <li>attention also seems to be important</li>
+</ul>
+
+<h1 id="exploration">exploration</h1>
+<ul>
+  <li>might I love agents to learn or evolve their own motivations based on experience</li>
+  <li>Even if changes in weights are suspended, metal learning would allow activation dynamics that support</li>
+</ul>
+
+<h1 id="cognition">cognition</h1>
+<ul>
+  <li>heirarchical systems can actually operate at time scales with different levels</li>
+  <li>social cognition such as competitive team games as well as multiple agents being trained in parallel also might emulate the brain</li>
+  <li>since human learners bring a lifetime of experience for every problem the AI system cannot hope to match up yet</li>
+  <li>a long-term credit assignment is important</li>
+  <li>back propagation itself might not allow preserving very old learning when there is new information available</li>
+  <li>majority of the research is not being done to copy the brain but attempt to recreate it in some other way</li>
+  <li>neuroscience and deep learning has been connected for decades and reinforcement learning seems to be a good place to continue that learning</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

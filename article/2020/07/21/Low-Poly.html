@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Low Poly | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Low Poly" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Convert a video to low poly :) (See images below if you dont know what that is)" />
+<meta property="og:description" content="Convert a video to low poly :) (See images below if you dont know what that is)" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-21T05:42:30+00:00" />
+<script type="application/ld+json">
+{"description":"Convert a video to low poly :) (See images below if you dont know what that is)","url":"/article/2020/07/21/Low-Poly.html","@type":"BlogPosting","headline":"Low Poly","dateModified":"2020-07-21T05:42:30+00:00","datePublished":"2020-07-21T05:42:30+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/21/Low-Poly.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Low Poly</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~24 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#loading-stuff">Loading stuff</a></li>
+  <li><a href="#point-generation">Point generation</a></li>
+  <li><a href="#edge-generation">Edge generation</a></li>
+  <li><a href="#triangulation">Triangulation</a></li>
+  <li><a href="#video">Video!</a></li>
+</ul>
+
+<p>Convert a video to low poly :) (See images below if you dont know what that is)</p>
+
+<p>Just as a citation. Most of the code is from <a href="https://github.com/louis-paul/polypy">here</a>. I adapted it to videos and decided to explain the code because it was too cool to not.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Before we go on. This is a low poly image.</p>
+
+<p><img src="/assets/img/poly1.png" alt="drawing" width="400" /></p>
+
+<p>Looks really cool doesn’t it? Okay so how do we go about making this. And then extend it to work with videos? Let us begin!! (Note that this will be in Python)</p>
+
+<h2 id="loading-stuff">Loading stuff</h2>
+
+<p>First let us get the libraries we need. cv2 and PIL are for loading and performing operations on images. tqdm is a fancy progress bar. colortypes is for getting the color and ctypes gives us access to the types from C. sys gives us access to the system
+As for the scipy spatial, that will be explained in due course.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">import</span> <span class="n">colorsys</span>
+<span class="k">import</span> <span class="n">ctypes</span>
+<span class="n">from</span> <span class="n">itertools</span> <span class="k">import</span> <span class="n">product</span>
+<span class="n">from</span> <span class="n">multiprocessing</span> <span class="k">import</span> <span class="n">Process</span><span class="x">,</span> <span class="kt">Array</span>
+<span class="n">from</span> <span class="n">PIL</span> <span class="k">import</span> <span class="n">Image</span><span class="x">,</span> <span class="n">ImageDraw</span><span class="x">,</span> <span class="n">ImageFilter</span>
+<span class="k">import</span> <span class="n">random</span>
+<span class="n">from</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span> <span class="k">import</span> <span class="n">Delaunay</span>
+<span class="k">import</span> <span class="n">sys</span>
+</code></pre></div></div>
+
+<p>After that, let us set some default parameters. The most important ones here are the point count and the edge ratio which determine how many and how polygonized the output image will be.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">POINT_COUNT</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="n">EDGE_THRESHOLD</span> <span class="o">=</span> <span class="mi">172</span>
+<span class="n">EDGE_RATIO</span> <span class="o">=</span> <span class="p">.</span><span class="mi">8</span>
+<span class="n">DARKENING_FACTOR</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">SPEEDUP_FACTOR_X</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">SPEEDUP_FACTOR_Y</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">CONCURRENCY_FACTOR</span> <span class="o">=</span> <span class="mi">8</span>
+</code></pre></div></div>
+
+<h2 id="point-generation">Point generation</h2>
+
+<p>Now we need to generate random points. To do so, we first define two helper functions. One which returns a fourth of the height/width. And another which identifies the least metric and returns 1/16th of it. This is done to make the generation a bit more random but not distorted.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_point_propagation</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_point_distance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">16</span>
+</code></pre></div></div>
+
+<p>Now for the actual point generation. We first use the previously defined function to get a fourth of the size. The we take 1/16th of the least value. 
+Finally, we iterate over for every point that we need and we choose a random x and y coordinate using the points we have obtained by trying to find a polygon using these random points. We then append this to the point list and store it.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generate_random</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+    <span class="n">prop_x</span><span class="p">,</span> <span class="n">prop_y</span> <span class="o">=</span> <span class="n">get_point_propagation</span><span class="p">(</span><span class="o">*</span><span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">point_distance</span> <span class="o">=</span> <span class="n">get_point_distance</span><span class="p">(</span><span class="o">*</span><span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">POINT_COUNT</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randrange</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">prop_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">point_distance</span><span class="p">))</span> <span class="o">*</span> \
+            <span class="n">point_distance</span> <span class="o">-</span> <span class="p">(</span><span class="n">prop_x</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randrange</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">prop_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">point_distance</span><span class="p">))</span> <span class="o">*</span> \
+            <span class="n">point_distance</span> <span class="o">-</span> <span class="p">(</span><span class="n">prop_y</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">points</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+
+</code></pre></div></div>
+
+<h2 id="edge-generation">Edge generation</h2>
+
+<p>Now that we have points, we need to generate random edges. Before we do this, we first write a function to identify the grayscale version of a pixel. We need this to calculate threshold and identify edges because in a color version of the image, the intensity values might not match our requirements. The formula to return the grayscale value of a pixel is</p>
+
+\[0.2126 \cdot r + 0.7152 \cdot g + 0.0722 \cdot b\]
+
+<p>where r,g,b are the values of red, green and blue intensities respectively.
+After that, we apply a sharpen and a find edges filter which will increase our chances of finding edges and then actually find the required edges. 
+Now that we have the edges in the image itself, we iterate over the points and check if our pixel matches our threshold. If it does, them we store away its coordinates. Note that the product function takes the product over an iterator such as a range function. (This is used to check for the threshold.)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_grayscale</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.2126</span><span class="o">*</span><span class="n">r</span> <span class="o">+</span> <span class="mf">0.7152</span><span class="o">*</span><span class="n">g</span> <span class="o">+</span> <span class="mf">0.0722</span><span class="o">*</span><span class="n">b</span>
+
+<span class="k">def</span> <span class="nf">generate_edges</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+    <span class="n">im_edges</span> <span class="o">=</span> <span class="n">im</span><span class="p">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">ImageFilter</span><span class="p">.</span><span class="n">SHARPEN</span><span class="p">).</span><span class="nb">filter</span><span class="p">(</span><span class="n">ImageFilter</span><span class="p">.</span><span class="n">FIND_EDGES</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">get_grayscale</span><span class="p">(</span><span class="o">*</span><span class="n">im_edges</span><span class="p">.</span><span class="n">getpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="n">EDGE_THRESHOLD</span> <span class="ow">and</span> \
+                <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">EDGE_RATIO</span><span class="p">:</span>
+            <span class="n">points</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>Now for the most important part, identifying the polygons. This is called triangulation. We first define a function to do it. Then we define another to perform the process in parallel to save time. We first iterate over the rows of the image and parallelize the code to work for the rows instead of working for the whole image at once. 
+So for every row, using the previously defined speedup factor to determine the number of values considered at a time, we can reduce compute time.
+Then we use an algorithm from scipy to find the simplex points containing x and y. From graph theory, we have “Simplex graph -A graph in which no line starts and ends at the same point, and in which no two lines have the same pair of end points”.
+We can now identify the pixels by their index and convert them to black if they are white. 
+If they points cannot be made into simplex points, then we ignore them. 
+If they are, then we identify the r,g,b values of that point and then encode and store their color into a fixed size array. (from the code)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">triangulate_worker</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">worker_index</span><span class="p">,</span> <span class="n">worker_count</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">SPEEDUP_FACTOR_X</span><span class="p">,</span>
+                              <span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                              <span class="n">SPEEDUP_FACTOR_X</span><span class="p">),</span>
+                        <span class="c1"># Workers treat different rows
+</span>                        <span class="nb">range</span><span class="p">(</span><span class="n">worker_index</span> <span class="o">*</span> <span class="n">SPEEDUP_FACTOR_Y</span><span class="p">,</span>
+                              <span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                              <span class="n">worker_count</span> <span class="o">*</span> <span class="n">SPEEDUP_FACTOR_Y</span><span class="p">)</span>
+                        <span class="p">):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">.</span><span class="n">find_simplex</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)).</span><span class="n">flat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">pixel_index</span> <span class="o">=</span> <span class="n">y</span><span class="o">*</span><span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span>
+            <span class="n">colors</span><span class="p">[</span><span class="n">pixel_index</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xFFFF</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="o">~</span><span class="n">t</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># Colors and triangle ID are encoded to integers for fixed-size
+</span>            <span class="c1"># storage in the Array object through a 64-bit integer
+</span>            <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">=</span> <span class="n">im</span><span class="p">.</span><span class="n">getpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+            <span class="n">colors</span><span class="p">[</span><span class="n">pixel_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">t</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">g</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">return</span>
+</code></pre></div></div>
+
+<p>We now use the Delaunay triangulation. This states that no point in P is inside the circumcircle of any triangle in DT(P) in the created triangulation. After we have that, we run our previous function in parallel and decode the colors using the encoded ones from the previous function. Once we do that, we can return the colors as well as the decoded triangles.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">triangulate</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+    <span class="n">triangles</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">ctypes</span><span class="p">.</span><span class="n">c_uint64</span><span class="p">,</span> <span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">im</span><span class="p">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lock</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">CONCURRENCY_FACTOR</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">triangulate_worker</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span>
+                                                     <span class="n">CONCURRENCY_FACTOR</span><span class="p">))</span>
+        <span class="n">jobs</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+        <span class="n">i</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">decoded_colors</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">triangles</span><span class="p">.</span><span class="n">simplices</span><span class="p">)</span>
+    <span class="c1"># Color decoding
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">colors</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mh">0xFFFF</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">decoded_colors</span><span class="p">[</span><span class="n">t</span><span class="p">]:</span>
+            <span class="n">decoded_colors</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">decoded_colors</span><span class="p">[</span><span class="n">t</span><span class="p">].</span><span class="n">append</span><span class="p">((</span><span class="n">c</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">,</span>
+                                 <span class="p">(</span><span class="n">c</span> <span class="o">&amp;</span> <span class="mh">0xFF00</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">,</span>
+                                 <span class="p">(</span><span class="n">c</span> <span class="o">&amp;</span> <span class="mh">0xFF0000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">triangles</span><span class="p">,</span> <span class="n">decoded_colors</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="triangulation">Triangulation</h2>
+
+<p>Now all that is left before the video is to draw these triangles. To do that we iterate over the colors and darken them a bit, to make it look better. We also convert the rgb colors to hsv space so we can darken them. (Hue saturation value). Once we do that we can draw the polygons using everything we have so far. We also need to fill</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="p">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">t_colors</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">colors</span><span class="p">):</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">t_colors</span><span class="p">:</span>
+            <span class="n">avg</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">t_colors</span><span class="p">)]</span>
+            <span class="c1"># Random darkening of the triangles
+</span>            <span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="n">colorsys</span><span class="p">.</span><span class="n">rgb_to_hsv</span><span class="p">(</span><span class="n">avg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">avg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">avg</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">colorsys</span><span class="p">.</span><span class="n">hsv_to_rgb</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span>
+                                      <span class="n">v</span> <span class="o">-</span> <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">DARKENING_FACTOR</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">.</span><span class="n">polygon</span><span class="p">([</span><span class="nb">tuple</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">y</span><span class="p">])</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">triangles</span><span class="p">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">t</span><span class="p">]],</span>
+                  <span class="n">fill</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">end</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">im</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">im</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">generate_random</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+    <span class="n">generate_edges</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+    <span class="n">triangles</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="n">triangulate</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+    <span class="n">draw</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">colors</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">im</span>
+</code></pre></div></div>
+
+<h2 id="video">Video!</h2>
+
+<p>Now for the video. Any video is just pictures so we convert a video into pictures. Since I took the video from a movie, I first needed to cut out a part of the movie. 
+The easiest way to do this is using ffmpeg. (This is a bash command)</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg <span class="nt">-i</span> Avengers.Infinity.War.2018.720p.WEBRip.x264-<span class="se">\[</span>YTS.AM<span class="se">\]</span>.mp4 <span class="nt">-ss</span> 01:45:10 <span class="nt">-to</span> 01:48:00 <span class="nt">-c</span> copy cropped.mp4
+</code></pre></div></div>
+
+<p>All this does is crop the movie between two times and save it as a new file.
+After that we use opencv to read the video frame by frame and perform above functions on them. We will also save it to images which we will again combine using ffmpeg.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">PIL</span>
+
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="s">"/media/subhaditya/DATA/ENTERTAIN/Movies/avengers infinity war/cropped.mp4"</span><span class="p">)</span>
+
+<span class="n">cap</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="p">.</span><span class="n">CAP_PROP_FRAME_COUNT</span><span class="p">)</span>
+
+<span class="n">arra_images</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1430</span><span class="p">)):</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="c1">#     main4(frame)
+</span>    <span class="k">if</span> <span class="n">ret</span><span class="o">==</span><span class="bp">True</span><span class="p">:</span>
+        <span class="n">arra_images</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">break</span>
+
+<span class="c1"># Release everything if job is finished
+</span><span class="n">cap</span><span class="p">.</span><span class="n">release</span><span class="p">()</span>
+
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">save_incr</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="c1">#     global count
+</span>    <span class="n">out</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">Image</span><span class="p">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="c1">#     count+=1
+</span>    <span class="k">return</span> <span class="n">out</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arra_images</span><span class="p">))):</span>
+    <span class="n">save_incr</span><span class="p">(</span><span class="n">arra_images</span><span class="p">[</span><span class="n">a</span><span class="p">]).</span><span class="n">save</span><span class="p">(</span><span class="s">f"data/</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">.jpg"</span><span class="p">)</span>
+	
+<span class="n">main</span><span class="p">(</span><span class="n">Image</span><span class="p">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">arra_images</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>Done. Now for the last function to convert it to a video we again use ffmpeg.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">!</span><span class="nb">cat </span>data/<span class="k">*</span>.png | ffmpeg <span class="nt">-f</span> image2pipe <span class="nt">-i</span> - output.mp4
+</code></pre></div></div>
+
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

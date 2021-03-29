@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Image Preprocessing | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Image Preprocessing" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="We look at some image processing techniques and try to implement them from scratch." />
+<meta property="og:description" content="We look at some image processing techniques and try to implement them from scratch." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-16T20:56:06+00:00" />
+<script type="application/ld+json">
+{"description":"We look at some image processing techniques and try to implement them from scratch.","url":"/article/2020/07/16/preprocessing.html","@type":"BlogPosting","headline":"Image Preprocessing","dateModified":"2020-07-16T20:56:06+00:00","datePublished":"2020-07-16T20:56:06+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/16/preprocessing.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Image Preprocessing</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~10 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#random-crop">Random crop</a></li>
+  <li><a href="#random-change-in-brightness-and-contrast">Random change in brightness and contrast</a></li>
+  <li><a href="#random-flip">Random Flip</a></li>
+  <li><a href="#gray-scale">Gray scale</a></li>
+  <li><a href="#mixup">Mixup</a></li>
+  <li><a href="#multiple-transforms">Multiple transforms</a></li>
+</ul>
+
+<p>We look at some image processing techniques and try to implement them from scratch.</p>
+
+<p>So before we start, let us import the usual packages and load two images. Our beloved mandrill and an image of the earth.
+We also define a function to take an array and resize it and display it as an image.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Plots</span><span class="x">,</span> <span class="n">Images</span><span class="x">,</span> <span class="n">ImageView</span><span class="x">,</span><span class="n">Statistics</span><span class="x">,</span> <span class="n">Distributions</span><span class="x">,</span> <span class="n">TestImages</span>
+<span class="n">imageret</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">imresize</span><span class="x">(</span><span class="n">colorview</span><span class="x">(</span><span class="n">RGB</span><span class="x">,</span><span class="n">x</span><span class="x">),(</span><span class="mi">200</span><span class="x">,</span><span class="mi">200</span><span class="x">))</span>
+
+<span class="n">image1</span> <span class="o">=</span> <span class="n">TestImages</span><span class="o">.</span><span class="n">testimage</span><span class="x">(</span><span class="s">"mandrill"</span><span class="x">);</span>
+<span class="n">imageret</span><span class="x">(</span><span class="n">image1</span><span class="x">)</span>
+
+<span class="n">image2</span> <span class="o">=</span> <span class="n">TestImages</span><span class="o">.</span><span class="n">testimage</span><span class="x">(</span><span class="s">"earth_apollo17"</span><span class="x">)</span>
+<span class="n">imageret</span><span class="x">(</span><span class="n">image2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="random-crop">Random crop</h2>
+
+<p>Once we have this, we can look at our first pre processing technique. Random cropping. We aim to randomly black out parts of the image in this.
+We first copy the image (to prevent the original from being modified) and convert it to an array.
+Then we index into it and randomly choose a range of x and y coordinates to set to 0. 
+We then just return the image.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> randomCrop</span><span class="x">(</span><span class="nb">im</span><span class="x">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">copy</span><span class="x">(</span><span class="n">channelview</span><span class="x">(</span><span class="nb">im</span><span class="x">))</span>
+    <span class="n">temp</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="mi">1</span><span class="o">:</span><span class="n">rand</span><span class="x">((</span><span class="mi">1</span><span class="o">:</span><span class="k">end</span><span class="x">)),</span><span class="mi">1</span><span class="o">:</span><span class="n">rand</span><span class="x">((</span><span class="mi">1</span><span class="o">:</span><span class="k">end</span><span class="x">))]</span> <span class="o">.=</span><span class="mi">0</span>
+    <span class="k">return</span> <span class="n">temp</span>
+<span class="k">end</span>
+<span class="n">imageret</span><span class="x">(</span><span class="n">randomCrop</span><span class="x">(</span><span class="n">im2</span><span class="x">))</span>
+</code></pre></div></div>
+<p><img src="/img/crop.png" alt="" /></p>
+
+<p>As you can see, part of the image is gone. This does lead to a loss in the image content.</p>
+
+<h2 id="random-change-in-brightness-and-contrast">Random change in brightness and contrast</h2>
+
+<p>We use the formula \(\alpha \cdot x + \beta\) where \(\alpha\) and \(\beta\) are values between 0 and 1 which represent the brightness and contrast in the image. 
+To modify it, We convert all the values in the image using this formula and randomly generated values for \(\alpha\) and \(\beta\). We also clamp the values between -1 and 1 as the function is defined there.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> imageJitter</span><span class="x">(</span><span class="nb">im</span><span class="x">)</span>
+    <span class="n">changer</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">α</span><span class="x">,</span> <span class="n">β</span><span class="x">)</span> <span class="o">=</span> <span class="n">clamp</span><span class="o">.</span><span class="x">(</span><span class="n">α</span> <span class="o">.*</span><span class="n">x</span> <span class="o">.+</span><span class="n">β</span><span class="x">,</span> <span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="mi">1</span><span class="x">);</span>
+    <span class="n">α</span><span class="x">,</span><span class="n">β</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">Uniform</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mf">1.0</span><span class="x">),</span><span class="mi">1</span><span class="x">)[</span><span class="mi">1</span><span class="x">],</span> <span class="n">rand</span><span class="x">(</span><span class="n">Uniform</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mf">1.0</span><span class="x">),</span><span class="mi">1</span><span class="x">)[</span><span class="mi">1</span><span class="x">];</span>
+    <span class="k">return</span> <span class="n">changer</span><span class="x">(</span><span class="nb">im</span><span class="x">,</span> <span class="n">α</span><span class="x">,</span> <span class="n">β</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><img src="/img/jit.png" alt="" /></p>
+
+<p>Here we get an image with high brightness and low contrast.</p>
+
+<h2 id="random-flip">Random Flip</h2>
+
+<p>This was almost hilariously easy but anyway. We need to randomly flip either up/down and/or left/right or not at all. So we index into the arrays and flip them.
+We also keep 3 cases and then just output a single choice between them.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> randomflip</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+    <span class="n">rand</span><span class="x">([</span><span class="n">x</span><span class="x">,</span><span class="n">x</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="k">end</span><span class="o">:-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="x">,</span><span class="o">:</span><span class="x">],</span><span class="n">x</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="k">end</span><span class="o">:-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="x">]])</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><img src="/img/flip.png" alt="" /></p>
+
+<p>In this case it was flipped upside down.</p>
+
+<h2 id="gray-scale">Gray scale</h2>
+
+<p>We have done this many times before but for the sake of consistency.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">togray</span><span class="x">(</span><span class="n">x</span><span class="x">)</span><span class="o">=</span> <span class="k">return</span> <span class="n">Gray</span><span class="o">.</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="mixup">Mixup</h2>
+
+<p>This is a newer technique and was talked about in this <a href="https://arxiv.org/abs/1710.09412">paper</a>. It basically involves choosing a weight and superimposing an image onto another. 
+The network is then forced to spit out 2 labels instead of one. This prevents overfitting and leads to greater generalization. The drawback is that mixup generally takes a longer time to converge. But when it does, it works better.
+It is also said that mixup might remove the need to have any other data augmentation techniques.</p>
+
+<p>We resize both the images into the same size first.
+Then we convert them into arrays.
+We also take a random value between .5 to 1.0 as the weight.
+The formula for mixup involves taking both the image matrices and weighted adding them together like this
+\(t \cdot im1 + \left( 1 - t \right) \cdot im2\)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> mixup</span><span class="x">(</span><span class="n">im1</span><span class="x">,</span><span class="n">im2</span><span class="x">)</span>
+    <span class="n">im2</span> <span class="o">=</span> <span class="n">imresize</span><span class="x">(</span><span class="n">im2</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">im1</span><span class="x">))</span>
+    <span class="n">im1</span><span class="x">,</span> <span class="n">im2</span> <span class="o">=</span> <span class="n">channelview</span><span class="x">(</span><span class="n">im1</span><span class="x">),</span><span class="n">channelview</span><span class="x">(</span><span class="n">im2</span><span class="x">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">Uniform</span><span class="x">(</span><span class="o">.</span><span class="mi">5</span><span class="x">,</span> <span class="mf">1.0</span><span class="x">),</span><span class="mi">1</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span>
+    <span class="nd">@show</span> <span class="n">t</span>
+    <span class="k">return</span> <span class="x">(</span><span class="n">t</span><span class="o">.*</span><span class="n">im1</span><span class="x">)</span> <span class="o">.+</span> <span class="x">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="x">)</span><span class="o">.*</span><span class="x">(</span><span class="n">im2</span><span class="x">)</span>
+<span class="k">end</span>
+
+<span class="n">tem</span>  <span class="o">=</span> <span class="n">mixup</span><span class="x">(</span><span class="n">image1</span><span class="x">,</span><span class="n">image2</span><span class="x">);</span>
+</code></pre></div></div>
+
+<p><img src="/img/mixup.png" alt="" /></p>
+
+<h2 id="multiple-transforms">Multiple transforms</h2>
+
+<p>The last thing we will see for now is how to chain multiple transforms for an image. Honestly, I could do more but I am so tired I just want to sleep. Anywayy.
+This is stupidly simple in Julia. All we have to do is use the |&gt; operation. 
+This is called a pipe and basically passes an output to another function or an input to a function and so on.</p>
+
+<p>So to call all the functions so far, and display the image.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imageret</span><span class="x">(</span><span class="n">im2</span> <span class="o">|&gt;</span> <span class="n">randomCrop</span> <span class="o">|&gt;</span> <span class="n">randomflip</span> <span class="o">|&gt;</span> <span class="n">imageJitter</span> <span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="/img/multiput.png" alt="" /></p>
+
+<p>If you look closely, you can see random cropping, vertical flipping and obviously changed brightness and contrast values. Yay!</p>
+
+<blockquote>
+  <p>There are other functions like warp/ affine transform. I tried making those but it seemed really complicated so I will leave that for a future blog post.</p>
+</blockquote>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

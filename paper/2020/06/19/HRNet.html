@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>HRNet (WIP) | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="HRNet (WIP)" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/HRNet.html","@type":"BlogPosting","headline":"HRNet (WIP)","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/HRNet.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>HRNet (WIP)</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~6 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#notes">Notes</a></li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[27]</strong> HRNet (WIP)</p>
+<ul>
+  <li>Wang, J., Sun, K., Cheng, T., Jiang, B., Deng, C., Zhao, Y., … &amp; Liu, W. (2020). Deep high-resolution representation learning for visual recognition. IEEE transactions on pattern analysis and machine intelligence. <a href="https://arxiv.org/pdf/1908.07919">Paper</a></li>
+</ul>
+
+<h1 id="notes">Notes</h1>
+
+<ul>
+  <li>first encode the input image as a low-resolution representation through a subnetwork that is formed by connecting high-to-low resolution convolutions in series and then recover the high-resolution representation from the encoded low-resolution representation.</li>
+  <li>maintains high-resolution representations through the whole process.</li>
+  <li>Connect the high-to-low resolution convolution streams in parallel; (ii) Repeatedly exchange the information across resolutions</li>
+  <li>semantically richer and spatially more precise.</li>
+  <li>human pose estimation, semantic segmentation, and object detection</li>
+  <li>HRNetV1, only outputs the high-resolution representation computed from the high-resolution convolution stream. We apply it to human pose estimation</li>
+  <li>HRNetV2, combines the representations from all the high-to-low resolution parallel streams. We apply it to semantic segmentation</li>
+  <li>stem, which consists of two stride 2 3x3 convolutions decreasing the resolution to 1/4 , and subsequently the main body that outputs the representation with the same resolution ( 1/4 ).</li>
+  <li>We start from a high-resolution convolution stream as the first stage, gradually add high-to-low resolution streams</li>
+  <li>(a) HRNetV1: only output the representation from the high-resolution convolution stream. (b) HRNetV2: Concatenate representations that are from all 1x1 convolution is not shown for clarity). (c) HRNetV2p: form a feature pyramid from the representation by HRNetV representations</li>
+  <li>Heads -&gt; HRNetV1. The output is the representation only from the high-resolution stream. Other three representations are ignored. HRNetV2. We rescale the low-resolution representations through bilinear upsampling without changing the number of channels to the high resolution, and concatenate the four representations, followed by a 1x1 convolution to mix the
+four representations. HRNetV2p. We construct multi-level representations by downsampling the high-resolution representation output from HRNetV2 to multiple levels. .</li>
+  <li>parallel convolution of the modularized block</li>
+  <li>multi-resolution parallel convolutions, and multi-resolution fusion  The multi-resolution parallel convolution resembles the group convolution. It divides the input channels into several subsets of channels and performs a regular convolution over each subset over different spatial resolutions separately, while in the group convolution, the resolutions are the same</li>
+  <li>multi-resolution fusion unit resembles the multibranch full-connection form of the regular convolution</li>
+  <li>multi-resolution fusion needs to handle the resolution change.</li>
+  <li>Pose estimation -&gt; transform this problem to estimating K heatmaps where each heatmap Hk indicates the location confidence of
+the k th keypoint.</li>
+  <li>Semantic seg -&gt; Semantic segmentation is a problem of assigning a class label to each pixel.  feed the input image to the HRNetV2 and then pass the resulting 15C -dimensional representation at each position to a linear classifier with the softmax loss to predict the segmentation maps. The segmentation maps are upsampled (4 times) to the input size by bilinear upsampling for both training and testing</li>
+  <li>
+    <p>We pretrain our network, which is augmented by a classification head shown in Figure 11, on ImageNet/ The
+classification head is described as below. First, the four-resolution feature maps are fed into a bottleneck and the output
+channels are increased from C , 2C , 4C , and 8C to 128, 256, 512, and 1024, respectively. Then, we downsample the high-
+resolution representation by a 2-strided 3x3 convolution outputting 256 channels and add it to the representation of the
+second-high-resolution. This process is repeated two times to get 1024 feature channels over the small resolution. Last, we
+transform the 1024 channels to 2048 channels through a 1x1 convolution, followed by a global average pooling operation.
+The output 2048-dimensional representation is fed into the classifier.</p>
+  </li>
+  <li>For semantic segmentation, the time cost of the HRNettraining is slightly smaller and for inference significantly smaller than PSPNet and DeepLabv3</li>
+  <li>For object detection, the time cost of the HRNet for training is larger than ResNet based networks and smaller than ResNext based
+networks, and for inference the HRNet is smaller for similar GFLOPs</li>
+  <li>For human pose estimation, the time cost of the HRNet for training is similar and for inference larger; and the time cost of the HRNet for training and inference in the MXNet platform is similar as SimpleBaseline</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

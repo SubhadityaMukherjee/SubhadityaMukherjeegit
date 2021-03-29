@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>NVAE (WIP) | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="NVAE (WIP)" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/NVAE.html","@type":"BlogPosting","headline":"NVAE (WIP)","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/NVAE.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>NVAE (WIP)</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~4 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#notes">Notes</a></li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[29]</strong> NVAE (WIP)</p>
+<ul>
+  <li>Vahdat, A., &amp; Kautz, J. (2020). NVAE: A Deep Hierarchical Variational Autoencoder. arXiv preprint arXiv:2007.03898. <a href="https://arxiv.org/abs/2007.03898">Paper</a></li>
+</ul>
+
+<h2 id="notes">Notes</h2>
+
+<ul>
+  <li>VAEs have the advantage of fast and tractable sampling and easy-to-access encoding networks</li>
+  <li>carefully designing neural ar- chitectures for hierarchical VAEs</li>
+  <li>Nouveau VAE</li>
+  <li>depth-wise separable convolu- tions and batch normalization</li>
+  <li>residual parameterization of Normal distributions and its training is stabilized by spectral regularization.</li>
+  <li>first successful VAE applied to natural images as large as 256x256 pixels.</li>
+  <li>VAEs maximize the mutual information between the input and latent variables requiring the networks to retain the information content of the input data as much as possible.</li>
+  <li>VAEs often respond differently to the over-parameterization in neural networks.</li>
+  <li>The current state-of-the-art VAEs omit batch normalization (BN) to combat the sources of randomness that could potentially amplify their instability.</li>
+  <li>turns out BN is an important component of the success of deep VAEs.</li>
+  <li>spectral regularization is key to stabilizing VAE training.</li>
+  <li>the case of VAEs with unconditional decoder, such long-range correlations are encoded in the latent space and are projected back to the pixel space by the decoder.</li>
+  <li>Our generative model starts from a small spatially arranged latent variables as z1 and samples from the hierarchy group-by-group while gradually doubling the spatial dimensions</li>
+  <li>capture global long-range correlations at the top of the hierarchy and local fine-grained dependencies at the lower groups.</li>
+  <li>increas- ing the receptive field of the networks</li>
+  <li>increasing the kernel sizes in the convolutional pat</li>
+  <li>depthwise convolutions outperform regular convolutions while keeping the number of parameters and the computational complexity orders of magnitudes smaller</li>
+  <li>BN has a negative during evaluation but not training</li>
+  <li>modify the momentum parameter of BN such that running statistics can catch up faster with the batch statistics. We also apply a regularization on the norm of scaling parameters in BN layers to ensure that a small mismatch in statistics is not amplified by BN</li>
+  <li>We also observe that the combination of BN and Swish outperforms WN and ELU activation</li>
+  <li>Similar to mobile net 2 with two additional BN layers at the beginning and the end of the cell and it uses Swish activation function and SE.</li>
+  <li>mixed precision</li>
+  <li>to fuse BN and Swish and we store only one feature map for the backward pass, instead of two</li>
+  <li>To bound KL, we need to ensure that the encoder output does not change dramatically as its input changes. This notion of smoothness is characterized by the Lipschitz constant.</li>
+  <li>apply a few additional normalizing flows to the samples generated at each group in q</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Optimizers | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Optimizers" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Finally let us look at optimizers. Once that is done, we will be able to use Flux ML for a lot of things directly." />
+<meta property="og:description" content="Finally let us look at optimizers. Once that is done, we will be able to use Flux ML for a lot of things directly." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-28T21:21:51+00:00" />
+<script type="application/ld+json">
+{"description":"Finally let us look at optimizers. Once that is done, we will be able to use Flux ML for a lot of things directly.","url":"/article/2020/07/28/Optimizers.html","@type":"BlogPosting","headline":"Optimizers","dateModified":"2020-07-28T21:21:51+00:00","datePublished":"2020-07-28T21:21:51+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/28/Optimizers.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Optimizers</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~27 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#what-is-it">What is it</a></li>
+  <li><a href="#data">Data</a></li>
+  <li><a href="#defin">Defin</a></li>
+  <li><a href="#sgd">SGD</a></li>
+  <li><a href="#sgd--momentum">SGD + momentum</a></li>
+  <li><a href="#adagrad">Adagrad</a></li>
+  <li><a href="#adam">Adam</a></li>
+</ul>
+
+<p>Finally let us look at optimizers. Once that is done, we will be able to use Flux ML for a lot of things directly.</p>
+
+<p>Wow I finally got to this article after 4 days. Just havent been feeling like working or doing anything related to DL. Burnout maybe? The quarantine is getting to my head haha. Anyway before I lose motivation again, here goes.</p>
+
+<h2 id="what-is-it">What is it</h2>
+
+<p>So what is an “optimizer”? So remember the loss? Every network has a loss landscape, which basically means that if we plot all the possible losses, we will get something like this.</p>
+
+<p><img src="/assets/img/grad.png" alt="img" /> (Got this from wikipedia)</p>
+
+<p>Our objective is to reach the least point in this landscape. The optimizer helps us get there faster. You can think of it like walking down a hill. You need to get to the bottom but how fast you get there depends on how you walk. If you know the way, you can reach faster right? But here we do not know the way, so all we can do is guess. The better the optimizer, the better we can “guess” our way down.
+This is called Gradient Descent. (pun intended lol)</p>
+
+<p>Okay so today we will be talking about a few of these optimizers. Before we do that let us load the MNIST data which we were using.</p>
+
+<h2 id="data">Data</h2>
+
+<p>We load the data, reshape it into the arrays as we want, one hot encode the labels. We also repeat this for the test set.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">MLDatasets</span>
+<span class="k">using</span> <span class="n">Random</span>
+
+<span class="n">train_x</span><span class="x">,</span> <span class="n">train_y</span> <span class="o">=</span> <span class="n">MNIST</span><span class="o">.</span><span class="n">traindata</span><span class="x">()</span>
+<span class="n">test_x</span><span class="x">,</span>  <span class="n">test_y</span>  <span class="o">=</span> <span class="n">MNIST</span><span class="o">.</span><span class="n">testdata</span><span class="x">();</span>
+
+<span class="n">images</span><span class="x">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="x">(</span><span class="n">reshape</span><span class="x">(</span><span class="n">train_x</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000</span><span class="x">],</span> <span class="x">(</span><span class="mi">28</span><span class="o">*</span><span class="mi">28</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)),</span> <span class="n">train_y</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000</span><span class="x">])</span>
+<span class="n">one_hot_labels</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">(</span><span class="mi">10</span><span class="x">,</span><span class="n">length</span><span class="x">(</span><span class="n">labels</span><span class="x">))</span>
+<span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span><span class="n">l</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">labels</span><span class="x">)</span>
+    <span class="n">one_hot_labels</span><span class="x">[</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="k">end</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">one_hot_labels</span>
+
+<span class="c">## same thing for test</span>
+
+<span class="n">test_images</span> <span class="o">=</span> <span class="n">reshape</span><span class="x">(</span><span class="n">test_x</span><span class="x">,</span> <span class="x">(</span><span class="mi">28</span><span class="o">*</span><span class="mi">28</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">test_x</span><span class="x">,</span><span class="mi">3</span><span class="x">)))</span>
+<span class="n">test_labels</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">((</span><span class="mi">10</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">test_x</span><span class="x">,</span><span class="mi">3</span><span class="x">)))</span>
+
+<span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span><span class="n">l</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">test_y</span><span class="x">)</span>
+    <span class="n">test_labels</span><span class="x">[</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="defin">Defin</h2>
+
+<p>Okay, now we can define relu and its derivative. We also take a batch size, learning rate(α) and number of iterations. 
+Our images are of size 28x28. Pixels per image is basically 28*28. Since we have 10 numbers, num labels is 10. Hidden size is a parameter we define.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">relu</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">relu2deriv</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">α</span><span class="x">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="x">(</span><span class="mf">0.001</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span>
+<span class="n">pixels_per_image</span><span class="x">,</span> <span class="n">num_labels</span><span class="x">,</span> <span class="n">hidden_size</span> <span class="o">=</span> <span class="x">(</span><span class="mi">784</span><span class="x">,</span> <span class="mi">10</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="sgd">SGD</h2>
+
+<p>Now for the first optimizer - Stochastic Gradient Descent. Simply put, this is a random run down the slopes with the hope that we will reach the end. It works. And it was one of the first optimizers so treat it like a grandpa who you go for advice.</p>
+
+<p>We first initialize all the required weights.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">weights_0_1</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">.*</span> <span class="n">rand</span><span class="x">(</span><span class="n">pixels_per_image</span><span class="x">,</span><span class="n">hidden_size</span><span class="x">)</span> <span class="o">.-</span> <span class="mf">0.1</span>
+<span class="n">weights_1_2</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">.*</span> <span class="n">rand</span><span class="x">(</span><span class="n">hidden_size</span><span class="x">,</span><span class="n">num_labels</span><span class="x">)</span> <span class="o">.-</span> <span class="mf">0.1</span>
+
+</code></pre></div></div>
+
+<p>After we do that, we go through all the batches. We apply a linear layer and then a relu to each batch.
+We also perform dropout. This is a step which will take us very far by preventing the network from learning “too much”. This effectively kills a few nodes at random. So when the network actually learns, it learns wayy better. We then add the errors and yay we are done with forward propagation.</p>
+
+\[Error = \mathrm{sum}\left( \left( \mathrm{labels}\left[:, \mathrm{:}\left( batch_{start}, batch_{end} \right)\right]' - layer_{2} \right)^{2} \right)\]
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">iterations</span>
+    <span class="n">Error</span><span class="x">,</span> <span class="n">Correct_cnt</span> <span class="o">=</span> <span class="x">(</span><span class="mf">0.0</span><span class="x">,</span> <span class="mi">0</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">images</span><span class="x">,</span><span class="mi">2</span><span class="x">)</span><span class="o">-</span><span class="n">batch_size</span>
+        <span class="n">batch_start</span><span class="x">,</span> <span class="n">batch_end</span> <span class="o">=</span> <span class="n">i</span><span class="x">,</span> <span class="n">i</span><span class="o">+</span><span class="n">batch_size</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">layer_0</span> <span class="o">=</span> <span class="n">images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span>
+        <span class="n">layer_1</span> <span class="o">=</span> <span class="n">relu</span><span class="o">.</span><span class="x">(</span><span class="n">layer_0</span><span class="err">'</span> <span class="o">*</span> <span class="n">weights_0_1</span><span class="x">)</span>
+
+        
+        <span class="n">dropout_mask</span> <span class="o">=</span> <span class="n">bitrand</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">layer_1</span><span class="x">))</span>
+        <span class="n">layer_1</span> <span class="o">.*=</span> <span class="x">(</span><span class="n">dropout_mask</span> <span class="o">.*</span> <span class="mi">2</span><span class="x">)</span>
+        <span class="n">layer_2</span> <span class="o">=</span> <span class="n">layer_1</span> <span class="o">*</span> <span class="n">weights_1_2</span>
+        
+        <span class="n">Error</span> <span class="o">+=</span> <span class="n">sum</span><span class="x">((</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">.^</span> <span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Now for back prop.
+We basically count the number of examples we got correct from the data. Then we apply the derivatives of the linear layer and relu on the batches.
+After this we update the weights which we had initialized before. This way our network learns :)</p>
+
+<p>The weights are updated in this way  \(\alpha \cdot layer_{1}' \cdot layer_{2_delta}\)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="k">for</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span>
+            <span class="n">Correct_cnt</span> <span class="o">+=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">argmax</span><span class="x">(</span><span class="n">layer_2</span><span class="x">[</span><span class="n">k</span><span class="x">,</span> <span class="o">:</span><span class="x">])</span> <span class="o">==</span> <span class="n">argmax</span><span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">]))[]</span>
+            <span class="n">layer_2_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">./</span><span class="n">batch_size</span>
+            <span class="n">layer_1_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">layer_2_delta</span> <span class="o">*</span> <span class="n">weights_1_2</span><span class="err">'</span><span class="x">)</span> <span class="o">.*</span> <span class="n">relu2deriv</span><span class="o">.</span><span class="x">(</span><span class="n">layer_1</span><span class="x">)</span>
+
+            <span class="n">layer_1_delta</span> <span class="o">.*=</span> <span class="n">dropout_mask</span>
+
+            <span class="n">weights_1_2</span> <span class="o">+=</span> <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_1</span><span class="err">'</span> <span class="o">*</span> <span class="n">layer_2_delta</span>
+            <span class="n">weights_0_1</span> <span class="o">+=</span> <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_0</span> <span class="o">*</span> <span class="n">layer_1_delta</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+      
+</code></pre></div></div>
+<p>We also need to see how well our network is doing and so we apply this to our test set and use mean squared error to check the accuracy every few epochs.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">if</span> <span class="x">(</span><span class="n">j</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="x">)</span>
+        <span class="n">test_Error</span><span class="x">,</span> <span class="n">test_Correct_cnt</span> <span class="o">=</span> <span class="x">(</span><span class="mf">0.0</span><span class="x">,</span> <span class="mi">0</span><span class="x">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">test_images</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+
+            <span class="n">layer_0</span> <span class="o">=</span> <span class="n">test_images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span>
+            <span class="n">layer_1</span> <span class="o">=</span> <span class="n">relu</span><span class="o">.</span><span class="x">(</span><span class="n">layer_0</span><span class="err">'</span> <span class="o">*</span> <span class="n">weights_0_1</span><span class="x">)</span>
+            <span class="n">layer_2</span> <span class="o">=</span> <span class="n">layer_1</span> <span class="o">*</span> <span class="n">weights_1_2</span>
+
+            <span class="n">test_Error</span> <span class="o">+=</span> <span class="n">sum</span><span class="x">((</span><span class="n">test_labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">i</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">.^</span> <span class="mi">2</span><span class="x">)</span>
+            <span class="n">test_Correct_cnt</span> <span class="o">+=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">argmax</span><span class="x">(</span><span class="n">layer_2</span><span class="x">[</span><span class="mi">1</span><span class="x">,</span><span class="o">:</span><span class="x">])</span> <span class="o">==</span> <span class="n">argmax</span><span class="x">(</span><span class="n">test_labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">i</span><span class="x">]))</span>
+        <span class="k">end</span>
+        <span class="n">println</span><span class="x">(</span><span class="s">"I: </span><span class="si">$(j) </span><span class="s">Train error: </span><span class="si">$</span><span class="s">(Error/size(images, 2)) Train accuracy: </span><span class="si">$</span><span class="s">(Correct_cnt/size(images, 2)) Test-Err:: </span><span class="si">$</span><span class="s">(test_Error/size(test_images, 2)) Test-Acc:: </span><span class="si">$</span><span class="s">(test_Correct_cnt/size(test_images, 2))"</span><span class="x">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="sgd--momentum">SGD + momentum</h2>
+
+<p>Now to make it better, all we do is add momentum. Run fasteeerrrr. This works a lot better than the previous one so if you want to use SGD, do not forget momentum.</p>
+
+<p>New terms. Momentum term and two velocities.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">μ</span><span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">v01</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">pixels_per_image</span><span class="x">,</span><span class="n">hidden_size</span><span class="x">)</span>
+<span class="n">v12</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">hidden_size</span><span class="x">,</span><span class="n">num_labels</span><span class="x">)</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="mi">10</span>
+</code></pre></div></div>
+
+<p>Changing the weight terms taking momentum into account.</p>
+
+\[v12 = \alpha \cdot layer_{1}' \cdot layer_{2_delta}\]
+
+\[v01 = \alpha \cdot layer_{0} \cdot layer_{1_delta}\]
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="n">Correct_cnt</span> <span class="o">+=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">argmax</span><span class="x">(</span><span class="n">layer_2</span><span class="x">[</span><span class="n">k</span><span class="x">,</span> <span class="o">:</span><span class="x">])</span> <span class="o">==</span> <span class="n">argmax</span><span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">]))[]</span>
+            <span class="n">layer_2_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">./</span><span class="n">batch_size</span>
+            <span class="n">layer_1_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">layer_2_delta</span> <span class="o">*</span> <span class="n">weights_1_2</span><span class="err">'</span><span class="x">)</span> <span class="o">.*</span> <span class="n">relu2deriv</span><span class="o">.</span><span class="x">(</span><span class="n">layer_1</span><span class="x">)</span>
+
+            <span class="n">layer_1_delta</span> <span class="o">.*=</span> <span class="n">dropout_mask</span>
+
+            <span class="n">v12</span> <span class="o">=</span><span class="n">α</span> <span class="o">.*</span> <span class="n">layer_1</span><span class="err">'</span> <span class="o">*</span> <span class="n">layer_2_delta</span>
+<span class="c">#             @info v12</span>
+            <span class="n">weights_1_2</span> <span class="o">+=</span> <span class="n">v12</span>
+            <span class="n">v01</span> <span class="o">=</span>  <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_0</span> <span class="o">*</span> <span class="n">layer_1_delta</span>
+            <span class="n">weights_0_1</span> <span class="o">+=</span><span class="n">v01</span>
+</code></pre></div></div>
+
+<h2 id="adagrad">Adagrad</h2>
+
+<p>Since SGD was not living up to its chase, Adagrad <em>tried</em> to fix it. Instead of taking random jumps, we actually store the gradients for the previous timesteps and use it for our update step. We use a different equation here.
+This basically stabilizes training a bit more and adaptively scales the parameter of learning rate based on the stored gradients. Sometimes this optimizer does not learn so keep that in mind. 
+It does work very well with Sparse data.</p>
+
+<p>Not much changes.
+Updates</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">weights_0_1</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">.*</span> <span class="n">rand</span><span class="x">(</span><span class="n">pixels_per_image</span><span class="x">,</span><span class="n">hidden_size</span><span class="x">)</span> <span class="o">.-</span> <span class="mf">0.1</span><span class="x">;</span>
+<span class="n">weights_1_2</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">.*</span> <span class="n">rand</span><span class="x">(</span><span class="n">hidden_size</span><span class="x">,</span><span class="n">num_labels</span><span class="x">)</span> <span class="o">.-</span> <span class="mf">0.1</span><span class="x">;</span>
+<span class="n">g01</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">pixels_per_image</span><span class="x">,</span><span class="n">hidden_size</span><span class="x">);</span>
+<span class="n">g12</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">hidden_size</span><span class="x">,</span><span class="n">num_labels</span><span class="x">);</span>
+</code></pre></div></div>
+
+<p>And the steps.</p>
+
+\[adjusted_{grad} = \frac{grad_{12}}{\sqrt{1.0e-7 + g12}}\]
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="k">for</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span>
+            <span class="n">Correct_cnt</span> <span class="o">+=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">argmax</span><span class="x">(</span><span class="n">layer_2</span><span class="x">[</span><span class="n">k</span><span class="x">,</span> <span class="o">:</span><span class="x">])</span> <span class="o">==</span> <span class="n">argmax</span><span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">]))[]</span>
+            <span class="n">layer_2_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">./</span><span class="n">batch_size</span>
+            <span class="n">layer_1_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">layer_2_delta</span> <span class="o">*</span> <span class="n">weights_1_2</span><span class="err">'</span><span class="x">)</span> <span class="o">.*</span> <span class="n">relu2deriv</span><span class="o">.</span><span class="x">(</span><span class="n">layer_1</span><span class="x">)</span>
+
+            <span class="n">layer_1_delta</span> <span class="o">.*=</span> <span class="n">dropout_mask</span>
+
+            <span class="n">grad_12</span> <span class="o">=</span>  <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_1</span><span class="err">'</span> <span class="o">*</span> <span class="n">layer_2_delta</span>
+            <span class="n">g12</span> <span class="o">+=</span> <span class="n">grad_12</span><span class="o">.^</span><span class="mi">2</span>
+<span class="c">#             @show size(g12)</span>
+            <span class="n">adjusted_grad</span> <span class="o">=</span> <span class="n">grad_12</span><span class="o">./</span><span class="n">sqrt</span><span class="o">.</span><span class="x">(</span><span class="mf">0.0000001</span> <span class="o">.+</span> <span class="n">g12</span><span class="x">)</span>
+<span class="c">#             @show size(weights_1_2), size(adjusted_grad)</span>
+            <span class="n">weights_1_2</span> <span class="o">+=</span><span class="n">adjusted_grad</span>
+            
+            
+            <span class="n">grad_01</span> <span class="o">=</span> <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_0</span> <span class="o">*</span> <span class="n">layer_1_delta</span>
+            <span class="n">g01</span> <span class="o">+=</span> <span class="n">grad_01</span><span class="o">.^</span><span class="mi">2</span>
+            <span class="n">adjusted_grad</span> <span class="o">=</span> <span class="n">grad_01</span><span class="o">./</span><span class="n">sqrt</span><span class="o">.</span><span class="x">(</span><span class="mf">0.0000001</span> <span class="o">.+</span> <span class="n">g01</span><span class="x">)</span>
+            <span class="n">weights_0_1</span> <span class="o">+=</span><span class="n">adjusted_grad</span>
+            
+        <span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="adam">Adam</h2>
+
+<p>The one you actually should be using the most. (or AdamW which I have not implemented yet.)
+The major difference from SGD are the varying learning rates and the fact that algo calculates the exp(gradient(batches)) aka the exponential moving average and also uses the variance. The learning rates are varied using the parameters β1 and β2. 
+We also use a leaky relu.</p>
+
+<p>Defining batch normalization, leaky relu and its derivative.</p>
+
+\[bnorm = \frac{x - \mathrm{mean}\left( x \right)}{\sqrt{\left( \mathrm{var}\left( x \right) \right)^{2} + \epsilon}}\]
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bnorm</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">ϵ</span><span class="o">=</span> <span class="mf">0.001</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="n">x</span> <span class="o">.-</span> <span class="n">mean</span><span class="x">(</span><span class="n">x</span><span class="x">))</span><span class="o">./</span><span class="n">sqrt</span><span class="x">(</span><span class="n">var</span><span class="x">(</span><span class="n">x</span><span class="x">)</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ϵ</span><span class="x">)</span> 
+<span class="n">lrelu</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">c</span> <span class="o">=</span> <span class="mf">0.01</span><span class="x">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">c</span><span class="o">*</span><span class="n">x</span>
+<span class="n">lrelu2deriv</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">c</span> <span class="o">=</span> <span class="mf">0.01</span><span class="x">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">c</span>
+</code></pre></div></div>
+
+<p>Initializing weights and the parameters.
+Loads of things to keep track of here. But the new things are just decay rates, learning rate and the timestep along with momentums and speeds.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">weights_0_1</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">.*</span> <span class="n">rand</span><span class="x">(</span><span class="n">pixels_per_image</span><span class="x">,</span><span class="n">hidden_size</span><span class="x">)</span> <span class="o">.-</span> <span class="mf">0.1</span><span class="x">;</span>
+<span class="n">weights_1_2</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">.*</span> <span class="n">rand</span><span class="x">(</span><span class="n">hidden_size</span><span class="x">,</span><span class="n">num_labels</span><span class="x">)</span> <span class="o">.-</span> <span class="mf">0.1</span><span class="x">;</span>
+<span class="n">β1</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">β2</span> <span class="o">=</span> <span class="mf">0.999</span>
+<span class="n">α</span> <span class="o">=</span> <span class="mf">0.002</span>
+<span class="n">ϵ</span> <span class="o">=</span> <span class="mf">1e-8</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">m</span><span class="x">,</span> <span class="n">v</span><span class="x">,</span> <span class="n">m2</span><span class="x">,</span> <span class="n">v2</span> <span class="o">=</span> <span class="mi">0</span><span class="x">,</span><span class="mi">0</span><span class="x">,</span><span class="mi">0</span><span class="x">,</span><span class="mi">0</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="mi">20</span>
+</code></pre></div></div>
+
+<p>The actual iteration changes a lot because Adam has a looooot of intermediate steps.</p>
+
+\[m = {\beta}1 \cdot m + \left( 1 - {\beta}1 \right) \cdot grad_{12}\]
+
+\[v = {\beta}1 \cdot v + \left( 1 - {\beta}2 \right) \cdot grad_{12}^{2}\]
+
+\[m\hat = \frac{m}{1 - {\beta}1^{t}}\]
+
+\[v\hat = \frac{v}{1 - {\beta}2^{t}}\]
+
+\[weights_{1_2} = weights_{1_2} + \alpha \cdot \frac{m\hat}{\sqrt{v\hat} + \epsilon}\]
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">images</span><span class="x">,</span><span class="mi">2</span><span class="x">)</span><span class="o">-</span><span class="n">batch_size</span>
+        <span class="n">batch_start</span><span class="x">,</span> <span class="n">batch_end</span> <span class="o">=</span> <span class="n">i</span><span class="x">,</span> <span class="n">i</span><span class="o">+</span><span class="n">batch_size</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">layer_0</span> <span class="o">=</span> <span class="n">bnorm</span><span class="x">(</span><span class="n">images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">])</span>
+        <span class="n">layer_1</span> <span class="o">=</span> <span class="n">lrelu</span><span class="o">.</span><span class="x">(</span><span class="n">layer_0</span><span class="err">'</span> <span class="o">*</span> <span class="n">weights_0_1</span><span class="x">)</span>
+<span class="c">#         @show layer_1</span>
+<span class="c">#         break</span>
+        <span class="n">dropout_mask</span> <span class="o">=</span> <span class="n">bitrand</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">layer_1</span><span class="x">))</span>
+        <span class="n">layer_1</span> <span class="o">.*=</span> <span class="x">(</span><span class="n">dropout_mask</span> <span class="o">.*</span> <span class="mi">2</span><span class="x">)</span>
+        <span class="n">layer_2</span> <span class="o">=</span> <span class="n">layer_1</span> <span class="o">*</span> <span class="n">weights_1_2</span>
+        
+        <span class="n">Error</span> <span class="o">+=</span> <span class="n">sum</span><span class="x">((</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">.^</span> <span class="mi">2</span><span class="x">)</span>
+        
+        <span class="n">t</span><span class="o">+=</span><span class="mi">1</span>
+        
+        <span class="k">for</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">batch_size</span>
+            <span class="n">Correct_cnt</span> <span class="o">+=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">argmax</span><span class="x">(</span><span class="n">layer_2</span><span class="x">[</span><span class="n">k</span><span class="x">,</span> <span class="o">:</span><span class="x">])</span> <span class="o">==</span> <span class="n">argmax</span><span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">]))[]</span>
+            <span class="n">layer_2_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">batch_start</span><span class="o">:</span><span class="n">batch_end</span><span class="x">]</span><span class="err">'</span> <span class="o">.-</span> <span class="n">layer_2</span><span class="x">)</span> <span class="o">./</span><span class="n">batch_size</span>
+            <span class="n">layer_1_delta</span> <span class="o">=</span> <span class="x">(</span><span class="n">layer_2_delta</span> <span class="o">*</span> <span class="n">weights_1_2</span><span class="err">'</span><span class="x">)</span> <span class="o">.*</span> <span class="n">lrelu2deriv</span><span class="o">.</span><span class="x">(</span><span class="n">layer_1</span><span class="x">)</span>
+
+            <span class="n">layer_1_delta</span> <span class="o">.*=</span> <span class="n">dropout_mask</span>
+
+            <span class="n">grad_12</span> <span class="o">=</span>  <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_1</span><span class="err">'</span> <span class="o">*</span> <span class="n">layer_2_delta</span>
+            <span class="n">grad_01</span> <span class="o">=</span> <span class="n">α</span> <span class="o">.*</span> <span class="n">layer_0</span> <span class="o">*</span> <span class="n">layer_1_delta</span>
+            
+            <span class="n">m</span> <span class="o">=</span> <span class="n">β1</span><span class="o">*</span><span class="n">m</span> <span class="o">.+</span> <span class="x">(</span><span class="mi">1</span><span class="o">-</span><span class="n">β1</span><span class="x">)</span><span class="o">.*</span><span class="n">grad_12</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">β1</span><span class="o">*</span><span class="n">v</span> <span class="o">.+</span> <span class="x">(</span><span class="mi">1</span><span class="o">-</span><span class="n">β2</span><span class="x">)</span><span class="o">*</span><span class="x">(</span><span class="n">grad_12</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+            <span class="n">m̂</span> <span class="o">=</span> <span class="n">m</span><span class="o">./</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">β1</span><span class="o">^</span><span class="n">t</span><span class="x">)</span>
+            <span class="n">v̂</span> <span class="o">=</span> <span class="n">v</span><span class="o">./</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">β2</span><span class="o">^</span><span class="n">t</span><span class="x">)</span>
+            <span class="n">weights_1_2</span> <span class="o">=</span> <span class="n">weights_1_2</span> <span class="o">.+</span> <span class="n">α</span><span class="o">*</span><span class="x">(</span><span class="n">m̂</span><span class="o">./</span><span class="x">(</span><span class="n">sqrt</span><span class="o">.</span><span class="x">(</span><span class="n">v̂</span><span class="x">)</span> <span class="o">.+</span><span class="n">ϵ</span><span class="x">))</span>        
+
+            <span class="n">m2</span> <span class="o">=</span> <span class="n">β1</span><span class="o">*</span><span class="n">m2</span> <span class="o">.+</span> <span class="x">(</span><span class="mi">1</span><span class="o">-</span><span class="n">β1</span><span class="x">)</span><span class="o">.*</span><span class="n">grad_01</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="n">β1</span><span class="o">*</span><span class="n">v2</span> <span class="o">.+</span> <span class="x">(</span><span class="mi">1</span><span class="o">-</span><span class="n">β2</span><span class="x">)</span><span class="o">*</span><span class="x">(</span><span class="n">grad_01</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+            <span class="n">m̂2</span> <span class="o">=</span> <span class="n">m2</span><span class="o">./</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">β1</span><span class="o">^</span><span class="n">t</span><span class="x">)</span>
+            <span class="n">v̂2</span><span class="o">=</span> <span class="n">v2</span><span class="o">./</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span><span class="n">β2</span><span class="o">^</span><span class="n">t</span><span class="x">)</span>
+            <span class="n">weights_0_1</span> <span class="o">=</span> <span class="n">weights_0_1</span> <span class="o">.+</span> <span class="n">α</span><span class="o">*</span><span class="x">(</span><span class="n">m̂2</span><span class="o">./</span><span class="x">(</span><span class="n">sqrt</span><span class="o">.</span><span class="x">(</span><span class="n">v̂2</span><span class="x">)</span> <span class="o">.+</span><span class="n">ϵ</span><span class="x">))</span>        
+<span class="c">#             @show weights_0_1[1], weights_1_2[1]</span>
+
+        <span class="k">end</span>
+    <span class="k">end</span>
+</code></pre></div></div>
+
+<p>Yay we can use it nowww!!</p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

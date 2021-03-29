@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>A murder mystery and Adversarial attack | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="A murder mystery and Adversarial attack" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="How smart are neural networks? And can we break them and fool them into doing dumb things?" />
+<meta property="og:description" content="How smart are neural networks? And can we break them and fool them into doing dumb things?" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-09-28T15:57:00+00:00" />
+<script type="application/ld+json">
+{"description":"How smart are neural networks? And can we break them and fool them into doing dumb things?","url":"/article/2020/09/28/AdversarialAttack.html","@type":"BlogPosting","headline":"A murder mystery and Adversarial attack","dateModified":"2020-09-28T15:57:00+00:00","datePublished":"2020-09-28T15:57:00+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/09/28/AdversarialAttack.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>A murder mystery and Adversarial attack</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~9 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#our-friend-termy">Our friend Termy</a></li>
+  <li><a href="#meet-turty">Meet Turty</a></li>
+  <li><a href="#attacked">Attacked</a></li>
+  <li><a href="#why">Why?</a></li>
+  <li><a href="#the-power-in-your-hands">The power in your hands</a></li>
+  <li><a href="#what-do-we-do-now">What do we do now?</a></li>
+  <li><a href="#a-word-of-warning">A word of warning</a></li>
+</ul>
+
+<p>How smart are neural networks? And can we break them and fool them into doing dumb things?</p>
+
+<h1 id="our-friend-termy">Our friend Termy</h1>
+
+<p>Today we have a special guest. His name is Termy, he is a friendly robot from the year 2025. What is cool about him is that he has an AI and a really nice personality. He loves people and animals. (Or atleast is told to). He is programmed to never hurt them. The only thing he hates are guns. He will try to break them as soon as he finds them.</p>
+
+<p>On the way sadly, his system was hacked. Termy, being from the future, has a failsafe so he managed to kick his attacker out. But in the process, the part of his brain that recognizes objects is affected a tiny bit. Now for every image, a few pixels are different.</p>
+
+<p>Termy sees nothing wrong and continues his daily tasks. One day however, the police catch him trying to strangle a poor animal to death.</p>
+
+<p>The only question is.. why?</p>
+
+<blockquote>
+  <p>Note that the code here is a toy example in JuliaLang. The entire code to train and generate such examples are at <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/AdversarialFGSM">this repository</a></p>
+</blockquote>
+
+<h1 id="meet-turty">Meet Turty</h1>
+
+<p>Let us take Turty, a cute little turtle. 
+We load his image, and convert it into a matrix from a matrix of RGB values.</p>
+
+<p><img src="/assets/img/deconstrucImages/turtle.jpg" alt="drawing" width="200" /></p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Images</span><span class="x">,</span> <span class="n">ImageView</span>
+<span class="k">using</span> <span class="n">Flux</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">Images</span><span class="o">.</span><span class="n">load</span><span class="x">(</span><span class="s">"turtle.jpg"</span><span class="x">)</span>
+
+<span class="n">ImageView</span><span class="o">.</span><span class="n">imshow</span><span class="x">(</span><span class="n">img</span><span class="x">)</span>
+
+<span class="n">new_img</span> <span class="o">=</span> <span class="n">channelview</span><span class="x">(</span><span class="n">colorview</span><span class="x">(</span><span class="n">RGB</span><span class="x">,</span> <span class="n">img</span><span class="x">))</span>
+
+</code></pre></div></div>
+
+<h1 id="attacked">Attacked</h1>
+
+<p>Now Termy happens to know what a turtle is. He also knows what a gun is. How does he do that? Well using a neural network of course.</p>
+
+<p>He is using a network trained to recognize thousands of types of images. In the attack though, his network had a small corruption. Instead of just taking the gradients in the backward pass, a small value ϵ creeped into the function. This is what happened.</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> signtest</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+        <span class="k">if</span><span class="x">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="x">)</span>
+                <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">elseif</span><span class="x">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="x">)</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span>
+                <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">function</span><span class="nf"> fgsm_attack</span><span class="x">(</span><span class="n">image</span><span class="x">,</span> <span class="n">ϵ</span><span class="x">,</span> <span class="n">data_grad</span><span class="x">)</span>
+        <span class="n">sign_data_grad</span> <span class="o">=</span> <span class="n">signtest</span><span class="o">.</span><span class="x">(</span><span class="n">data_grad</span><span class="x">)</span>
+        <span class="n">peturbed_img</span> <span class="o">=</span> <span class="n">image</span> <span class="o">+</span> <span class="n">ϵ</span><span class="o">*</span><span class="n">sign_data_grad</span>
+        <span class="n">peturbed_img</span> <span class="o">=</span> <span class="n">clamp</span><span class="o">.</span><span class="x">(</span><span class="n">peturbed_img</span><span class="x">,</span> <span class="mi">0</span><span class="x">,</span><span class="mi">1</span><span class="x">)</span>
+        <span class="k">return</span> <span class="n">peturbed_img</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The attack is the function which represents the corruption by means of the peturbed image. 
+Signtest is just a simple function to return a specific value based on the if the value in the image matrix is +, - or 0.</p>
+
+<p>peturbedimage = x + ϵ*sign(∇x J(θ, x, y))</p>
+
+<p>Note that the last bit is the formula to find the gradient.</p>
+
+<p>What is passed to this image identifier is generally the gradient of the image, the image itself and the function generally keeps the values between 0,1 and returns the image.
+Due to the peturbed function, the image now becomes this.</p>
+
+<p><img src="/assets/img/deconstrucImages/attacked.png" alt="drawing" width="200" /></p>
+
+<p>Apart from the color (which does not really matter), the image looks the same. But to Termy, this actually looks like a rifle!!</p>
+
+<p><img src="/assets/img/deconstrucImages/attackedpaper.png" alt="drawing" width="300" /></p>
+
+<p>This is from the <a href="https://arxiv.org/pdf/1707.07397.pdf">paper</a></p>
+
+<h1 id="why">Why?</h1>
+
+<p>This happens because the gradient is altered to the network to appear as a bias. The probablities change, and the network actually feels more <em>confident</em> towards its prediction. 
+Termy our dear friend, is now dangerous and must be put away…</p>
+
+<h1 id="the-power-in-your-hands">The power in your hands</h1>
+
+<p>As people who work with AI, we need to avoid the story of poor Termy. Because if you think about it, this is extremely scary. What if Termy thinks that a Stop sign is a Go? Or a person is a rifle? Or a rifle is a stick?</p>
+
+<p>If Termy was driving, maybe he would hit a person because to him.. there is nobody there.</p>
+
+<p>Scared?? This is called an Adversarial Attack.</p>
+
+<h1 id="what-do-we-do-now">What do we do now?</h1>
+
+<p>Now that we have looked at what happens, and why it happens. What do we do about it?
+The first thing, is to realize that it is a possibility. Deep learning has changed our world for good. In every aspect, every domain, neural networks have slowly crept in. But we have to take their power with a pinch of salt.. because.. it is us who hold this power.</p>
+
+<p>There are many ways to counter this effect, the easiest is to include adversarial images in your training data itself. The function mentioned previously is called the <a href="https://arxiv.org/abs/1412.6572">Fast gradient sign method</a>. 
+If you include these images in your set, there is a higher probability of defending against these attacks.</p>
+
+<p>To be noted that this problem has not been fully solved. Majorly because it is hard for us to actually understand why this happens. To do that, we need to dig into the network and understand how it learns. Which we don’t yet.</p>
+
+<h1 id="a-word-of-warning">A word of warning</h1>
+
+<p>Note that this is not just a small issue. This method generalizes across all types of network architectures. But the good side to all this is that, including these images not only makes your model perform better, it also helps secure the future of consumer applications. 
+A lot of research is going on in this field. <a href="https://www.sciencedirect.com/science/article/pii/S1877050918319884">Like this paper</a>.</p>
+
+<p>So the next time you make a system… try to add adversarial noise to it too and save poor Turty.</p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+  <a href=/article/2020/09/02/DatasetBindings.html> Dataset Bindings&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

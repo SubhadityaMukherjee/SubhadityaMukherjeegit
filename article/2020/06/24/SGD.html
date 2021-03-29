@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>SGD | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="SGD" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In this post we will try to implement SGD and read a bit about what it is." />
+<meta property="og:description" content="In this post we will try to implement SGD and read a bit about what it is." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-24T07:30:33+00:00" />
+<script type="application/ld+json">
+{"description":"In this post we will try to implement SGD and read a bit about what it is.","url":"/article/2020/06/24/SGD.html","@type":"BlogPosting","headline":"SGD","dateModified":"2020-06-24T07:30:33+00:00","datePublished":"2020-06-24T07:30:33+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/06/24/SGD.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>SGD</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~11 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+
+
+<p>In this post we will try to implement SGD and read a bit about what it is.</p>
+
+<p>Before that. Let us review what we have so far.</p>
+<ol>
+  <li>A way to read images and identify classes</li>
+  <li>A generator go give us this data in batches</li>
+  <li>A dense layer</li>
+  <li>A bunch of activation functions</li>
+  <li>A basic backprop loop.</li>
+</ol>
+
+<p>So what is SGD? Well it is a tiny addition to the loop in which we calculate the gradient and update the weight matrix batch wise instead of doing it for the whole data at once. Thats about it.</p>
+
+<p>Why? Because we have a limited memory. And we are “streaming” the data so to speak. SGD is one of the older technqiues. It works. It works pretty well and it is the first step towards making a proper DL pipeline.</p>
+
+<p>So in the case of gradient descent, SGD just takes random values instead aka Stochastic.</p>
+
+<p>How do we implement it? Let us modify our training loop a bit now and add what we had discussed for “Linear Model”. Lets see if it works. Also as a note. I am using xtest/ytest because it is smaller and we are not using a GPU right now.</p>
+
+<p>To be honest I actually gave up on this for a few days. For some reason it felt like I could not do this. But now I am back after 5 days and I will try it again. It is a bottleneck I think. Once this is done I can actually do a lot more directly. 
+Ugh. I am probably doing something horribly wrong..</p>
+
+<p>Its been hours and I am still trying to understand how to do this. Wow. I have no idea why I wanted to do this. It is way harder than I thought. But anyway, the show will go on. Fingers crossed.</p>
+
+<p>I think it worked :)
+It is not perfect and we will get back to it later but anyway. Before I write the code for SGD, let us modify our dataloader to normalize the images while loading them. This is a way to reduce the variation and scale the pixels between values and make our model run quicker.
+Normalization is defined as  pixels = (pixels.-μ./σ).</p>
+
+<p>Basically we add this bit.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="n">img</span> <span class="o">=</span> <span class="n">convert</span><span class="x">(</span><span class="kt">Array</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">img</span><span class="x">)</span>
+        <span class="n">μ</span><span class="x">,</span> <span class="n">σ</span> <span class="o">=</span> <span class="n">mean</span><span class="x">(</span><span class="n">img</span><span class="x">),</span> <span class="n">std</span><span class="x">(</span><span class="n">img</span><span class="x">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="x">(</span><span class="n">img</span><span class="o">.-</span><span class="n">μ</span><span class="o">./</span><span class="n">σ</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Now for our SGD.
+We first repurpose our loss MSE loss function from before.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Dense</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">W</span><span class="o">.*</span> <span class="n">x</span> <span class="o">.+</span> <span class="n">b</span>
+<span class="k">function</span><span class="nf"> loss</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span>
+    <span class="n">ŷ</span> <span class="o">=</span> <span class="n">Dense</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+	<span class="n">lo</span> <span class="o">=</span>  <span class="n">sum</span><span class="x">((</span><span class="n">y</span> <span class="o">.-</span> <span class="n">ŷ</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span> <span class="x">)</span>
+    <span class="kd">global</span> <span class="n">loss_pl</span>
+    <span class="n">loss_pl</span><span class="o">*=</span> <span class="n">string</span><span class="x">(</span><span class="n">lo</span><span class="x">)</span><span class="o">*</span><span class="s">" "</span>
+    <span class="nd">@show</span><span class="x">(</span><span class="n">lo</span><span class="x">)</span>
+    <span class="k">return</span> <span class="n">lo</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We compute the MSE loss and save the values to a string. Why string? I tried saving it in an array but because im using Automatic Differentiation, mutation an array while the compute is going on is not allowed. So I just saved them to a string and wrote a tiny function to convert it into an array of floats after the training is done. (To plot the losses).</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bs</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">rep_len</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">ytest</span><span class="x">)</span>
+
+<span class="n">W</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">he_uniform</span><span class="x">(</span><span class="mi">64</span><span class="x">),</span><span class="mi">64</span><span class="x">,</span><span class="mi">64</span> <span class="x">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">he_uniform</span><span class="x">(</span><span class="mi">64</span><span class="x">),</span> <span class="mi">64</span><span class="x">)</span>
+<span class="n">loss_pl</span> <span class="o">=</span> <span class="s">""</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">2</span>
+
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="k">in</span> <span class="n">collect</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="n">n_epochs</span><span class="x">)</span>
+    <span class="n">bunchData</span> <span class="o">=</span> <span class="kt">Channel</span><span class="x">(</span><span class="n">datagen</span><span class="x">);</span>
+    <span class="nd">@info</span> <span class="s">"Epoch "</span><span class="x">,</span><span class="n">epoch</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">collect</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="n">round</span><span class="x">(</span><span class="n">rep_len</span><span class="o">/</span><span class="n">bs</span><span class="x">)</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
+        <span class="n">current_index</span> <span class="o">=</span> <span class="n">take!</span><span class="x">(</span><span class="n">bunchData</span><span class="x">)</span>
+        <span class="k">try</span>
+            <span class="n">x_batch</span><span class="x">,</span><span class="n">y_batch</span> <span class="o">=</span> <span class="n">Xtest</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="o">:</span><span class="x">,</span> <span class="o">:</span><span class="x">,</span> <span class="n">current_index</span><span class="o">:</span><span class="n">current_index</span><span class="o">+</span><span class="n">bs</span><span class="o">-</span><span class="mi">1</span><span class="x">],</span><span class="n">ytest</span><span class="x">[</span><span class="n">current_index</span><span class="o">:</span><span class="n">current_index</span><span class="o">+</span><span class="n">bs</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span>
+<span class="c">#             @info size(x_batch),size(y_batch)</span>
+            <span class="k">catch</span> <span class="n">e</span> 
+            <span class="n">x_batch</span><span class="x">,</span><span class="n">y_batch</span> <span class="o">=</span> <span class="n">Xtest</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="o">:</span><span class="x">,</span> <span class="o">:</span><span class="x">,</span> <span class="n">rep_len</span><span class="o">-</span><span class="n">bs</span><span class="o">:</span><span class="n">rep_len</span><span class="o">-</span><span class="mi">1</span><span class="x">],</span><span class="n">ytest</span><span class="x">[</span><span class="n">rep_len</span><span class="o">-</span><span class="n">bs</span><span class="o">:</span><span class="n">rep_len</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span>
+<span class="c">#             @info size(x_batch),size(y_batch)</span>
+        <span class="k">end</span>
+        <span class="kd">global</span> <span class="n">x_batch</span><span class="x">,</span> <span class="n">y_batch</span>
+          <span class="n">gs</span> <span class="o">=</span> <span class="n">gradient</span><span class="x">(()</span> <span class="o">-&gt;</span> <span class="n">loss</span><span class="x">(</span><span class="n">x_batch</span><span class="x">,</span> <span class="n">y_batch</span><span class="x">),</span> <span class="n">Params</span><span class="x">([</span><span class="n">W</span><span class="x">,</span> <span class="n">b</span><span class="x">]))</span>
+
+        <span class="n">W̄</span> <span class="o">=</span> <span class="n">gs</span><span class="x">[</span><span class="n">W</span><span class="x">]</span>
+        <span class="n">W</span><span class="o">.=</span> <span class="n">α</span><span class="o">.*</span><span class="n">W̄</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let us take a batch size of 64. (Repurposing the previous batching code.)
+The biggest challenge were the dimensions of the Weights and biases matrices. This is because Julias image array is not like pythons ): and I could not just modify the code directly to reflect my python implementation of the same. Which is sad.</p>
+
+<p>Anyway, I also added He initialization to the weights and biases (which is coooool). Now the gradient is computed for batches and not the whole array together. I also added the epochs loop! The rest of the code is modified from the linear reg example.</p>
+
+<blockquote>
+  <p>This code works but I feel like there is something wrong here and I will probably fix it when I realize what.</p>
+</blockquote>
+
+<p>The last thing in this segment is a tiny function to plot the losses. (Well its MSE and it probably isnt a good idea to plot it but anyway)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">loss_pl</span> <span class="o">=</span> <span class="n">split</span><span class="x">(</span><span class="n">loss_pl</span><span class="x">,</span><span class="s">" "</span><span class="x">);</span>
+<span class="n">Plots</span><span class="o">.</span><span class="n">plot</span><span class="x">([</span><span class="n">parse</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="n">x</span><span class="x">)</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">loss_pl</span><span class="x">[</span><span class="n">collect</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">loss_pl</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span><span class="x">)]])</span>
+</code></pre></div></div>
+
+<p>Since I saved them to a string with spaces, I just split them and then convert them into float32. I tried float16 but it is MSE after all and it was out of bounds. Then just a simple plot function using the Plots library. I guess I will have to move this inside the loop if I want it to show me the loss every epoch. (Or atleast modify the loop itself) But well. Baby steps right?</p>
+
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

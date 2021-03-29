@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>VGG | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="VGG" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Here we will talk about VGG networks and how to implement VGG16 and VGG19." />
+<meta property="og:description" content="Here we will talk about VGG networks and how to implement VGG16 and VGG19." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-08-11T19:36:56+00:00" />
+<script type="application/ld+json">
+{"description":"Here we will talk about VGG networks and how to implement VGG16 and VGG19.","url":"/article/2020/08/11/VGG.html","@type":"BlogPosting","headline":"VGG","dateModified":"2020-08-11T19:36:56+00:00","datePublished":"2020-08-11T19:36:56+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/08/11/VGG.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>VGG</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~16 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#community">Community</a></li>
+  <li><a href="#intro">Intro</a></li>
+  <li><a href="#what-i-learnt-from-the-paper">What I learnt from the paper</a></li>
+  <li><a href="#bla-bla-code-time">Bla bla.. code time</a>
+    <ul>
+      <li><a href="#data">Data</a></li>
+      <li><a href="#model-helpers">Model helpers</a></li>
+      <li><a href="#vgg16">VGG16</a></li>
+      <li><a href="#vgg19">VGG19</a></li>
+    </ul>
+  </li>
+  <li><a href="#an-important-note">An important note</a></li>
+</ul>
+
+<p>Here we will talk about VGG networks and how to implement VGG16 and VGG19.</p>
+
+<h2 id="community">Community</h2>
+<p>I took a break for a few days because I was <em>Seriously</em> burnt out. But I am back! So here we go. 
+In the meanwhile I decided to fix Flux.jl model zoo because it is an absolute disaster. I hope it will get accepted. I spoke to one of the maintainers - Dhairya Gandhi who helped me out a bit. <a href="https://github.com/FluxML/model-zoo/pull/249">PR</a></p>
+
+<p>I also could not figure out the … operator which I got to know from the <a href="discourse.julialang.org/">community</a>. I would encourage everyone to participate there because it truly is an awesome place to learn and share stuff regarding Julia and Scientific Machine Learning in general.</p>
+
+<h2 id="intro">Intro</h2>
+<p>Without further delay, what is VGG??
+Simply put, it is a really popular Deep learning architecture. It is widely used for image recognition and does pretty well. There are two major variants of it - VGG16 and VGG19 both of which differ slightly in their architectures.</p>
+
+<h2 id="what-i-learnt-from-the-paper">What I learnt from the paper</h2>
+<p>Do read the paper if you get a chance - <a href="https://arxiv.org/pdf/1409.1556.pdf">Link</a>
+But an executive summary of sorts and some things I learnt from the paper are as follows.</p>
+
+<ul>
+  <li>Always add ReLU</li>
+  <li>Adding 1x1 layers increases non linearity ( this is called network in network and is used in many architectures as it not only reduces computation but also sometimes converges better)</li>
+  <li>learning rate decay was used. This helps a lot for larger networks</li>
+  <li>Greater depth, smaller filter provides Implicit regularization</li>
+  <li>Adding small amounts of noise to image increases accuracy in the long run</li>
+  <li>Averaging best soft max parts of multiple performing models is HAX. (come on I am sleepy)</li>
+</ul>
+
+<h2 id="bla-bla-code-time">Bla bla.. code time</h2>
+
+<p>As usual let us get all our packages</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Flux</span><span class="x">,</span> <span class="n">Statistics</span>
+<span class="k">using</span> <span class="n">Flux</span><span class="o">:</span> <span class="n">onehotbatch</span><span class="x">,</span> <span class="n">onecold</span><span class="x">,</span> <span class="n">crossentropy</span><span class="x">,</span> <span class="n">throttle</span>
+<span class="k">using</span> <span class="n">Base</span><span class="o">.</span><span class="n">Iterators</span><span class="o">:</span> <span class="n">repeated</span><span class="x">,</span> <span class="n">partition</span>
+<span class="k">using</span> <span class="n">Metalhead</span><span class="o">:</span><span class="n">trainimgs</span><span class="x">,</span> <span class="n">CIFAR10</span>
+<span class="k">using</span> <span class="n">Images</span>
+</code></pre></div></div>
+
+<p>We will also define a function to make the images into an array of Float32 and the order required by flux for every image dimension.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">getarray</span><span class="x">(</span><span class="n">X</span><span class="x">)</span> <span class="o">=</span> <span class="kt">Float32</span><span class="o">.</span><span class="x">(</span><span class="n">permutedims</span><span class="x">(</span><span class="n">channelview</span><span class="x">(</span><span class="n">X</span><span class="x">),</span> <span class="x">(</span><span class="mi">2</span><span class="x">,</span> <span class="mi">3</span><span class="x">,</span> <span class="mi">1</span><span class="x">)))</span>
+</code></pre></div></div>
+
+<h3 id="data">Data</h3>
+
+<p>Now let us load CIFAR10. Then we make a list of all the images in it. And make them into batches. We also one hot encode the labels and push the batches to the GPU. This is our train set.</p>
+
+<p>Rinse and repeat for test set.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">X</span> <span class="o">=</span> <span class="n">trainimgs</span><span class="x">(</span><span class="n">CIFAR10</span><span class="x">)</span>
+<span class="n">imgs</span> <span class="o">=</span> <span class="x">[</span><span class="n">getarray</span><span class="x">(</span><span class="n">X</span><span class="x">[</span><span class="n">i</span><span class="x">]</span><span class="o">.</span><span class="n">img</span><span class="x">)</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">50000</span><span class="x">];</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">onehotbatch</span><span class="x">([</span><span class="n">X</span><span class="x">[</span><span class="n">i</span><span class="x">]</span><span class="o">.</span><span class="n">ground_truth</span><span class="o">.</span><span class="n">class</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">50000</span><span class="x">],</span><span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="x">);</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">gpu</span><span class="o">.</span><span class="x">([(</span><span class="n">cat</span><span class="x">(</span><span class="n">imgs</span><span class="x">[</span><span class="n">i</span><span class="x">]</span><span class="o">...</span><span class="x">,</span> <span class="n">dims</span> <span class="o">=</span> <span class="mi">4</span><span class="x">),</span> <span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="n">i</span><span class="x">])</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">partition</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="mi">49000</span><span class="x">,</span> <span class="mi">100</span><span class="x">)]);</span>
+
+<span class="n">valset</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="mi">49001</span><span class="o">:</span><span class="mi">50000</span><span class="x">)</span>
+<span class="n">valX</span> <span class="o">=</span> <span class="n">cat</span><span class="x">(</span><span class="n">imgs</span><span class="x">[</span><span class="n">valset</span><span class="x">]</span><span class="o">...</span><span class="x">,</span> <span class="n">dims</span> <span class="o">=</span> <span class="mi">4</span><span class="x">)</span> <span class="o">|&gt;</span> <span class="n">gpu</span>
+<span class="n">valY</span> <span class="o">=</span> <span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">valset</span><span class="x">]</span> <span class="o">|&gt;</span> <span class="n">gpu</span>
+</code></pre></div></div>
+
+<h3 id="model-helpers">Model helpers</h3>
+
+<p>Since a lot of this model has repeats, we will define blocks that will reduce the redundancy in the model.
+We first define a block of [Conv -&gt; ReLU -&gt; Batchnorm].
+Note that we take into account the input and output channels.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">conv_block</span><span class="x">(</span><span class="n">in_channels</span><span class="x">,</span> <span class="n">out_channels</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span>
+    <span class="n">Conv</span><span class="x">((</span><span class="mi">3</span><span class="x">,</span><span class="mi">3</span><span class="x">),</span> <span class="n">in_channels</span> <span class="o">=&gt;</span> <span class="n">out_channels</span><span class="x">,</span> <span class="n">relu</span><span class="x">,</span> <span class="n">pad</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="x">,</span><span class="mi">1</span><span class="x">),</span> <span class="n">stride</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="x">,</span><span class="mi">1</span><span class="x">)),</span> 
+    <span class="n">BatchNorm</span><span class="x">(</span><span class="n">out_channels</span><span class="x">))</span>
+</code></pre></div></div>
+<p>Once we have that, we can define a second block of [Conv -&gt; ReLU -&gt; Batchnorm -&gt; Conv -&gt; ReLU -&gt; Batchnorm -&gt; Max Pool].</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">double_conv</span><span class="x">(</span><span class="n">in_channels</span><span class="x">,</span> <span class="n">out_channels</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="n">in_channels</span><span class="x">,</span> <span class="n">out_channels</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="n">out_channels</span><span class="x">,</span> <span class="n">out_channels</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">MaxPool</span><span class="x">((</span><span class="mi">2</span><span class="x">,</span><span class="mi">2</span><span class="x">)))</span>
+</code></pre></div></div>
+
+<p>And finally we can define another bigger block of [Conv -&gt; ReLU -&gt; Batchnorm -&gt; Conv -&gt; ReLU -&gt; Batchnorm -&gt; Conv -&gt; ReLU -&gt; MaxPool]</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">triple_conv</span><span class="x">(</span><span class="n">in_channels</span><span class="x">,</span> <span class="n">out_channels</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="n">in_channels</span><span class="x">,</span> <span class="n">out_channels</span><span class="x">),</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="n">out_channels</span><span class="x">,</span> <span class="n">out_channels</span><span class="x">),</span>
+    <span class="n">Conv</span><span class="x">((</span><span class="mi">3</span><span class="x">,</span><span class="mi">3</span><span class="x">),</span> <span class="n">out_channels</span> <span class="o">=&gt;</span> <span class="n">out_channels</span><span class="x">,</span> <span class="n">relu</span><span class="x">,</span> <span class="n">pad</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="x">,</span><span class="mi">1</span><span class="x">),</span> <span class="n">stride</span> <span class="o">=</span> <span class="x">(</span><span class="mi">1</span><span class="x">,</span><span class="mi">1</span><span class="x">)),</span>
+    <span class="n">MaxPool</span><span class="x">((</span><span class="mi">2</span><span class="x">,</span><span class="mi">2</span><span class="x">)))</span>
+</code></pre></div></div>
+
+<p>The above blocks save a looot of redundancy while taking into account the input and output, so we can now directly go to the architecture.
+There is nothing special here except the way the number of channels increase from 3 to 4096. The last few layers are linear which we are using for classification. Of course softmax is also needed.
+The … is the splat operator. Yes its called that xD
+All it does is unrolls a structure like our tuple here.</p>
+
+<p>We finally pop these into the GPU.</p>
+
+<h3 id="vgg16">VGG16</h3>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vgg16</span><span class="x">(</span><span class="n">initial_channels</span><span class="x">,</span> <span class="n">num_classes</span><span class="x">)</span> <span class="o">=</span> <span class="n">Chain</span><span class="x">(</span>
+    <span class="n">double_conv</span><span class="x">(</span><span class="n">initial_channels</span><span class="x">,</span> <span class="mi">64</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">double_conv</span><span class="x">(</span><span class="mi">64</span><span class="x">,</span><span class="mi">128</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="mi">128</span><span class="x">,</span> <span class="mi">256</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">double_conv</span><span class="x">(</span><span class="mi">256</span><span class="x">,</span> <span class="mi">256</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>  
+    <span class="n">conv_block</span><span class="x">(</span><span class="mi">256</span><span class="x">,</span> <span class="mi">512</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">double_conv</span><span class="x">(</span><span class="mi">512</span><span class="x">,</span> <span class="mi">512</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="mi">512</span><span class="x">,</span> <span class="mi">512</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">double_conv</span><span class="x">(</span><span class="mi">512</span><span class="x">,</span> <span class="mi">512</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">reshape</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="o">:</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="mi">4</span><span class="x">)),</span>
+    <span class="n">Dense</span><span class="x">(</span><span class="mi">512</span><span class="x">,</span> <span class="mi">4096</span><span class="x">,</span> <span class="n">relu</span><span class="x">),</span>
+    <span class="n">Dropout</span><span class="x">(</span><span class="mf">0.5</span><span class="x">),</span>
+    <span class="n">Dense</span><span class="x">(</span><span class="mi">4096</span><span class="x">,</span> <span class="mi">4096</span><span class="x">,</span> <span class="n">relu</span><span class="x">),</span>
+    <span class="n">Dropout</span><span class="x">(</span><span class="mf">0.5</span><span class="x">),</span>
+    <span class="n">Dense</span><span class="x">(</span><span class="mi">4096</span><span class="x">,</span> <span class="n">num_classes</span><span class="x">),</span> 
+    <span class="n">softmax</span>
+    <span class="x">)</span> <span class="o">|&gt;</span> <span class="n">gpu</span>
+
+</code></pre></div></div>
+
+<h3 id="vgg19">VGG19</h3>
+<p>How about VGG19??</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vgg19</span><span class="x">(</span><span class="n">initial_channels</span><span class="x">,</span> <span class="n">num_classes</span><span class="x">)</span> <span class="o">=</span> <span class="n">Chain</span><span class="x">(</span>
+    <span class="n">double_conv</span><span class="x">(</span><span class="n">initial_channels</span><span class="x">,</span> <span class="mi">64</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">double_conv</span><span class="x">(</span><span class="mi">64</span><span class="x">,</span> <span class="mi">128</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="mi">128</span><span class="x">,</span><span class="mi">256</span><span class="x">),</span>
+    <span class="n">triple_conv</span><span class="x">(</span><span class="mi">256</span><span class="x">,</span><span class="mi">256</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="mi">256</span><span class="x">,</span><span class="mi">512</span><span class="x">),</span>
+    <span class="n">triple_conv</span><span class="x">(</span><span class="mi">512</span><span class="x">,</span><span class="mi">512</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">conv_block</span><span class="x">(</span><span class="mi">512</span><span class="x">,</span><span class="mi">512</span><span class="x">),</span>
+    <span class="n">triple_conv</span><span class="x">(</span><span class="mi">512</span><span class="x">,</span><span class="mi">512</span><span class="x">)</span><span class="o">...</span><span class="x">,</span>
+    <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">reshape</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="o">:</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="mi">4</span><span class="x">)),</span>
+    <span class="n">Dense</span><span class="x">(</span><span class="mi">512</span><span class="x">,</span> <span class="mi">4096</span><span class="x">,</span> <span class="n">relu</span><span class="x">),</span>
+    <span class="n">Dropout</span><span class="x">(</span><span class="mf">0.5</span><span class="x">),</span>
+    <span class="n">Dense</span><span class="x">(</span><span class="mi">4096</span><span class="x">,</span> <span class="mi">4096</span><span class="x">,</span> <span class="n">relu</span><span class="x">),</span>
+    <span class="n">Dropout</span><span class="x">(</span><span class="mf">0.5</span><span class="x">),</span>
+    <span class="n">Dense</span><span class="x">(</span><span class="mi">4096</span><span class="x">,</span> <span class="n">num_classes</span><span class="x">),</span>
+    <span class="n">softmax</span><span class="x">)</span> <span class="o">|&gt;</span> <span class="n">gpu</span>
+
+</code></pre></div></div>
+
+<p>Yes. That’s it. Of course, please dont be fooled by the size. We have hidden away the layers in the functions we defined before. But it is that simple to define these things.</p>
+
+<p>Now let us initialize our model.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m</span> <span class="o">=</span> <span class="n">vgg19</span><span class="x">(</span><span class="mi">3</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
+<span class="c"># OR</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">vgg16</span><span class="x">(</span><span class="mi">3</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
+
+</code></pre></div></div>
+
+<p>Let us use cross entropy loss. And we will also define an accuracy function which is basically a sum of the number of labels that match from our test set on which we predict using our model.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">loss</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="n">crossentropy</span><span class="x">(</span><span class="n">m</span><span class="x">(</span><span class="n">x</span><span class="x">),</span> <span class="n">y</span><span class="x">)</span>
+
+<span class="n">accuracy</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="n">mean</span><span class="x">(</span><span class="n">onecold</span><span class="x">(</span><span class="n">m</span><span class="x">(</span><span class="n">x</span><span class="x">))</span> <span class="o">.==</span> <span class="n">onecold</span><span class="x">(</span><span class="n">y</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p>Now that we have that, we can define the number of epochs(10), the optimizer (Adam) and finally run our models.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">evalcb</span> <span class="o">=</span> <span class="n">throttle</span><span class="x">(()</span> <span class="o">-&gt;</span> <span class="nd">@show</span><span class="x">(</span><span class="n">accuracy</span><span class="x">(</span><span class="n">valX</span><span class="x">,</span> <span class="n">valY</span><span class="x">)),</span> <span class="mi">10</span><span class="x">)</span>
+
+<span class="n">opt</span> <span class="o">=</span> <span class="n">ADAM</span><span class="x">()</span>
+
+<span class="n">Flux</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">loss</span><span class="x">,</span> <span class="n">params</span><span class="x">(</span><span class="n">m</span><span class="x">),</span> <span class="n">train</span><span class="x">,</span> <span class="n">opt</span><span class="x">,</span> <span class="n">cb</span> <span class="o">=</span> <span class="n">evalcb</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Yayyy!!!</p>
+
+<h2 id="an-important-note">An important note</h2>
+
+<p>Please learn to take breaks. Do not be me. I spent the past few months doing Deep learning everyday and burnt out like a candle. Took me a week or so of doing other things to even be able to write this. Take breaks. 
+Qurantine has really messed with us all. But hey! We will get through it. And come out better, smarter and more in love with people and this world.</p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>VAE | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="VAE" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A simple Variational Auto Encoder using just what we made so far!!" />
+<meta property="og:description" content="A simple Variational Auto Encoder using just what we made so far!!" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-25T18:50:19+00:00" />
+<script type="application/ld+json">
+{"description":"A simple Variational Auto Encoder using just what we made so far!!","url":"/article/2020/07/25/VAE.html","@type":"BlogPosting","headline":"VAE","dateModified":"2020-07-25T18:50:19+00:00","datePublished":"2020-07-25T18:50:19+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/25/VAE.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>VAE</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~13 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#architecture">Architecture</a></li>
+  <li><a href="#loss-function">Loss function</a></li>
+  <li><a href="#issues">Issues</a></li>
+  <li><a href="#code">Code</a>
+    <ul>
+      <li><a href="#libraries--data">Libraries + data</a></li>
+      <li><a href="#encoder--bottleneck">Encoder + Bottleneck</a></li>
+      <li><a href="#decoder-aka-generative">Decoder aka Generative</a></li>
+      <li><a href="#loss-function-1">Loss function</a></li>
+      <li><a href="#loop-de-loop">Loop de loop</a></li>
+      <li><a href="#output">Output</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>A simple Variational Auto Encoder using just what we made so far!!</p>
+
+<blockquote>
+  <p>Since we made everything in this from scratch already I will be using Flux directly. (I will attempt to do optimizers in the next post)</p>
+</blockquote>
+
+<p>Okay so what is that? it is a neural network which is used for things like Image compression, Image generation etc etc. It is cool because it is pretty cheap computationally.</p>
+
+<p>So what do we need to build it?</p>
+<h2 id="architecture">Architecture</h2>
+
+<p>-<img src="/img/vae.png" alt="" /></p>
+
+<ul>
+  <li>This is the what makes the VAE special. If you notice, the conv sizes first start off huge (Encoder), then reduce to a really small point and then go back up huge again(Decoder).</li>
+  <li>So the thing is, the Encoder is responsible for taking the input data and encoding it so to speak into what is called the latent space representation. In human terms it means that it tries to find a very high dimensional representation of the images. Aka it tries to “learn” what the image is so it can recreate it.</li>
+  <li>The middle bit which has the smallest sizes is called the bottle neck (because it looks like one lol) and this is what helps in image compression. Since the Convolution and max pool layers fundamentally try to represent images in a very compressed manner, this is the effect. Now the fun part is that we can take the representation space (which the encoder pops things in) and sample from it to get representations of the initial data. These we pop into the decoder.</li>
+  <li>The last bit of the architecture is the Decoder which is responsible for giving us back our images (albeit similar and not the same ones). What this does is takes the input as the probability distribution of the data (which is a single pixel in the Bernoulli distribution) and outputs a parameter for every pixel in the image. (aka what it thinks should be the image).</li>
+</ul>
+
+<h2 id="loss-function">Loss function</h2>
+
+<ul>
+  <li>This is a cool looking equation haha.
+\(l_i(\Theta,\Phi) = -\mathbb{E}_{q\Theta(z|x_i)}[log(p_\Theta(x_i|z)] + \mathbb{KL}(q_\Theta(z|x_i) || p(z))\)</li>
+</ul>
+
+<p>Let us break it down or I will break down.</p>
+
+<ul>
+  <li>\(l_i(\Theta,\Phi)\) =&gt;  Greek way of writing the loss between two things. (Could be x and y if you are not awake yet).</li>
+  <li>\(-\mathbb{E}_{q\Theta(z|x_i)}[log(p_\Theta(x_i|z)]\) =&gt;
+likelihood of something happening -&gt; the log of it -&gt; negative of it -&gt; Expected value of all this drama. This lets the network learn that it needs to remake the data again. Since the outputs are probabilities, it is a nice way of seeing how well we did</li>
+  <li>\(\mathbb{KL}(q_\Theta(z|x_i) || p(z))\)
+This is the KL divergence. It is a nice measure to see how far away we are from what we need. Aka how much data is lost in translation so to speak. This acts as a regularizer and reduces the chances of mode collapse (everything is similar so output random nonsesense).</li>
+</ul>
+
+<h2 id="issues">Issues</h2>
+
+<ul>
+  <li>A lot of data is lost in translation because the decoder reconstructs from a reduced version of the image.</li>
+  <li>Outputs are really blurry (This was fixed in a recent <a href="https://arxiv.org/abs/2007.03898">paper</a>. I made notes for it but I havent pushed it yet)</li>
+</ul>
+
+<h2 id="code">Code</h2>
+
+<h3 id="libraries--data">Libraries + data</h3>
+
+<p>We load all required libraries. Batch the data and split it to train and test.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Flux</span><span class="x">,</span> <span class="n">Flux</span><span class="o">.</span><span class="n">Data</span><span class="o">.</span><span class="n">MNIST</span><span class="x">,</span> <span class="n">Statistics</span><span class="x">,</span> <span class="n">Flux</span><span class="o">.</span><span class="n">Optimise</span>
+<span class="k">using</span> <span class="n">Flux</span><span class="o">:</span> <span class="n">throttle</span><span class="x">,</span> <span class="n">params</span>
+<span class="n">X</span> <span class="o">=</span> <span class="x">(</span><span class="n">float</span><span class="o">.</span><span class="x">(</span><span class="n">hcat</span><span class="x">(</span><span class="n">vec</span><span class="o">.</span><span class="x">(</span><span class="n">MNIST</span><span class="o">.</span><span class="n">images</span><span class="x">())</span><span class="o">...</span><span class="x">))</span> <span class="o">.&gt;</span> <span class="mf">0.5</span><span class="x">)</span> 
+<span class="n">N</span><span class="x">,</span> <span class="n">M</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">X</span><span class="x">,</span> <span class="mi">2</span><span class="x">),</span> <span class="mi">100</span>
+<span class="n">data</span> <span class="o">=</span> <span class="x">[</span><span class="n">X</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="n">i</span><span class="x">]</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">Iterators</span><span class="o">.</span><span class="n">partition</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="n">N</span><span class="x">,</span><span class="n">M</span><span class="x">)]</span>
+</code></pre></div></div>
+
+<h3 id="encoder--bottleneck">Encoder + Bottleneck</h3>
+
+<p>We need to pick something from the sampled space and also run our encoder.</p>
+<ul>
+  <li>(Dense(784, 500, tanh), Dense(500, 5), Dense(500, 5))</li>
+</ul>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Dz</span><span class="x">,</span> <span class="n">Dh</span> <span class="o">=</span> <span class="mi">5</span><span class="x">,</span> <span class="mi">500</span>
+<span class="n">A</span><span class="x">,</span> <span class="n">μ</span><span class="x">,</span> <span class="n">logσ</span> <span class="o">=</span> <span class="n">Dense</span><span class="x">(</span><span class="mi">28</span><span class="o">^</span><span class="mi">2</span><span class="x">,</span> <span class="n">Dh</span><span class="x">,</span> <span class="n">tanh</span><span class="x">)</span> <span class="x">,</span> <span class="n">Dense</span><span class="x">(</span><span class="n">Dh</span><span class="x">,</span> <span class="n">Dz</span><span class="x">)</span> <span class="x">,</span> <span class="n">Dense</span><span class="x">(</span><span class="n">Dh</span><span class="x">,</span> <span class="n">Dz</span><span class="x">)</span> 
+
+<span class="n">g</span><span class="x">(</span><span class="n">X</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="n">h</span> <span class="o">=</span> <span class="n">A</span><span class="x">(</span><span class="n">X</span><span class="x">);</span> <span class="x">(</span><span class="n">μ</span><span class="x">(</span><span class="n">h</span><span class="x">),</span> <span class="n">logσ</span><span class="x">(</span><span class="n">h</span><span class="x">)))</span>
+
+<span class="k">function</span><span class="nf"> sample_z</span><span class="x">(</span><span class="n">μ</span><span class="x">,</span> <span class="n">logσ</span><span class="x">)</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">randn</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">μ</span><span class="x">))</span> 
+    <span class="k">return</span> <span class="n">μ</span> <span class="o">+</span> <span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">logσ</span><span class="x">)</span> <span class="o">.*</span> <span class="n">eps</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<h3 id="decoder-aka-generative">Decoder aka Generative</h3>
+
+<p>We define the decoder here.</p>
+<ul>
+  <li>Chain(Dense(5, 500, tanh), Dense(500, 784, σ))</li>
+</ul>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="n">Chain</span><span class="x">(</span><span class="n">Dense</span><span class="x">(</span><span class="n">Dz</span><span class="x">,</span> <span class="n">Dh</span><span class="x">,</span> <span class="n">tanh</span><span class="x">),</span> <span class="n">Dense</span><span class="x">(</span><span class="n">Dh</span><span class="x">,</span> <span class="mi">28</span><span class="o">^</span><span class="mi">2</span><span class="x">,</span> <span class="n">σ</span><span class="x">))</span>
+<span class="n">kl_q_p</span><span class="x">(</span><span class="n">μ</span><span class="x">,</span> <span class="n">logσ</span><span class="x">)</span> <span class="o">=</span> <span class="mf">0.5f0</span> <span class="o">*</span> <span class="n">sum</span><span class="x">(</span><span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="mf">2f0</span> <span class="o">.*</span> <span class="n">logσ</span><span class="x">)</span> <span class="o">+</span> <span class="n">μ</span><span class="o">.^</span><span class="mi">2</span> <span class="o">.-</span> <span class="mf">1f0</span> <span class="o">.+</span> <span class="n">logσ</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+
+<span class="k">function</span><span class="nf"> logp_x_z</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">z</span><span class="x">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">f</span><span class="x">(</span><span class="n">z</span><span class="x">)</span>
+    <span class="n">ll</span> <span class="o">=</span> <span class="n">x</span> <span class="o">.*</span> <span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="n">p</span> <span class="o">.+</span> <span class="n">eps</span><span class="x">(</span><span class="kt">Float32</span><span class="x">))</span> <span class="o">+</span> <span class="x">(</span><span class="mf">1f0</span> <span class="o">.-</span> <span class="n">x</span><span class="x">)</span> <span class="o">.*</span> <span class="n">log</span><span class="o">.</span><span class="x">(</span><span class="mi">1</span> <span class="o">.-</span> <span class="n">p</span> <span class="o">.+</span> <span class="n">eps</span><span class="x">(</span><span class="kt">Float32</span><span class="x">))</span>
+    <span class="k">return</span> <span class="n">sum</span><span class="x">(</span><span class="n">ll</span><span class="x">)</span>
+<span class="k">end</span>
+
+<span class="n">L̄</span><span class="x">(</span><span class="n">X</span><span class="x">)</span> <span class="o">=</span> <span class="x">((</span><span class="n">μ̂</span><span class="x">,</span> <span class="n">logσ̂</span><span class="x">)</span> <span class="o">=</span> <span class="n">g</span><span class="x">(</span><span class="n">X</span><span class="x">);</span> <span class="x">(</span><span class="n">logp_x_z</span><span class="x">(</span><span class="n">X</span><span class="x">,</span> <span class="n">sample_z</span><span class="x">(</span><span class="n">μ̂</span><span class="x">,</span> <span class="n">logσ̂</span><span class="x">))</span> <span class="o">-</span> <span class="n">kl_q_p</span><span class="x">(</span><span class="n">μ̂</span><span class="x">,</span> <span class="n">logσ̂</span><span class="x">))</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">//</span> <span class="n">M</span><span class="x">)</span>
+
+</code></pre></div></div>
+
+<h3 id="loss-function-1">Loss function</h3>
+
+<p>Let us define the loss function. And also attempt to sample from the model.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">loss</span><span class="x">(</span><span class="n">X</span><span class="x">)</span> <span class="o">=</span> <span class="o">-</span><span class="n">L̄</span><span class="x">(</span><span class="n">X</span><span class="x">)</span> <span class="o">+</span> <span class="mf">0.01f0</span> <span class="o">*</span> <span class="n">sum</span><span class="x">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">sum</span><span class="x">(</span><span class="n">x</span><span class="o">.^</span><span class="mi">2</span><span class="x">),</span> <span class="n">params</span><span class="x">(</span><span class="n">f</span><span class="x">))</span>
+
+<span class="k">function</span><span class="nf"> modelsample</span><span class="x">()</span>  
+  <span class="n">ϕ</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span> <span class="n">Dz</span><span class="x">)</span>
+  <span class="n">p</span> <span class="o">=</span> <span class="n">f</span><span class="x">(</span><span class="n">sample_z</span><span class="x">(</span><span class="n">ϕ</span><span class="x">,</span> <span class="n">ϕ</span><span class="x">))</span>
+  <span class="n">u</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">p</span><span class="x">))</span>
+  <span class="k">return</span> <span class="x">(</span><span class="n">u</span> <span class="o">.&lt;</span> <span class="n">p</span><span class="x">)</span> 
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="loop-de-loop">Loop de loop</h3>
+
+<p>Now for the actual training. I will be using ADAM (yes cheating I know but I am trying really hard to get it done from scratch ): ). Also no GPU.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">evalcb</span> <span class="o">=</span> <span class="n">throttle</span><span class="x">(()</span> <span class="o">-&gt;</span> <span class="nd">@show</span><span class="x">(</span><span class="o">-</span><span class="n">L̄</span><span class="x">(</span><span class="n">X</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">rand</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="n">N</span><span class="x">,</span> <span class="n">M</span><span class="x">)])),</span> <span class="mi">10</span><span class="x">)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">ADAM</span><span class="x">()</span>
+
+<span class="n">ps</span> <span class="o">=</span> <span class="n">params</span><span class="x">(</span><span class="n">A</span><span class="x">,</span> <span class="n">μ</span><span class="x">,</span> <span class="n">logσ</span><span class="x">,</span> <span class="n">f</span><span class="x">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="mi">10</span>
+  <span class="nd">@info</span> <span class="s">"Epoch </span><span class="si">$</span><span class="s">i"</span>
+  <span class="n">Flux</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">loss</span><span class="x">,</span> <span class="n">ps</span><span class="x">,</span> <span class="n">zip</span><span class="x">(</span><span class="n">data</span><span class="x">),</span> <span class="n">opt</span><span class="x">,</span> <span class="n">cb</span><span class="o">=</span><span class="n">evalcb</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="output">Output</h3>
+
+<p>Finally let us visualize the outputs. Note that it was only for 10 epochs so it is kinda dumb but well.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Images</span>
+
+<span class="n">img</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gray</span><span class="o">.</span><span class="x">(</span><span class="n">reshape</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="mi">28</span><span class="x">,</span> <span class="mi">28</span><span class="x">))</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">hcat</span><span class="x">(</span><span class="n">img</span><span class="o">.</span><span class="x">([</span><span class="n">modelsample</span><span class="x">()</span> <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="x">])</span><span class="o">...</span><span class="x">)</span>
+<span class="n">save</span><span class="x">(</span><span class="s">"sample.png"</span><span class="x">,</span> <span class="n">sample</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>-<img src="/img/vaeo.png" alt="" /></p>
+
+<blockquote>
+  <p>Finis</p>
+</blockquote>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

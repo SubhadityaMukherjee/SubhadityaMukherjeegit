@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>LightSeg (only notes for now) | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="LightSeg (only notes for now)" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/LightSeg.html","@type":"BlogPosting","headline":"LightSeg (only notes for now)","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/LightSeg.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>LightSeg (only notes for now)</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~3 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#notes">Notes</a>
+    <ul>
+      <li><a href="#objective">Objective</a></li>
+      <li><a href="#modules-used">Modules used</a>
+        <ul>
+          <li><a href="#atrous---dilated-conv">Atrous -&gt; Dilated conv</a></li>
+        </ul>
+      </li>
+      <li><a href="#whats-new">Whats new</a></li>
+      <li><a href="#misc-training-info">Misc training info</a></li>
+      <li><a href="#results-miou">Results (mIOU)</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[36]</strong> LightSeg (only notes for now)</p>
+<ul>
+  <li>Emara, T., Abd El Munim, H. E., &amp; Abbas, H. M. (2019, December). LiteSeg: A Novel Lightweight ConvNet for Semantic Segmentation. In 2019 Digital Image Computing: Techniques and Applications (DICTA) (pp. 1-7). IEEE. <a href="https://arxiv.org/pdf/1912.06683">Link</a></li>
+</ul>
+
+<p>(P.S. This was done for an internship so is a bit more formal than usual)</p>
+
+<h1 id="notes">Notes</h1>
+
+<p>TL;DR -&gt; Faster Semantic Segmentation with a modified ASPP module(from the <a href="https://arxiv.org/pdf/1606.00915">DeepLab</a> paper) + MobileNetV2</p>
+
+<h2 id="objective">Objective</h2>
+<ul>
+  <li>Efficiency (To run on edge devices)</li>
+  <li>Better performance (aka accuracy)</li>
+  <li>Assign a label to every pixel</li>
+  <li>Real time</li>
+</ul>
+
+<h2 id="modules-used">Modules used</h2>
+
+<h3 id="atrous---dilated-conv">Atrous -&gt; Dilated conv</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- Decrease receptive field
+- Upsample by adding 0s b/w two filter vals along spatial dimensions with a dilation factor
+- Note for Pytorch -&gt; Conv2d has dilation as a param ### ASPP
+- Take feature map -&gt; Add 4 parallel atrous convs with different rates ### Deeper Atrous Spatial Pooling(DASPP)
+- Take ASPP
+- Add 3x3 convs after 3x3 atrous convs ### Depthwise separable conv
+- Replace normal convs
+- Split input and output into channels
+- Convolve pointwise
+- Note for Pytorch -&gt; Add groups = no of in_channels in Conv2d ### Residuals
+- Take residual/skip connections 
+  - H(X) = F(X) + X  ; H(X) is output; F(X) is residual  ; X is input feature map
+- Long -&gt; Across larger no of layers
+- Short -&gt; Smaller no of layers (as memory units)
+- Fuse them both 
+- Use 1x1 convs
+- End up with richer features ### Encoder
+- MobileNetV2 with output stride of 32 ### Decoder
+- DeepLabv3+ decoder with ASPP modified to DASPP
+</code></pre></div></div>
+
+<h2 id="whats-new">Whats new</h2>
+<ul>
+  <li>“Deeper” ASPP module</li>
+  <li>Use DeepLabv3+/Mobile net etc as backbone for decoder</li>
+  <li>Use long + short residuals (From resnet paper)</li>
+  <li>Use Depthwise separable</li>
+  <li>Modify strides for efficiency</li>
+</ul>
+
+<h2 id="misc-training-info">Misc training info</h2>
+<ul>
+  <li>SGD + Nesterov (0.9)</li>
+  <li>Something similar to cyclic lr starting from 10e-7</li>
+  <li>Use weight decay of 4*10e-5</li>
+  <li>Metric for Predicted bounding box vs ground truth : mIOU -&gt; Mean of (Area of overlap/ Area of union)</li>
+</ul>
+
+<h2 id="results-miou">Results (mIOU)</h2>
+<ul>
+  <li>Cityscapes using MobileNet enc -&gt; 66.48%</li>
+  <li>161fps for 360x640</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

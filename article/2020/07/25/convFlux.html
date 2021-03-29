@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Simple conv with Flux | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Simple conv with Flux" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Using the library functions which we defined till now to run a simple Neural Network." />
+<meta property="og:description" content="Using the library functions which we defined till now to run a simple Neural Network." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-25T16:35:29+00:00" />
+<script type="application/ld+json">
+{"description":"Using the library functions which we defined till now to run a simple Neural Network.","url":"/article/2020/07/25/convFlux.html","@type":"BlogPosting","headline":"Simple conv with Flux","dateModified":"2020-07-25T16:35:29+00:00","datePublished":"2020-07-25T16:35:29+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/25/convFlux.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Simple conv with Flux</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~8 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+
+
+<p>Using the library functions which we defined till now to run a simple Neural Network.</p>
+
+<p>Now that we defined everything that a simple NN needs we will use the same functions from the DL library in Julia. (FluxML). The rule is to only use things we defined previously.
+Oh also I found out this really awesome interactive alternative to Jupyter notebook today -&gt; <a href="https://github.com/fonsp/Pluto.jl">Pluto.jl</a> and I am in love. It auto updates outputs if you change functions and everything. Wow!!!!</p>
+
+<p>Okay let us get to it. First let us import what we need. The main library is Flux. And from it we import the MNIST dataset and also other functionality that we will need and I will relate to what we did so far.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Flux</span><span class="x">,</span> <span class="n">Flux</span><span class="o">.</span><span class="n">Data</span><span class="o">.</span><span class="n">MNIST</span><span class="x">,</span> <span class="n">Statistics</span>
+<span class="k">using</span> <span class="n">Flux</span><span class="o">:</span> <span class="n">onehotbatch</span><span class="x">,</span> <span class="n">onecold</span><span class="x">,</span> <span class="n">crossentropy</span><span class="x">,</span> <span class="n">throttle</span>
+<span class="k">using</span> <span class="n">Base</span><span class="o">.</span><span class="n">Iterators</span><span class="o">:</span> <span class="n">repeated</span><span class="x">,</span> <span class="n">partition</span>
+</code></pre></div></div>
+
+<p>Let us load the data and perform the train test split. Since the labels are categorical, we one hot encode them as well. And we push them to their respective partitions while we are at it. The other thing which we have not done so far is GPU implementation (only done this for Convs). But well that comes in time.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgs</span> <span class="o">=</span> <span class="n">MNIST</span><span class="o">.</span><span class="n">images</span><span class="x">()</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">onehotbatch</span><span class="x">(</span><span class="n">MNIST</span><span class="o">.</span><span class="n">labels</span><span class="x">(),</span> <span class="mi">0</span><span class="o">:</span><span class="mi">9</span><span class="x">)</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">gpu</span><span class="o">.</span><span class="x">([(</span><span class="n">cat</span><span class="x">(</span><span class="n">float</span><span class="o">.</span><span class="x">(</span><span class="n">imgs</span><span class="x">[</span><span class="n">i</span><span class="x">])</span><span class="o">...</span><span class="x">,</span> <span class="n">dims</span> <span class="o">=</span> <span class="mi">4</span><span class="x">),</span> <span class="n">labels</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="n">i</span><span class="x">])</span>
+         <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">partition</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="mi">60_000</span><span class="x">,</span> <span class="mi">32</span><span class="x">)]);</span>
+<span class="n">tX</span> <span class="o">=</span> <span class="n">cat</span><span class="x">(</span><span class="n">float</span><span class="o">.</span><span class="x">(</span><span class="n">MNIST</span><span class="o">.</span><span class="n">images</span><span class="x">(</span><span class="o">:</span><span class="n">test</span><span class="x">)[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000</span><span class="x">])</span><span class="o">...</span><span class="x">,</span> <span class="n">dims</span> <span class="o">=</span> <span class="mi">4</span><span class="x">)</span> <span class="o">|&gt;</span> <span class="n">gpu</span><span class="x">;</span>
+<span class="n">tY</span> <span class="o">=</span> <span class="n">onehotbatch</span><span class="x">(</span><span class="n">MNIST</span><span class="o">.</span><span class="n">labels</span><span class="x">(</span><span class="o">:</span><span class="n">test</span><span class="x">)[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000</span><span class="x">],</span> <span class="mi">0</span><span class="o">:</span><span class="mi">9</span><span class="x">)</span> <span class="o">|&gt;</span> <span class="n">gpu</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>Now to define our stupidly simple architecture. Dense == Linear layer which we defined. Everything else (Conv, maxpool, softmax) we defined before so we are allowed to use.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m</span> <span class="o">=</span> <span class="n">Chain</span><span class="x">(</span>
+    <span class="n">Conv</span><span class="x">((</span><span class="mi">3</span><span class="x">,</span> <span class="mi">3</span><span class="x">),</span> <span class="mi">1</span><span class="o">=&gt;</span><span class="mi">32</span><span class="x">,</span> <span class="n">relu</span><span class="x">),</span>
+    <span class="n">Conv</span><span class="x">((</span><span class="mi">3</span><span class="x">,</span> <span class="mi">3</span><span class="x">),</span> <span class="mi">32</span><span class="o">=&gt;</span><span class="mi">32</span><span class="x">,</span> <span class="n">relu</span><span class="x">),</span>
+    <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">maxpool</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="x">(</span><span class="mi">2</span><span class="x">,</span><span class="mi">2</span><span class="x">)),</span>
+    <span class="n">Conv</span><span class="x">((</span><span class="mi">3</span><span class="x">,</span> <span class="mi">3</span><span class="x">),</span> <span class="mi">32</span><span class="o">=&gt;</span><span class="mi">16</span><span class="x">,</span> <span class="n">relu</span><span class="x">),</span>
+    <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">maxpool</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="x">(</span><span class="mi">2</span><span class="x">,</span><span class="mi">2</span><span class="x">)),</span>
+    <span class="n">Conv</span><span class="x">((</span><span class="mi">3</span><span class="x">,</span> <span class="mi">3</span><span class="x">),</span> <span class="mi">16</span><span class="o">=&gt;</span><span class="mi">10</span><span class="x">,</span> <span class="n">relu</span><span class="x">),</span>
+    <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">reshape</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="o">:</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="mi">4</span><span class="x">)),</span>
+    <span class="n">Dense</span><span class="x">(</span><span class="mi">90</span><span class="x">,</span> <span class="mi">10</span><span class="x">),</span> <span class="n">softmax</span><span class="x">)</span> <span class="o">|&gt;</span> <span class="n">gpu</span>
+</code></pre></div></div>
+
+<p>Let us also define the loss function and accuracy metric while we are at it. 
+The loss function is crossentropy and the accuracy is basically the average of the number of predictions (m(x)) that are equal to the original labels in the test set (onecold(y)).</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">loss</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="n">crossentropy</span><span class="x">(</span><span class="n">m</span><span class="x">(</span><span class="n">x</span><span class="x">),</span> <span class="n">y</span><span class="x">)</span>
+<span class="n">accuracy</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="n">mean</span><span class="x">(</span><span class="n">onecold</span><span class="x">(</span><span class="n">m</span><span class="x">(</span><span class="n">x</span><span class="x">))</span> <span class="o">.==</span> <span class="n">onecold</span><span class="x">(</span><span class="n">y</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p>Since we only did SGD till now (booo I wanted to use ADAM), let us just use that. We also train this for 10 epochs.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">evalcb</span> <span class="o">=</span> <span class="n">throttle</span><span class="x">(()</span> <span class="o">-&gt;</span> <span class="nd">@show</span><span class="x">(</span><span class="n">accuracy</span><span class="x">(</span><span class="n">tX</span><span class="x">,</span> <span class="n">tY</span><span class="x">)),</span> <span class="mi">10</span><span class="x">)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">Descent</span><span class="x">()</span>
+<span class="n">Flux</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">loss</span><span class="x">,</span> <span class="n">params</span><span class="x">(</span><span class="n">m</span><span class="x">),</span> <span class="n">train</span><span class="x">,</span> <span class="n">opt</span><span class="x">,</span> <span class="n">cb</span> <span class="o">=</span> <span class="n">evalcb</span><span class="x">)</span>
+</code></pre></div></div>
+<p>So we get around 96.7% accuracy in a few epochs. It is MNIST but anyway yay!</p>
+
+<p>Ah I really love the syntax. It is so clean and nice. Guess it is a little hard to get used to though but oh well. Its nice to see we already built so much. (Theres more but baby steps).</p>
+
+<blockquote>
+  <p>I am so enjoying this game. Build everything from scratch and when you are done then you can use the existing libraries. That way you get the best of both worlds. Also not giving up on Python but using it for other stuff to keep me motivated is just nice.</p>
+</blockquote>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

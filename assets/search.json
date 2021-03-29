@@ -1,0 +1,971 @@
+[
+  
+    {
+
+      "title"    : "AI Superpowers Kai Fu Lee",
+      "url"      : "/book/2021/03/09/AISuperpowersKaiFuLee.html",
+      "category" : "book",
+      "tags"     : "",
+      "date"     : "2021-03-09 05:04:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Digital Minimalism Cal Newport",
+      "url"      : "/book/2021/03/07/DigitalMinimalismCalNewport.html",
+      "category" : "book",
+      "tags"     : "",
+      "date"     : "2021-03-07 12:24:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "More Deep Learning, Less Crying - A guide",
+      "url"      : "/article/2021/03/05/tricksFromLectures.html",
+      "category" : "article",
+      "tags"     : "",
+      "date"     : "2021-03-05 14:42:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Super resolution",
+      "url"      : "/article/2020/10/09/SuperRes.html",
+      "category" : "article",
+      "tags"     : "Super, Resolution, photoshop, pytorch, upsample, upscale",
+      "date"     : "2020-10-09 18:01:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Federated Learning",
+      "url"      : "/article/2020/10/07/FederatedLearning.html",
+      "category" : "article",
+      "tags"     : "federated, syft, clusters, secure",
+      "date"     : "2020-10-07 16:15:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Taking Batchnorm For Granted",
+      "url"      : "/article/2020/10/03/TakingBatchnormForGranted.html",
+      "category" : "article",
+      "tags"     : "batch, norm, plots, learning, params, black, box, digging, in",
+      "date"     : "2020-10-03 15:52:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "A murder mystery and Adversarial attack",
+      "url"      : "/article/2020/09/28/AdversarialAttack.html",
+      "category" : "article",
+      "tags"     : "",
+      "date"     : "2020-09-28 15:57:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Thank you and a rain check",
+      "url"      : "/article/2020/09/26/An.html",
+      "category" : "article",
+      "tags"     : "blog, medium, update",
+      "date"     : "2020-09-26 15:16:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Pruning",
+      "url"      : "/article/2020/09/25/Pruning.html",
+      "category" : "article",
+      "tags"     : "prune, approach, global, layer, size, compute",
+      "date"     : "2020-09-25 19:02:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Documentation using Documenter.jl",
+      "url"      : "/article/2020/09/04/Documentation.html",
+      "category" : "article",
+      "tags"     : "document, automation, string",
+      "date"     : "2020-09-04 20:41:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Dataset Bindings",
+      "url"      : "/article/2020/09/02/DatasetBindings.html",
+      "category" : "article",
+      "tags"     : "dataset, binding, web, download",
+      "date"     : "2020-09-02 05:29:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "DCGAN",
+      "url"      : "/article/2020/08/25/DCGAN.html",
+      "category" : "article",
+      "tags"     : "generative, color, abstract, art, gan, dc, create, mnist",
+      "date"     : "2020-08-25 20:03:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Differentiable Programming",
+      "url"      : "/article/2020/08/12/Differentiable-Programming.html",
+      "category" : "article",
+      "tags"     : "deep, learning, dead, physics, math, simulation, gap, ode",
+      "date"     : "2020-08-12 21:07:58 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Compositional Pattern Producing Networks",
+      "url"      : "/article/2020/08/11/Compositional-Pattern-Producing-Networks.html",
+      "category" : "article",
+      "tags"     : "cppn, generative, color, abstract, art",
+      "date"     : "2020-08-11 20:26:21 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "VGG",
+      "url"      : "/article/2020/08/11/VGG.html",
+      "category" : "article",
+      "tags"     : "vgg, deep, network, paper",
+      "date"     : "2020-08-11 19:36:56 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Optimizers",
+      "url"      : "/article/2020/07/28/Optimizers.html",
+      "category" : "article",
+      "tags"     : "grad, descent, ada, sgd, momen",
+      "date"     : "2020-07-28 21:21:51 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "VAE",
+      "url"      : "/article/2020/07/25/VAE.html",
+      "category" : "article",
+      "tags"     : "variational, auto, encoder, generative, image, compression, encoder, decoder",
+      "date"     : "2020-07-25 18:50:19 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Simple conv with Flux",
+      "url"      : "/article/2020/07/25/convFlux.html",
+      "category" : "article",
+      "tags"     : "flux, conv, librar, mnist, conv, arch",
+      "date"     : "2020-07-25 16:35:29 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "RNN from scratch",
+      "url"      : "/article/2020/07/24/rnnFromScratch.html",
+      "category" : "article",
+      "tags"     : "",
+      "date"     : "2020-07-24 07:41:02 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Backprop",
+      "url"      : "/article/2020/07/24/backprop.html",
+      "category" : "article",
+      "tags"     : "backprop, back, propag, data, mnist, scratch",
+      "date"     : "2020-07-24 05:51:59 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Low Poly",
+      "url"      : "/article/2020/07/21/Low-Poly.html",
+      "category" : "article",
+      "tags"     : "",
+      "date"     : "2020-07-21 05:42:30 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Universal Approximation theorem",
+      "url"      : "/article/2020/07/18/Universal-Approximation-theorem.html",
+      "category" : "article",
+      "tags"     : "uat, tick, theorem, feed, forwa, real, activation, complex, non, linear",
+      "date"     : "2020-07-18 06:42:41 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Image Preprocessing",
+      "url"      : "/article/2020/07/16/preprocessing.html",
+      "category" : "article",
+      "tags"     : "random, crop, proces, image, mixup, bright, contr, sat, flip, gray",
+      "date"     : "2020-07-16 20:56:06 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "fastai Book",
+      "url"      : "/article/2020/07/12/fastai-Book.html",
+      "category" : "article",
+      "tags"     : "",
+      "date"     : "2020-07-12 07:50:52 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Pooling layers",
+      "url"      : "/article/2020/07/11/pooling.html",
+      "category" : "article",
+      "tags"     : "",
+      "date"     : "2020-07-11 08:43:34 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "My life is a lie + Even faster conv",
+      "url"      : "/article/2020/07/10/evenFasterConv.html",
+      "category" : "article",
+      "tags"     : "corre, conv, ope, faster, cairo, gtk, image, fft, fast, four, col, im2, im",
+      "date"     : "2020-07-10 18:24:36 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Mandelbrot set",
+      "url"      : "/article/2020/07/09/mandelbrot.html",
+      "category" : "article",
+      "tags"     : "mandelbrot, julia, pattern, infinity, set, math, equations, beauty, pretty",
+      "date"     : "2020-07-09 12:51:12 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Action Recognition part 2",
+      "url"      : "/article/2020/07/07/Action-Recognition-part-2.html",
+      "category" : "article",
+      "tags"     : "",
+      "date"     : "2020-07-07 09:57:20 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Adopt dont shop",
+      "url"      : "/space/2020/07/06/adopt.html",
+      "category" : "space",
+      "tags"     : "",
+      "date"     : "2020-07-06 22:04:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Action recognition part 1",
+      "url"      : "/article/2020/07/06/Video-Classification.html",
+      "category" : "article",
+      "tags"     : "video, recognition, tutorial, pytorch, data, format, linear, max, pool, 3d, conv, drop",
+      "date"     : "2020-07-06 16:34:52 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Endangered Species",
+      "url"      : "/article/2020/07/06/Endangered-Species.html",
+      "category" : "article",
+      "tags"     : "art, awareness, species, endangered, style, transfer, neural, web, page, wildlife, site",
+      "date"     : "2020-07-06 01:59:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Padding",
+      "url"      : "/article/2020/07/04/padding.html",
+      "category" : "article",
+      "tags"     : "pad, image, view, constant, copy, symm, max, min, aver, mode, med",
+      "date"     : "2020-07-04 07:25:39 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Faster and more general Conv",
+      "url"      : "/article/2020/07/03/fasterConv.html",
+      "category" : "article",
+      "tags"     : "fast, conv, gpu, fftw, fourier, transform, 2d, cuda, limits",
+      "date"     : "2020-07-03 13:13:46 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Image kernels",
+      "url"      : "/article/2020/07/02/kernels.html",
+      "category" : "article",
+      "tags"     : "kernel, image, filter, blur, sobel, emboss, identity, outline",
+      "date"     : "2020-07-02 15:34:06 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Basic Convolution",
+      "url"      : "/article/2020/07/02/convolution.html",
+      "category" : "article",
+      "tags"     : "conv, scratch, 2d, array, basic, oper, image, mandrill",
+      "date"     : "2020-07-02 13:38:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Imposter Syndrome in the research community",
+      "url"      : "/article/2020/07/01/time.html",
+      "category" : "article",
+      "tags"     : "time, clari, question, research, imposter",
+      "date"     : "2020-07-01 11:03:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "latex from code",
+      "url"      : "/article/2020/06/30/latex-from-code.html",
+      "category" : "article",
+      "tags"     : "latex, code, convert",
+      "date"     : "2020-06-30 13:24:21 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Loss Functions",
+      "url"      : "/article/2020/06/29/loss-functions.html",
+      "category" : "article",
+      "tags"     : "loss, functions, log, softmax, bce, logits, margin, ranking, huber, smooth, l1, mean, absolute, negative, log, binary, cross, entropy, cosine, similarity, kl, divergence, log, cosh, mae, percentage, root, poisson, sparce, hinge, squared, triplet, margin, ctc, multi, label, soft",
+      "date"     : "2020-06-29 20:01:59 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Implementing Papers",
+      "url"      : "/article/2020/06/27/Implementing-Papers.html",
+      "category" : "article",
+      "tags"     : "papers, github, link, repository, implement",
+      "date"     : "2020-06-27 07:56:57 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "100PageMlblook",
+      "url"      : "/article/2020/06/27/100PageMlbook.html",
+      "category" : "article",
+      "tags"     : "review notes book 100 page machine learning svm random variable unbiased estimator shallow cost decision id3 gd sdg bin norma standa impu regu hyper rnn seq ensem active semi zero combine vote stack dbsc umap",
+      "date"     : "2020-06-27 07:44:28 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "SGD",
+      "url"      : "/article/2020/06/24/SGD.html",
+      "category" : "article",
+      "tags"     : "stochastic, gradient, descent, optimize, sgd, gd",
+      "date"     : "2020-06-24 07:30:33 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Batching",
+      "url"      : "/article/2020/06/23/batching.html",
+      "category" : "article",
+      "tags"     : "batch, one, hot, loop, dictionary, ide, editor, iteration, loader, data, dataloader, encoding, cold",
+      "date"     : "2020-06-23 14:48:06 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Initialization",
+      "url"      : "/article/2020/06/21/initialization.html",
+      "category" : "article",
+      "tags"     : "inititialize, xavier, he, glorot, kaiming, normal, random, uniform, zeros, lsuv",
+      "date"     : "2020-06-21 09:58:32 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Linear Model",
+      "url"      : "/article/2020/06/20/layers.html",
+      "category" : "article",
+      "tags"     : "linear, regression, basic, start, dense",
+      "date"     : "2020-06-20 08:43:30 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Activation functions",
+      "url"      : "/article/2020/06/19/activationFunctions.html",
+      "category" : "article",
+      "tags"     : "activation, leaky, swish, sigmoid, soft, elu",
+      "date"     : "2020-06-19 22:00:43 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Vision",
+      "url"      : "/article/2020/06/19/Vision.html",
+      "category" : "article",
+      "tags"     : "vision, roadmap",
+      "date"     : "2020-06-19 17:56:03 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "notebook2script",
+      "url"      : "/article/2020/06/19/notebook2script.html",
+      "category" : "article",
+      "tags"     : "notebook, script, convert, helper",
+      "date"     : "2020-06-19 15:10:30 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Oversample and Split",
+      "url"      : "/article/2020/06/19/trainTest.html",
+      "category" : "article",
+      "tags"     : "split, tutorial, dataset, distribution, split, oversample",
+      "date"     : "2020-06-19 13:52:02 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "swish",
+      "url"      : "/paper/2020/06/19/swish.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "ShuffleNet",
+      "url"      : "/paper/2020/06/19/shufflenet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "SELU",
+      "url"      : "/paper/2020/06/19/selu.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Random erasing data augmentation",
+      "url"      : "/paper/2020/06/19/randomErasingAugmentation.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Bag Of Tricks",
+      "url"      : "/paper/2020/06/19/bagOfTricks.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "WGAN",
+      "url"      : "/paper/2020/06/19/WGAN.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "VGG net",
+      "url"      : "/paper/2020/06/19/VGGNet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "VAE (Auto-Encoding Variational Bayes)",
+      "url"      : "/paper/2020/06/19/VAE.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Unets",
+      "url"      : "/paper/2020/06/19/Unet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Thinking machines - Turing (Just notes)",
+      "url"      : "/paper/2020/06/19/Thinking-machines-Turing.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Super Resolution using Sub Pixel Convolutions",
+      "url"      : "/paper/2020/06/19/SuperResolution.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Squeeze Net",
+      "url"      : "/paper/2020/06/19/SqueezeNet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Spatial Transformer Networks",
+      "url"      : "/paper/2020/06/19/Spatial-Transformer-Network.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "SRCNN",
+      "url"      : "/paper/2020/06/19/SRCNN.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Understanding Deep learning requires rethinking generalization (Just notes)",
+      "url"      : "/paper/2020/06/19/Rethinking-Generalization.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "GoogLe Net",
+      "url"      : "/paper/2020/06/19/ResNet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "What is the state of pruning",
+      "url"      : "/paper/2020/06/19/Pruning.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Perceptual Loss",
+      "url"      : "/paper/2020/06/19/Perceptual-Loss.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "One cycle paper",
+      "url"      : "/paper/2020/06/19/OneCycle.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "NVAE (WIP)",
+      "url"      : "/paper/2020/06/19/NVAE.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "A disciplined approach to neural network hyper-parameters",
+      "url"      : "/paper/2020/06/19/NN-hyper-parameters-disciplined-approach.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Mobile Net",
+      "url"      : "/paper/2020/06/19/MobileNet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "LightSeg (only notes for now)",
+      "url"      : "/paper/2020/06/19/LightSeg.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "LSTM",
+      "url"      : "/paper/2020/06/19/LSTM.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "HRNet (WIP)",
+      "url"      : "/paper/2020/06/19/HRNet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "GoogLe Net",
+      "url"      : "/paper/2020/06/19/GoogLeNet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Focal Loss",
+      "url"      : "/paper/2020/06/19/Focal-Loss.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Google Keyboard Federated Learning(Notes only. refer to [35] for code)",
+      "url"      : "/paper/2020/06/19/FederatedLearningGboard.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Federated Learning (original paper)",
+      "url"      : "/paper/2020/06/19/FederatedLearning.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Dropout (Just notes)",
+      "url"      : "/paper/2020/06/19/Dropout.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Semantic segmentation DeepLab",
+      "url"      : "/paper/2020/06/19/DeepLab-(Semantic-seg).html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Inceptionism (Google Deep Dream)",
+      "url"      : "/paper/2020/06/19/DeepDream.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "DRL and neuroscience (Just notes",
+      "url"      : "/paper/2020/06/19/DRlNeuro.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "DC GAN",
+      "url"      : "/paper/2020/06/19/DCGan.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Computational Limits (Just notes)",
+      "url"      : "/paper/2020/06/19/ComputationalLimits.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Class Imbalance Problem",
+      "url"      : "/paper/2020/06/19/Class-Imbalance.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Alex Net",
+      "url"      : "/paper/2020/06/19/AlexNet.html",
+      "category" : "paper",
+      "tags"     : "",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Dataloader",
+      "url"      : "/article/2020/06/19/dataloader.html",
+      "category" : "article",
+      "tags"     : "start, dataloader, images, tutorial",
+      "date"     : "2020-06-19 12:53:45 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Initial Steps",
+      "url"      : "/article/2020/06/19/Initial-Steps.html",
+      "category" : "article",
+      "tags"     : "introduction, start, blog, setup",
+      "date"     : "2020-06-19 00:00:00 +0000",
+      "discription" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Defining the project and outlining what is to come in the future",
+      "url"      : "/article/2020/06/19/Defining-the-problem.html",
+      "category" : "article",
+      "tags"     : "start, defining, post, introduction",
+      "date"     : "2020-06-19 00:00:00 +0000",
+      "discription" : ""
+
+    } 
+  
+]

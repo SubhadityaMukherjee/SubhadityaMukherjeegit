@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Linear Model | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Linear Model" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Let us start the fun with a simple model which will be extended to fit complex needs." />
+<meta property="og:description" content="Let us start the fun with a simple model which will be extended to fit complex needs." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-20T08:43:30+00:00" />
+<script type="application/ld+json">
+{"description":"Let us start the fun with a simple model which will be extended to fit complex needs.","url":"/article/2020/06/20/layers.html","@type":"BlogPosting","headline":"Linear Model","dateModified":"2020-06-20T08:43:30+00:00","datePublished":"2020-06-20T08:43:30+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/06/20/layers.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Linear Model</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~4 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+
+
+<p>Let us start the fun with a simple model which will be extended to fit complex needs.</p>
+
+<p>The first and easiest model we can think of to start with is the Dense or fully connected Linear layer model. Once we have this working, this can be extended further. So what is this layer? Simply put, W*x.+b where W and b are the initialized weights and biases. For now these are random. Later we will check out Kaiming/glorot initialization instead.</p>
+
+<p>Let us make W and b first. And let us also take a random x, y array so we can perform the task at hand.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">W</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="mi">2</span><span class="x">,</span><span class="mi">5</span><span class="x">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="mi">2</span><span class="x">)</span>
+<span class="n">x</span><span class="x">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="mi">5</span><span class="x">),</span><span class="n">rand</span><span class="x">(</span><span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Okay now that we have this. We need to find the gradients aka backprop. In Julia, we use a library called Zygote. Basically this is a differential programming library which will allow us to calculate the gradients on the fly and pretty easily. To do this we use.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gs</span> <span class="o">=</span> <span class="n">gradient</span><span class="x">(()</span> <span class="o">-&gt;</span> <span class="n">loss</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">),</span> <span class="n">Params</span><span class="x">([</span><span class="n">W</span><span class="x">,</span> <span class="n">b</span><span class="x">]))</span>
+</code></pre></div></div>
+<p>Once we have this, we can use it to find the updated weights. We can now apply our linear layer that we defined earlier. We take the previous weight and update it as α.*W̄ where α is the learning rate. An extremely important parameter which we will keep coming back to as we go along.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">W̄</span> <span class="o">=</span> <span class="n">gs</span><span class="x">[</span><span class="n">W</span><span class="x">]</span>
+<span class="n">W</span><span class="o">.=</span> <span class="n">α</span><span class="o">.*</span><span class="n">W̄</span>
+<span class="n">ŷ</span> <span class="o">=</span>  <span class="n">W</span><span class="o">*</span><span class="n">x</span><span class="o">.+</span><span class="n">b</span>
+</code></pre></div></div>
+
+<p>Okay now on to finding exactly how good our model did. To do this we define a simple loss function. Here we will use Mean Squared error. It is the simplest metric and all it does is find the square of the mean of the differences between the predicted and original. This is also simple to define.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sum</span><span class="x">((</span><span class="n">y</span><span class="o">-</span><span class="n">ŷ</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>So now we have a proper loop! Which actually runs and gives us a minimized loss!
+We run this bit as many times as needed to get results.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="n">collect</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="mi">100</span><span class="x">)</span>
+    <span class="n">gs</span> <span class="o">=</span> <span class="n">gradient</span><span class="x">(()</span> <span class="o">-&gt;</span> <span class="n">loss</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">),</span> <span class="n">Params</span><span class="x">([</span><span class="n">W</span><span class="x">,</span> <span class="n">b</span><span class="x">]))</span>
+    <span class="n">W̄</span> <span class="o">=</span> <span class="n">gs</span><span class="x">[</span><span class="n">W</span><span class="x">]</span>
+    <span class="n">W</span><span class="o">.=</span> <span class="n">α</span><span class="o">.*</span><span class="n">W̄</span>
+    <span class="n">ŷ</span> <span class="o">=</span>  <span class="n">W</span><span class="o">*</span><span class="n">x</span><span class="o">.+</span><span class="n">b</span>
+    <span class="nd">@info</span> <span class="n">sum</span><span class="x">((</span><span class="n">y</span><span class="o">-</span><span class="n">ŷ</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

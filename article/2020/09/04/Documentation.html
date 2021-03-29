@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Documentation using Documenter.jl | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Documentation using Documenter.jl" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Here we will talk about how to document your code using Documenter.jl and a few tips along the way." />
+<meta property="og:description" content="Here we will talk about how to document your code using Documenter.jl and a few tips along the way." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-09-04T20:41:00+00:00" />
+<script type="application/ld+json">
+{"description":"Here we will talk about how to document your code using Documenter.jl and a few tips along the way.","url":"/article/2020/09/04/Documentation.html","@type":"BlogPosting","headline":"Documentation using Documenter.jl","dateModified":"2020-09-04T20:41:00+00:00","datePublished":"2020-09-04T20:41:00+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/09/04/Documentation.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Documentation using Documenter.jl</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~9 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#why">Why</a></li>
+  <li><a href="#what-are-we-trying-to-do">What are we trying to do?</a></li>
+  <li><a href="#how">How</a></li>
+  <li><a href="#tips-and-informal-rules">Tips and informal rules</a>
+    <ul>
+      <li><a href="#learn-markdown">Learn markdown</a></li>
+      <li><a href="#automation">Automation!</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Here we will talk about how to document your code using Documenter.jl and a few tips along the way.</p>
+
+<p>Before we go on, look at this as an example. <a href="https://subhadityamukherjee.github.io/DDL.jl/build/index.html">Source</a></p>
+
+<p>[Edit] : Adding on to using the helpful hints from <a href="https://discourse.julialang.org/t/step-by-step-documentation-tutorial/46093/4">link</a></p>
+
+<h2 id="why">Why</h2>
+
+<p>I know. It is really boring and why would you bother anyway. Or. “This is only for me”. Trust me I have been in your shoes for a majority part of my coding life. Which funnily enough has only been there for around 4 years. Of which the first doesn’t even count.</p>
+
+<p>But we are coders! So how do we go about making it easy to maintain.</p>
+
+<h2 id="what-are-we-trying-to-do">What are we trying to do?</h2>
+
+<p>This</p>
+
+<p><img src="/assets/img/docu.png" alt="img" /></p>
+
+<h2 id="how">How</h2>
+
+<p>We will be using a package called <a href="https://juliadocs.github.io/Documenter.jl/stable/man/guide/#Navigation">Documenter.jl</a> for this although it would be easy enough to implement things if we wanted to. But since a package exists, why reinvent the wheel.</p>
+
+<p>What this allows us to do is write documentation in the code itself which we do anyway and convert it into a website. I had written something similar for Python a long time ago but this takes it further by allowing full markdown support. Which means you can do pretty much anything without too much drama.</p>
+
+<p>The process is a bit wonky so the aim of this is to give you a nice flow of how to use it.</p>
+
+<ol>
+  <li>Toml who? This is very generic to Julia and you can get it by going to your folder, opening Julia and typing these. <a href="https://invenia.github.io/PkgTemplates.jl/stable/user/">Source</a>
+    <ul>
+      <li>
+        <div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="x">]</span><span class="n">add</span> <span class="n">PkgTemplates</span>
+ <span class="k">using</span> <span class="n">PkgTemplates</span>
+ <span class="n">t</span> <span class="o">=</span> <span class="n">Template</span><span class="x">()</span>
+ <span class="n">t</span><span class="x">(</span><span class="s">"MyPkg"</span><span class="x">)</span>    
+</code></pre></div>        </div>
+        <p>This will create a bunch of default folders which we will use.</p>
+        <blockquote>
+          <p>Note that PkgTemplates can generate the documentation for you. It requires a bit of tinkering but you can skip a few steps if you want. (Go to step 8 directly :) )</p>
+        </blockquote>
+      </li>
+    </ul>
+  </li>
+  <li>Get the package
+    <div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">]</span><span class="n">add</span> <span class="n">Documenter</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Put your code in the folder called src</li>
+  <li>Create a folder called docs
+    <ul>
+      <li>Follow this structure if you can (most of this is auto generated)
+        <ul>
+          <li>DDL.jl
+            <ul>
+              <li>src
+                <ul>
+                  <li>DDL.jl</li>
+                  <li>classif.jl</li>
+                </ul>
+              </li>
+              <li>docs</li>
+              <li>tests</li>
+              <li>README.md</li>
+              <li>Manifest.toml</li>
+              <li>Project.toml</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Now in the docs folder make this heirarchy
+    <ul>
+      <li>docs
+        <ul>
+          <li>make.jl</li>
+          <li>src</li>
+          <li>
+            <p>Project.toml (To take care of related dependencies)</p>
+
+            <blockquote>
+              <p>Tip: If you have a clean repo you can do this to speed up your workflow</p>
+            </blockquote>
+
+            <div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">$</span> <span class="n">julia</span> <span class="o">--</span><span class="n">project</span><span class="o">=</span><span class="n">docs</span><span class="o">/</span>
+<span class="n">pkg</span><span class="o">&gt;</span> <span class="n">instantiate</span>
+<span class="n">pkg</span><span class="o">&gt;</span> <span class="n">dev</span> <span class="o">.</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="n">include</span><span class="x">(</span><span class="s">"docs/make.jl"</span><span class="x">)</span>
+</code></pre></div>            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Inside the make.jl file, take this and modify it for your purpose.
+    <ul>
+      <li>
+        <div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">using</span> <span class="n">Documenter</span><span class="x">,</span> <span class="n">classification</span><span class="x">,</span> <span class="n">Datasets</span>
+
+  <span class="n">Documenter</span><span class="o">.</span><span class="n">makedocs</span><span class="x">(</span>
+      <span class="n">sitename</span> <span class="o">=</span> <span class="s">"DDL Documentation"</span><span class="x">,</span>
+      <span class="n">repo</span> <span class="o">=</span> <span class="s">"https://github.com/SubhadityaMukherjee/DDL.jl"</span>
+  <span class="x">)</span>
+</code></pre></div>        </div>
+      </li>
+      <li>Instead of classification and Datasets, put the names of the other files you have in your source</li>
+      <li>Note that this is a very basic initialization and more complex ones can be found in their <a href="https://juliadocs.github.io/Documenter.jl/stable/man/guide/#Navigation">documentation</a></li>
+    </ul>
+  </li>
+  <li>After that, go to the docs folder and do
+    <ul>
+      <li>
+        <div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">julia</span> <span class="n">make</span><span class="o">.</span><span class="n">jl</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>This will generate everything you need. You can test it out by opening docs/build/index.html</li>
+  <li>To add content, go to docs/src/index.md and type whatever you need in markdown</li>
+  <li>The coolest thing is how to auto add documentation from your code.
+    <ul>
+      <li>Suppose you have something like this
+```jl
+“””</li>
+      <li>Takes paths generated from load_classes as input</li>
+      <li>Takes a function defining a custom label</li>
+      <li>eg: labeller(x) = split(x, “/”)[-1]</li>
+      <li>Returns labels based on function specified
+“””
+function labelFromPattern(paths, labeller)
+  labeller.(paths)
+end
+```</li>
+      <li>Format all your docs to be this way</li>
+      <li>Then go to index.md and add this block
+        <div class="language-md highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">@autodocs
+</span><span class="sb">Modules = [modulename]
+`` ` 
+</span></code></pre></div>        </div>
+      </li>
+      <li>If you have done every step correctly, this should automatically get your documentation here</li>
+      <li>Style it or add whatever you want</li>
+      <li>When you are done, run the make.jl file once more</li>
+    </ul>
+  </li>
+  <li>If you want to host this on github, upload the repo first</li>
+  <li>Then go to github.com/username/reponame</li>
+  <li>Go to settings and then scroll down till you find “Github Pages”. Click publish and choose the gh-pages branch (Make a branch if you do not have one. It would save hassle later.)</li>
+  <li>Done! To access your site go to username.github.io/projectname/build/index.html</li>
+  <li>You can also mess around with the paths if you know how to. Or add extra features. But this will get you set up with all the needed basics!</li>
+</ol>
+
+<h2 id="tips-and-informal-rules">Tips and informal rules</h2>
+
+<p>Some tips from experience..</p>
+
+<ol>
+  <li>Write docstrings as you go. Because you will never feel like writing them later</li>
+  <li>No need to write paragraphs, just explain what to do and how to invoke the function</li>
+  <li>Be short and to the point</li>
+  <li>If possible, include an example too. 
+ This function takes a url and a destination and downloads the file there with a name specified.
+    <div class="language-md highlighter-rouge"><div class="highlight"><pre class="highlight"><code> url: The url to be downloaded
+ dest: Path
+ fname: File name
+ <span class="p">```</span><span class="nl">julia
+</span> <span class="n">downloader</span><span class="x">(</span><span class="s">"http://www.julialang.org/"</span><span class="x">,</span> <span class="s">"/tmp/"</span><span class="x">,</span><span class="s">"index. html"</span><span class="x">)</span><span class="sb">``</span><span class="err">`</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <h3 id="learn-markdown">Learn markdown</h3>
+    <p>It will save your life over and over again.
+Here is the best cheat sheet I found to learn it <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">CHEAT</a></p>
+  </li>
+  <li>
+    <h3 id="automation">Automation!</h3>
+    <p>If you want to automate this workflow, use a <a href="https://discourse.julialang.org/t/step-by-step-documentation-tutorial/46093/4">github action</a></p>
+  </li>
+</ol>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/02/DatasetBindings.html> Dataset Bindings&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

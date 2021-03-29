@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Computational Limits (Just notes) | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Computational Limits (Just notes)" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/ComputationalLimits.html","@type":"BlogPosting","headline":"Computational Limits (Just notes)","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/ComputationalLimits.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Computational Limits (Just notes)</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~3 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#theory">theory</a></li>
+  <li><a href="#performance">performance</a></li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[31]</strong> Computational Limits (Just notes)</p>
+<ul>
+  <li>
+    <p>Thompson, N. C., Greenewald, K., Lee, K., &amp; Manso, G. F. (2020). The Computational Limits of Deep Learning. arXiv preprint arXiv:2007.05558. <a href="https://arxiv.org/pdf/2007.05558">Paper</a></p>
+  </li>
+  <li>Deep learning is quickly becoming unsustainable economically, environmentally and technically</li>
+  <li>deep learning might soon become computationally constrained even though substantial improvements might be possible</li>
+</ul>
+
+<h1 id="theory">theory</h1>
+<ul>
+  <li>over parameterizing a neural network basically means that it would be given more parameters and there are data points</li>
+  <li>a cost of training the neural network scales with the product of the number of parameters with the number of data points</li>
+  <li>theoretically, It grows by at least the square of the number of data points in an over parameterized setting</li>
+  <li>we should always be aware of a performance plateau</li>
+  <li>as the amount of data increases, standard flexible models are performed expert models because they do not capture all the contributing factors</li>
+  <li>traditional machine learning techniques to better when data is small and deep learning does better when there’s a huge amount of data. This is because of over parameterization which makes use of implicit regularization</li>
+</ul>
+
+<h1 id="performance">performance</h1>
+
+<ul>
+  <li>We find highly-statistically significant slopes and strong explanatory power (R2 between 29% and 68%) for all benchmarks except machine translation, English to German, where we have very little variation in the computing power used.</li>
+  <li>Object detection, named-entity recognition and machine translation show large increases in hardware burden with relatively small improvements</li>
+  <li>polynomial models best explain this data, but that models implying an exponential increase in computing power as the right functional form are also plausible.</li>
+  <li>more-optimistic model, it is estimated to take an additional 10^5× more computing to get to an error rate of 5% for ImageNet.</li>
+  <li>fundamental rearchitecting is needed to lower the computational intensity</li>
+  <li>For deep learning, these included mostly GPU and TPU implementations, although it has increasingly also included FPGA and other ASICs.</li>
+  <li>analog hardware with in-memory computation, neuromorphic computing, optical computing , and quantum computing based approaches [90], as well as hybrid approaches</li>
+  <li>quantum computing is the approach with perhaps the most long-term upside</li>
+  <li>pruning” away weights ,quantizing the network, or using low-rank compression are important</li>
+  <li>overhead of doing meta learning or neural architecture search is itself computationally intense</li>
+  <li>move to other, perhaps as yet undiscovered or underappreciated types of machine learning.</li>
+  <li>era when improvements in hardware perfor- mance are slowing.</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

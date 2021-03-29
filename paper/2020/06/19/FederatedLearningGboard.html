@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Google Keyboard Federated Learning(Notes only. refer to [35] for code) | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Google Keyboard Federated Learning(Notes only. refer to [35] for code)" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Paper notes for the paper" />
+<meta property="og:description" content="Paper notes for the paper" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"Paper notes for the paper","url":"/paper/2020/06/19/FederatedLearningGboard.html","@type":"BlogPosting","headline":"Google Keyboard Federated Learning(Notes only. refer to [35] for code)","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/paper/2020/06/19/FederatedLearningGboard.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Google Keyboard Federated Learning(Notes only. refer to [35] for code)</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~1 min</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#paper-notes">Paper notes</a>
+    <ul>
+      <li><a href="#lstm-modeling">LSTM Modeling</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion">Conclusion</a></li>
+</ul>
+
+<p>Paper notes for the paper</p>
+
+<p><strong>[34]</strong> Google Keyboard Federated Learning(Notes only. refer to [35] for code)</p>
+<ul>
+  <li>Chen, M., Mathews, R., Ouyang, T., &amp; Beaufays, F. (2019). Federated learning of out-of-vocabulary words. arXiv preprint arXiv:1903.10635.  <a href="https://arxiv.org/pdf/1903.10635">Paper</a></li>
+</ul>
+
+<h1 id="paper-notes">Paper notes</h1>
+
+<ul>
+  <li>character-level recurrent neural network is able to learn out- of-vocabulary</li>
+  <li>High-frequency words can be sampled from the trained generative model by drawing from the joint posterior directly</li>
+  <li>Studied using 1. Simulation, 2. Gboard App</li>
+  <li>Learning frequently typed words</li>
+  <li>Words missing from the vocabulary cannot be predicted on the keyboard suggestion strip</li>
+  <li>neural machine translation (NMT), rely on a vocabulary to encode words during endto-end training</li>
+  <li>uploading only ephemeral model updates to the server for aggregation, and leaving the users’ raw data on their device.</li>
+  <li>the privacy risk of unintended memorization still exists</li>
+  <li>We further show that the top sampled words are very meaningful and are able to capture words we know to be trending in the news at the time of the experiments</li>
+</ul>
+
+<h2 id="lstm-modeling">LSTM Modeling</h2>
+
+<ul>
+  <li>In this work we use a variant of LSTM with a Coupled Input and Forget Gate (CIFG) (Greff et al., 2017), peephole con- nections (Gers and Schmidhuber, 2000) and a pro- jection layer (Sak et al., 2014)</li>
+  <li>Cross entropy loss</li>
+  <li>This parallel sampling approach avoids the dependency between each sampling thread, which might occur in beam search or shortest path search sampling</li>
+  <li>Adaptive L2 -norm clipping is performed on each client’s gradient, as it is found to improve the robustness of model convergence</li>
+  <li>The larger model (on training with Reddit data) does not lead to significant gains. Momentum and adaptive clipping lead to faster convergence and more stable performance.</li>
+</ul>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<ul>
+  <li>We also perform live experiments with on-device data from 3 populations of Gboard users and demonstrate that this method can learn OOV words effectively in a real-world setting.</li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

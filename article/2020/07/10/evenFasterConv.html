@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>My life is a lie + Even faster conv | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="My life is a lie + Even faster conv" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Why CNNs are Correlation Neural Networks and an even faster Convolution operation." />
+<meta property="og:description" content="Why CNNs are Correlation Neural Networks and an even faster Convolution operation." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-10T18:24:36+00:00" />
+<script type="application/ld+json">
+{"description":"Why CNNs are Correlation Neural Networks and an even faster Convolution operation.","url":"/article/2020/07/10/evenFasterConv.html","@type":"BlogPosting","headline":"My life is a lie + Even faster conv","dateModified":"2020-07-10T18:24:36+00:00","datePublished":"2020-07-10T18:24:36+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/10/evenFasterConv.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>My life is a lie + Even faster conv</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~8 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#corr-net">Corr Net</a></li>
+  <li><a href="#im2col">Im2col</a></li>
+  <li><a href="#col2im">Col2im</a></li>
+  <li><a href="#tests">Tests</a></li>
+</ul>
+
+<p>Why CNNs are Correlation Neural Networks and an even faster Convolution operation.</p>
+
+<h2 id="corr-net">Corr Net</h2>
+<p>Okay so, my life is a lie. And the operation I have been calling convolution till now is actually correlation, mathematically. But historical reasons deem that it is called Convolution. So technically, we are working with Correlation Neural Networks. Admittedly, that does not sound cool enough, so let us just stick to calling it what we did so far.</p>
+
+<p>Anyway, today I was thinking of implementing an even more optimized convolution. This is done by first converting the image to a column. We do the same for the kernel, and follow what we did previously. And use FFT in the end as usual.</p>
+
+<p>Okay so first, lets get what we need. Cairo and Gtk are to save the outputs directly.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Plots</span><span class="x">,</span><span class="n">Images</span><span class="x">,</span> <span class="n">ImageView</span><span class="x">,</span><span class="n">TestImages</span><span class="x">,</span> <span class="n">Cairo</span><span class="x">,</span><span class="n">Gtk</span>
+</code></pre></div></div>
+<h2 id="im2col">Im2col</h2>
+
+<p>Now we need to define a way to convert an image to a column vector.
+We first input the block size and store it away. Do the same for the height and width of the image. 
+After we have that, we create an empty array with dimensions \(m \cdot n; mc \cdot nc\). Then we iterate over the matrix and store away the values we need.
+Why do we do this? Well quite obviously, performing an operation over a single dimension will be much faster than doing it over multiple dimensions.
+What is @views? This is a really cool functionality where we are actually accessing a particular part of the array without copying it to memory but modifying it. All in the name of optimization.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> im2col</span><span class="x">(</span><span class="n">A</span><span class="x">,</span> <span class="n">block_size</span><span class="x">)</span> <span class="c"># mxn: block_size</span>
+            <span class="n">m</span><span class="x">,</span><span class="n">n</span> <span class="o">=</span> <span class="n">block_size</span>
+           <span class="n">M</span><span class="x">,</span><span class="n">N</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">A</span><span class="x">)</span>
+           <span class="n">mc</span> <span class="o">=</span> <span class="n">M</span><span class="o">-</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span>          <span class="c"># no. vertical blocks</span>
+           <span class="n">nc</span> <span class="o">=</span> <span class="n">N</span><span class="o">-</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span>          <span class="c"># no. horizontal blocks</span>
+           <span class="n">B</span> <span class="o">=</span> <span class="kt">Array</span><span class="x">{</span><span class="n">eltype</span><span class="x">(</span><span class="n">A</span><span class="x">)}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">m</span><span class="o">*</span><span class="n">n</span><span class="x">,</span> <span class="n">mc</span><span class="o">*</span><span class="n">nc</span><span class="x">)</span>
+           <span class="k">for</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">nc</span>
+             <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">mc</span>
+               <span class="nd">@views</span> <span class="n">block</span> <span class="o">=</span> <span class="n">A</span><span class="x">[</span><span class="n">i</span><span class="o">:</span><span class="n">i</span><span class="o">+</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="n">j</span><span class="o">:</span><span class="n">j</span><span class="o">+</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span>
+               <span class="k">for</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">m</span><span class="o">*</span><span class="n">n</span>
+                  <span class="n">B</span><span class="x">[</span><span class="n">k</span><span class="x">,(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span><span class="o">*</span><span class="n">mc</span><span class="o">+</span><span class="n">i</span><span class="x">]</span> <span class="o">=</span> <span class="n">block</span><span class="x">[</span><span class="n">k</span><span class="x">]</span>
+               <span class="k">end</span>
+             <span class="k">end</span>
+           <span class="k">end</span>
+           <span class="k">return</span> <span class="n">B</span>
+       <span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="col2im">Col2im</h2>
+
+<p>Quite obviously, we need to reverse it as well. So we define col2im.
+This is quite simple. We just use a reshape function with the size we want it to be in.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> col2im</span><span class="x">(</span><span class="n">A</span><span class="x">,</span><span class="n">block_size</span><span class="x">)</span>
+    <span class="n">mm</span><span class="x">,</span> <span class="n">nn</span> <span class="o">=</span> <span class="n">block_size</span>
+    <span class="k">return</span> <span class="n">reshape</span><span class="x">(</span><span class="n">A</span><span class="x">,</span> <span class="x">(</span><span class="n">mm</span><span class="x">,</span> <span class="n">nn</span><span class="x">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="tests">Tests</h2>
+
+<p>So lets test it out!
+Let us take our beloved mandrill using testimages.</p>
+
+<p><img src="/assets/img/deconstrucImages/mandorig.png" alt="drawing" width="200" /></p>
+
+<p>Then we can apply channelview on it and convert the values to Float32. Let us also just index out the 1st dimension. (since it is a colored image, there are 3 dimensions).
+Then we do an im2col on it with the same dimension as that of the image.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">img</span> <span class="o">=</span> <span class="n">channelview</span><span class="x">(</span><span class="n">testimage</span><span class="x">(</span><span class="s">"mandrill"</span><span class="x">))[</span><span class="mi">1</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">];</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">convert</span><span class="o">.</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="n">img</span><span class="x">)</span>
+<span class="n">flat_im</span> <span class="o">=</span> <span class="n">im2col</span><span class="x">(</span><span class="n">img</span><span class="x">,</span> <span class="x">(</span><span class="mi">512</span><span class="x">,</span><span class="mi">512</span><span class="x">));</span>
+</code></pre></div></div>
+
+<p>Once we have that, we get an array of dimension 262144×1.</p>
+
+<p>Now we pad the kernel using the padding function we defined before (Check the padding post) and we apply im2col to that too.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">kernel_padded</span> <span class="o">=</span> <span class="n">pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span> <span class="n">kernel</span><span class="x">)</span>
+<span class="n">flat_ker</span> <span class="o">=</span> <span class="n">im2col</span><span class="x">(</span><span class="n">kernel_padded</span><span class="x">,</span> <span class="x">(</span><span class="mi">512</span><span class="x">,</span> <span class="mi">512</span><span class="x">));</span>
+</code></pre></div></div>
+
+<p>Now both our images are of the same dimensions. We can directly apply FFT on this now.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@time</span> <span class="n">conv</span> <span class="o">=</span> <span class="n">ifft</span><span class="x">(</span><span class="n">fft</span><span class="x">(</span><span class="n">flat_im</span><span class="x">)</span><span class="o">.*</span><span class="n">fft</span><span class="x">(</span><span class="n">flat_ker</span><span class="x">))</span>
+<span class="mf">0.038521</span> <span class="n">seconds</span> <span class="x">(</span><span class="mi">190</span> <span class="n">allocations</span><span class="o">:</span> <span class="mf">20.010</span> <span class="n">MiB</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Wow. Without this, it was around  0.063075 seconds (190 allocations: 76.304 MiB). Not only did it take half the time, the memory it took is so much lesser.</p>
+
+<p>I wonder what this looks like.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imshow</span><span class="x">(</span><span class="n">col2im</span><span class="x">(</span><span class="n">real</span><span class="o">.</span><span class="x">(</span><span class="n">conv</span><span class="x">),(</span><span class="mi">512</span><span class="x">,</span> <span class="mi">512</span><span class="x">)))</span>
+
+<span class="k">function</span><span class="nf"> write_to_png</span><span class="x">(</span><span class="n">guidict</span><span class="x">,</span> <span class="n">filename</span><span class="x">)</span>
+    <span class="n">canvas</span> <span class="o">=</span> <span class="n">guidict</span><span class="x">[</span><span class="s">"gui"</span><span class="x">][</span><span class="s">"canvas"</span><span class="x">]</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">getgc</span><span class="x">(</span><span class="n">canvas</span><span class="x">)</span>
+    <span class="n">Cairo</span><span class="o">.</span><span class="n">write_to_png</span><span class="x">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">surface</span><span class="x">,</span> <span class="n">filename</span><span class="x">)</span>
+<span class="k">end</span>
+
+<span class="n">write_to_png</span><span class="x">(</span><span class="n">out1</span><span class="x">,</span> <span class="s">"/home/subhaditya/Desktop/GITHUB/SubhadityaMukherjee.github.io/img/deconstrucImages/imconv.png"</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/deconstrucImages/imconv.png" alt="drawing" width="200" /></p>
+
+<p>Fun.</p>
+
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

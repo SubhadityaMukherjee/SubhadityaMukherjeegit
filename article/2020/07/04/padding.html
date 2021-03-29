@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Padding | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Padding" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="To implement a faster conv we need padding, so here we will try to explore what that means and try to implement it." />
+<meta property="og:description" content="To implement a faster conv we need padding, so here we will try to explore what that means and try to implement it." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-04T07:25:39+00:00" />
+<script type="application/ld+json">
+{"description":"To implement a faster conv we need padding, so here we will try to explore what that means and try to implement it.","url":"/article/2020/07/04/padding.html","@type":"BlogPosting","headline":"Padding","dateModified":"2020-07-04T07:25:39+00:00","datePublished":"2020-07-04T07:25:39+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/04/padding.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Padding</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~6 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#constant-padding">Constant padding</a></li>
+  <li><a href="#max-padding">Max padding</a></li>
+  <li><a href="#min-padding">Min padding</a></li>
+  <li><a href="#mean-padding">Mean padding</a></li>
+  <li><a href="#median-padding">Median padding</a></li>
+</ul>
+
+<p>To implement a faster conv we need padding, so here we will try to explore what that means and try to implement it.</p>
+
+<p>The objective is to get the kernel to be the same size as the image and fill it with some value so as to be able to apply FFT to it.</p>
+
+<p>We first import the packages we need, I am just using the image packages for visualization and then take a small image and a kernel (just for testing, we can scale it up later). 
+We are also making the kernel a solid block of white as it is just easier to see since the img is random numbers.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Images</span><span class="x">,</span><span class="n">ImageView</span><span class="x">,</span> <span class="n">Plots</span><span class="x">,</span><span class="n">LinearAlgebra</span><span class="x">,</span><span class="n">Statistics</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="mi">50</span><span class="x">,</span><span class="mi">50</span><span class="x">)</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">ones</span><span class="x">(</span><span class="kt">Float32</span><span class="x">,</span><span class="mi">15</span><span class="x">,</span><span class="mi">15</span><span class="x">);</span>
+</code></pre></div></div>
+<h2 id="constant-padding">Constant padding</h2>
+<p>Okay now for constant padding. This means that we choose a value and then apply it to the figure.</p>
+
+<p>Steps followed :</p>
+<ol>
+  <li>To save memory, let us first allocate an image of constants with the size of the image. We do this by making an array of ones and then element wise multiplying it by constant. (Note that the number should be in the range of 0-1 for a gray scale image)</li>
+  <li>Then we identify the center of the image</li>
+  <li>We then find out the space required by the kernel to fit in this array</li>
+  <li>Just set this space in the padded version = the kernel</li>
+  <li>Convert it to grayscale so we can plot it and see if it worked.</li>
+  <li>Note that we scale the constant between 0 and 1 using the sigmoid function</li>
+</ol>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span><span class="n">kernel</span><span class="x">,</span><span class="n">constant</span><span class="x">)</span>
+    <span class="n">kernel_h</span><span class="x">,</span> <span class="n">kernel_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">kernel</span><span class="x">)</span>
+    <span class="n">img_h</span><span class="x">,</span> <span class="n">img_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">img</span><span class="x">)</span>
+    <span class="n">padded_kernel</span><span class="o">=</span> <span class="n">ones</span><span class="x">(</span><span class="n">img_h</span><span class="x">,</span><span class="n">img_w</span><span class="x">)</span><span class="o">.*</span><span class="x">(</span><span class="mi">1</span><span class="o">/</span><span class="x">(</span><span class="mi">1</span><span class="o">+</span><span class="n">exp</span><span class="x">(</span><span class="o">-</span><span class="n">constant</span><span class="x">)));</span>
+    <span class="n">pad_h</span><span class="x">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">padded_kernel</span><span class="x">)</span>
+    <span class="n">center_x</span><span class="x">,</span><span class="n">center_y</span> <span class="o">=</span> <span class="n">pad_w</span> <span class="o">÷</span><span class="mi">2</span><span class="x">,</span> <span class="n">pad_h</span> <span class="o">÷</span><span class="mi">2</span>
+    <span class="n">tmp_x</span> <span class="o">=</span> <span class="n">center_x</span><span class="o">-</span><span class="x">(</span><span class="n">kernel_w÷2</span><span class="x">)</span>
+    <span class="n">tmp_y</span> <span class="o">=</span> <span class="n">center_y</span><span class="o">-</span><span class="x">(</span><span class="n">kernel_h÷2</span><span class="x">)</span>
+    <span class="n">padded_kernel</span><span class="x">[</span><span class="n">collect</span><span class="x">(</span><span class="n">tmp_x</span><span class="o">:</span><span class="n">tmp_x</span><span class="o">+</span><span class="n">kernel_w</span><span class="o">-</span><span class="mi">1</span><span class="x">),</span><span class="n">collect</span><span class="x">(</span><span class="n">tmp_y</span><span class="o">:</span><span class="n">tmp_y</span><span class="o">+</span><span class="n">kernel_h</span><span class="o">-</span><span class="mi">1</span><span class="x">)]</span> <span class="o">=</span> <span class="n">kernel</span><span class="x">;</span>
+    <span class="k">return</span> <span class="n">Gray</span><span class="o">.</span><span class="x">(</span><span class="n">padded_kernel</span><span class="x">)</span>
+<span class="k">end</span>
+<span class="n">pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span><span class="n">kernel</span><span class="x">,</span><span class="o">.</span><span class="mi">3</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Since our kernel was white and we supplied a constant of .3(grayish), we get this -&gt;</p>
+
+<p><img src="/assets/img/deconstrucImages/pad_const.png" alt="drawing" width="200" /></p>
+
+<p>It works!!</p>
+
+<h2 id="max-padding">Max padding</h2>
+
+<ul>
+  <li>Pad with the max value in the image.</li>
+  <li>We will repurpose our previous function for this</li>
+</ul>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span><span class="n">kernel</span><span class="x">,</span><span class="n">maximum</span><span class="x">(</span><span class="n">kernel</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/deconstrucImages/pad_max.png" alt="drawing" width="200" /></p>
+
+<h2 id="min-padding">Min padding</h2>
+
+<ul>
+  <li>Pad with the min value in the image.</li>
+  <li>We will repurpose our previous function for this</li>
+</ul>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span><span class="n">kernel</span><span class="x">,</span><span class="n">minimum</span><span class="x">(</span><span class="n">kernel</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/deconstrucImages/pad_min.png" alt="drawing" width="200" /></p>
+
+<h2 id="mean-padding">Mean padding</h2>
+
+<ul>
+  <li>Pad with the min value in the image.</li>
+  <li>We will repurpose our previous function for this</li>
+</ul>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span><span class="n">kernel</span><span class="x">,</span><span class="n">mean</span><span class="x">(</span><span class="n">kernel</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/deconstrucImages/pad_mean.png" alt="drawing" width="200" /></p>
+
+<h2 id="median-padding">Median padding</h2>
+
+<ul>
+  <li>Pad with the median value in the image.</li>
+  <li>We will repurpose our previous function for this</li>
+</ul>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pad_constant</span><span class="x">(</span><span class="n">img</span><span class="x">,</span><span class="n">kernel</span><span class="x">,</span><span class="n">mean</span><span class="x">(</span><span class="n">kernel</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/deconstrucImages/pad_median.png" alt="drawing" width="200" /></p>
+
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

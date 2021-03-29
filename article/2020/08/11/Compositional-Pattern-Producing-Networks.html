@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Compositional Pattern Producing Networks | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Compositional Pattern Producing Networks" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Today we will talk about Compositional Pattern Producing Networks." />
+<meta property="og:description" content="Today we will talk about Compositional Pattern Producing Networks." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-08-11T20:26:21+00:00" />
+<script type="application/ld+json">
+{"description":"Today we will talk about Compositional Pattern Producing Networks.","url":"/article/2020/08/11/Compositional-Pattern-Producing-Networks.html","@type":"BlogPosting","headline":"Compositional Pattern Producing Networks","dateModified":"2020-08-11T20:26:21+00:00","datePublished":"2020-08-11T20:26:21+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/08/11/Compositional-Pattern-Producing-Networks.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Compositional Pattern Producing Networks</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~10 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#intro">Intro</a></li>
+  <li><a href="#defining-the-parameters">Defining the parameters</a></li>
+  <li><a href="#network">Network</a></li>
+  <li><a href="#generation">Generation</a></li>
+  <li><a href="#final-image">Final Image</a></li>
+</ul>
+
+<p>Today we will talk about Compositional Pattern Producing Networks.</p>
+
+<p>Note that Whatever I learnt about this is from <a href="https://blog.otoro.net/2016/03/25/generating-abstract-patterns-with-tensorflow/">Link to post</a> and the original Julia implementation at the model zoo. (Which I am trying to fix).</p>
+
+<h2 id="intro">Intro</h2>
+<p>Okay so what is it? Basically a CPPN is a type of generative model. Very basic but generates abstract points. How? Basically we use the neural network as a function to give us points of intensity and then we plot it. Simple as dots xD
+This reminded me a lot of GANs and earlier things like identifying the latent space of an image and messing around with it.</p>
+
+<h2 id="defining-the-parameters">Defining the parameters</h2>
+
+<p>I do not want to blabber so let us get to the code.</p>
+
+<p>Ah! This is like the dimensions. We define the size of the image in (x,y) and we also define the z value. N seems to be the number of input and output channels to our Dense layer (defined later). And obviously batch size as normal.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">z_dim</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">x_dim</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">y_dim</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">hidden</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">x_dim</span> <span class="o">*</span> <span class="n">y_dim</span>
+
+</code></pre></div></div>
+
+<p>A small function to create an array casted between -0.5:0.5</p>
+
+<p>We also define the a bunch of points which would be the initial boundaries of our image. If it does not make sense, think of it as a grid. We are defining the range and filling it up with points. In x, y directions. The last one is a non linearity which I guess is something like ReLU since it seems to be a point wise operation.</p>
+
+\[rs = \sqrt{xs^{2} + ys^{2}}\]
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cast</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="x">[</span><span class="n">range</span><span class="x">(</span><span class="o">-</span><span class="mf">0.5</span><span class="x">,</span> <span class="n">stop</span><span class="o">=</span><span class="mf">0.5</span><span class="x">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="x">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="x">))</span><span class="o">...</span><span class="x">]</span>
+
+<span class="n">xs</span><span class="x">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">cast</span><span class="x">(</span><span class="n">x_dim</span><span class="x">),</span> <span class="n">cast</span><span class="x">(</span><span class="n">y_dim</span><span class="x">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">repeat</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">inner</span><span class="o">=</span><span class="x">(</span><span class="n">y_dim</span><span class="x">))</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">repeat</span><span class="x">(</span><span class="n">ys</span><span class="x">,</span> <span class="n">outer</span><span class="o">=</span><span class="x">(</span><span class="n">x_dim</span><span class="x">))</span>
+<span class="n">rs</span> <span class="o">=</span> <span class="n">sqrt</span><span class="o">.</span><span class="x">(</span><span class="n">xs</span><span class="o">.^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ys</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="network">Network</h2>
+
+<p>Now we need to make a network.
+We first define a Dense layer with tanh instead of relu.</p>
+
+<p>Why? I honestly do not know. Let me run it and find out. Okay it was because it just gave barely any patterns and all white/black images. Makes sense really due to the nature of relu. I also tried it with leaky relu. Same thing.</p>
+
+<p>Okay time to move on.</p>
+
+<p>We then make a chain with an initial dense layer, multiple dense layers for the hidden and a final layer.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">unit</span><span class="x">(</span><span class="k">in</span><span class="o">=</span><span class="n">N</span><span class="x">,</span> <span class="n">out</span><span class="o">=</span><span class="n">N</span><span class="x">,</span> <span class="n">f</span><span class="o">=</span><span class="n">tanh</span><span class="x">)</span> <span class="o">=</span> <span class="n">Dense</span><span class="x">(</span><span class="k">in</span><span class="x">,</span> <span class="n">out</span><span class="x">,</span> <span class="n">f</span><span class="x">,</span> <span class="n">initW</span><span class="o">=</span><span class="n">randn</span><span class="x">)</span>
+
+<span class="n">layers</span> <span class="o">=</span> <span class="kt">Any</span><span class="x">[</span><span class="n">unit</span><span class="x">(</span><span class="mi">3</span> <span class="o">+</span> <span class="n">z_dim</span><span class="x">),</span> <span class="x">[</span><span class="n">unit</span><span class="x">()</span> <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">hidden</span><span class="x">]</span><span class="o">...</span><span class="x">,</span> <span class="n">unit</span><span class="x">(</span><span class="n">N</span><span class="x">,</span> <span class="mi">1</span><span class="x">,</span> <span class="n">σ</span><span class="x">)]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Chain</span><span class="x">(</span><span class="n">layers</span><span class="o">...</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Now we define a tiny function which will get us the color at a point. We then write another function to batch our images so we dont blow up our GPU. I simplified and applied list comprehension where I could. #devSwag</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">getColorAt</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="o">=</span> <span class="n">Flux</span><span class="o">.</span><span class="n">data</span><span class="x">(</span><span class="n">model</span><span class="x">(</span><span class="n">x</span><span class="x">))</span>
+
+<span class="k">function</span><span class="nf"> batch</span><span class="x">(</span><span class="n">arr</span><span class="x">,</span> <span class="n">s</span><span class="x">)</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">arr</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">batches</span> <span class="o">=</span> <span class="x">[</span><span class="n">arr</span><span class="x">[</span><span class="o">:</span><span class="x">,</span> <span class="n">i</span><span class="o">:</span><span class="n">min</span><span class="x">(</span><span class="n">i</span><span class="o">+</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="n">l</span><span class="x">)]</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">s</span><span class="o">:</span><span class="n">l</span><span class="x">]</span>
+    <span class="n">batches</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="generation">Generation</h2>
+
+<p>Now that we have that, on to actually generating an image.
+Simply put, we create an empty grid using our x,y, z coords.
+Then we use our model to predict an intensity at each point using the coordinates and we convert them to grayscale values. That way we can plot it directly as an image. 
+We also reshape it to fit the size we need.</p>
+
+<p>Thats about it.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> getImage</span><span class="x">(</span><span class="n">z</span><span class="x">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">repeat</span><span class="x">(</span><span class="n">reshape</span><span class="x">(</span><span class="n">z</span><span class="x">,</span> <span class="mi">1</span><span class="x">,</span> <span class="n">z_dim</span><span class="x">),</span> <span class="n">outer</span><span class="o">=</span><span class="x">(</span><span class="n">n</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">hcat</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">rs</span><span class="x">,</span> <span class="n">z</span><span class="x">)</span><span class="err">'</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">batch</span><span class="x">(</span><span class="n">coords</span><span class="x">,</span> <span class="n">batch_size</span><span class="x">)</span>
+    <span class="n">pixels</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gray</span><span class="o">.</span><span class="x">(</span><span class="n">hcat</span><span class="x">(</span><span class="n">getColorAt</span><span class="o">.</span><span class="x">(</span><span class="n">coords</span><span class="x">)</span><span class="o">...</span><span class="x">))</span><span class="o">...</span><span class="x">]</span>
+    <span class="n">reshape</span><span class="x">(</span><span class="n">pixels</span><span class="x">,</span> <span class="n">y_dim</span><span class="x">,</span> <span class="n">x_dim</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="final-image">Final Image</h2>
+<p>The final part is actually plotting the image. Over here we just run the previous function and save the image locally.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> saveImg</span><span class="x">(</span><span class="n">z</span><span class="x">,</span> <span class="n">image_path</span><span class="o">=</span><span class="s">"sample.png"</span><span class="x">)</span>
+    <span class="n">imgg</span> <span class="o">=</span> <span class="n">getImage</span><span class="x">(</span><span class="n">z</span><span class="x">)</span>
+    <span class="n">save</span><span class="x">(</span><span class="n">image_path</span><span class="x">,</span> <span class="n">imgg</span><span class="x">)</span>
+    <span class="n">imgg</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>I extended the print command to show us 10 images instead of one just to see the variation. It does look pretty. Like a bit of my personal molten steel.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">[</span><span class="n">saveImg</span><span class="x">(</span><span class="n">rand</span><span class="x">(</span><span class="n">z_dim</span><span class="x">))</span> <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="x">]</span>
+</code></pre></div></div>
+
+<p><img src="/img/cppn.png" alt="" /></p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

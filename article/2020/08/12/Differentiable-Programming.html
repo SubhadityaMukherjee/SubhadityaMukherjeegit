@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Differentiable Programming | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Differentiable Programming" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)" />
+<meta property="og:description" content="Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)" />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-08-12T21:07:58+00:00" />
+<script type="application/ld+json">
+{"description":"Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)","url":"/article/2020/08/12/Differentiable-Programming.html","@type":"BlogPosting","headline":"Differentiable Programming","dateModified":"2020-08-12T21:07:58+00:00","datePublished":"2020-08-12T21:07:58+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/08/12/Differentiable-Programming.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Differentiable Programming</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~11 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#in-theory">In theory</a></li>
+  <li><a href="#lotka-volterra">Lotka Volterra</a></li>
+  <li><a href="#what-is-it">What is it</a></li>
+  <li><a href="#modelling-it">Modelling it</a></li>
+  <li><a href="#train">Train!!</a></li>
+  <li><a href="#outputs">Outputs</a></li>
+</ul>
+
+<p>Deep Learning is dead. Hello Differentiable Programming. (Uh come on man)</p>
+
+<h2 id="in-theory">In theory</h2>
+
+<p>So what was deep learning and why did we move on? Or did we?
+In summary, DL had the following steps -&gt; Pick a bunch of inputs and outputs -&gt; Start off by randomly defining a relationship -&gt; Pass it through neural network -&gt; perform gradient descent -&gt; Optimize a loss function -&gt; Repeat until it either works or blows up.</p>
+
+<p>Now what? Well now we take this and realize that hey! What if we applied this to code itself??!! Crazy right? All it means is, why not take arbitrary (almost) code and if it can be differentiated, calculate its gradient and.. optimize it for a function!</p>
+
+<p>Does that make sense? I guess not. So in other words. We can take existing equations which we say know parts of and then use this approach to fill in so to speak. What does this mean? We can apply domain knowledge and well defined laws and use data to find equations to model our system!</p>
+
+<p>Say we have simulated a physics engine (many exist) and we run a simulation. Using a Neural ODE we can plug in the variables we need and compute an equation. “Theoretically”</p>
+
+<blockquote>
+  <p>I am still figuring things out so I will update this as I go along. If I get anything wrong now, hopefully I will learn enough to fix it. If not, please do tell me</p>
+</blockquote>
+
+<h2 id="lotka-volterra">Lotka Volterra</h2>
+
+<p>As an example, here is the most common one I found so far. The Lotka Volterra model. What is it? 
+Simply put, it is an ecological model which tries to describe the relationship between two species where one is a predator and the other is prey. It aims to model how the population changes over time.</p>
+
+<p>Here we get some different packages. Along with our old friends Latexify, Flux and Plots.
+DiffEqFlux will allow us to use differential equation solvers. I do not think I will try to implement that from scratch as it is currently wayy out of scope for me.
+The only major thing I will try to atleast understand and write in depth about is Automatic Differentiation. (More explained throughout the course of this article)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Latexify</span>
+<span class="k">using</span> <span class="n">DiffEqFlux</span><span class="x">,</span> <span class="n">DiffEqSensitivity</span><span class="x">,</span> <span class="n">Flux</span><span class="x">,</span> <span class="n">OrdinaryDiffEq</span><span class="x">,</span> <span class="n">Zygote</span><span class="x">,</span> <span class="n">Test</span>
+<span class="k">using</span> <span class="n">Plots</span>
+</code></pre></div></div>
+<h2 id="what-is-it">What is it</h2>
+<p>Okay now let us model the system.</p>
+
+<p>We have two populations and so we need two starting values which we set as x and y.
+We will also define a few parameters that we need.
+The first being the equation of the first population.</p>
+
+<ul>
+  <li>We take α to be the growth rate.</li>
+  <li>β to be the rate at which the prey is killed.</li>
+  <li>δ to be the death rate of the predators</li>
+  <li>γ rate at which the predators increase</li>
+</ul>
+
+\[dx = \left( \alpha - \beta \cdot y \right) \cdot x\]
+
+<p>The second being the equation of the second population.</p>
+
+\[dy = \left( \delta \cdot x - \gamma \right) \cdot y\]
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> lotka_volterra</span><span class="x">(</span><span class="n">du</span><span class="x">,</span><span class="n">u</span><span class="x">,</span><span class="n">p</span><span class="x">,</span><span class="n">t</span><span class="x">)</span>
+    <span class="n">x</span><span class="x">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">u</span>
+    <span class="n">α</span><span class="x">,</span> <span class="n">β</span><span class="x">,</span> <span class="n">δ</span><span class="x">,</span> <span class="n">γ</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="n">du</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">=</span> <span class="x">(</span><span class="n">α</span> <span class="o">-</span> <span class="n">β</span><span class="o">*</span><span class="n">y</span><span class="x">)</span><span class="n">x</span>
+    <span class="n">du</span><span class="x">[</span><span class="mi">2</span><span class="x">]</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">=</span> <span class="x">(</span><span class="n">δ</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="n">γ</span><span class="x">)</span><span class="n">y</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<h2 id="modelling-it">Modelling it</h2>
+
+<p>Now that we have a model of our system, we set a few default values just to start with. Giving the inital populations a value of 1. And some default parameters for our rates.</p>
+
+<p>We then pop this into what is known as an ODEProblem. This is a wrapper for allowing us to pose our function as an ODE. We can then attempt to solve it using an ODESolver. (I am still getting the details. When I understand it fully, there will be a post)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">p</span> <span class="o">=</span> <span class="x">[</span><span class="mf">2.2</span><span class="x">,</span> <span class="mf">1.0</span><span class="x">,</span> <span class="mf">2.0</span><span class="x">,</span> <span class="mf">0.4</span><span class="x">]</span>
+<span class="n">u0</span> <span class="o">=</span> <span class="x">[</span><span class="mf">1.0</span><span class="x">,</span><span class="mf">1.0</span><span class="x">]</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">ODEProblem</span><span class="x">(</span><span class="n">lotka_volterra</span><span class="x">,</span><span class="n">u0</span><span class="x">,(</span><span class="mf">0.0</span><span class="x">,</span><span class="mf">10.0</span><span class="x">),</span><span class="n">p</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>Our current plot looks something like this.</p>
+<ul>
+  <li><img src="/img/dif1.png" alt="im" /></li>
+</ul>
+
+<p>So we write a tiny function to return an array with the solutions for that current timestep. We are also using the Tsit5(Tsitorous) solver. This seems to be part of something called Runge-Kutta. 
+A google says “Runge–Kutta method is an effective and widely used method for solving the initial-value problems of differential equations and can be used to construct high order accurate numerical method by functions’ self without needing the high order derivatives of functions.”.</p>
+
+<p>I guess that roughly translates to -&gt; Solve a higher order differential equation without much overhead?</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> predict_rd</span><span class="x">()</span>
+    <span class="kt">Array</span><span class="x">(</span><span class="n">solve</span><span class="x">(</span><span class="n">prob</span><span class="x">,</span><span class="n">Tsit5</span><span class="x">(),</span><span class="n">saveat</span><span class="o">=</span><span class="mf">0.1</span><span class="x">,</span><span class="n">reltol</span><span class="o">=</span><span class="mf">1e-4</span><span class="x">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Now for something more up my alley. Optimizers and loss!! We are using sum of squared absolute error here it seems. And our dear friend Adam.
+We also have a callback function to display the current loss and then try to remake the equation using the current parameters so we can plot it.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">loss_rd</span><span class="x">()</span> <span class="o">=</span> <span class="n">sum</span><span class="x">(</span><span class="n">abs2</span><span class="x">,</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">predict_rd</span><span class="x">())</span>
+
+<span class="n">opt</span> <span class="o">=</span> <span class="n">ADAM</span><span class="x">(</span><span class="mf">0.1</span><span class="x">)</span>
+
+<span class="n">cb</span> <span class="o">=</span> <span class="k">function</span><span class="nf"> </span><span class="o">()</span>
+  <span class="n">display</span><span class="x">(</span><span class="n">loss_rd</span><span class="x">())</span>
+  <span class="n">display</span><span class="x">(</span><span class="n">plot</span><span class="x">(</span><span class="n">solve</span><span class="x">(</span><span class="n">remake</span><span class="x">(</span><span class="n">prob</span><span class="x">,</span><span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="x">),</span><span class="n">Tsit5</span><span class="x">(),</span><span class="n">saveat</span><span class="o">=</span><span class="mf">0.1</span><span class="x">),</span><span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span><span class="mi">6</span><span class="x">)))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<h2 id="train">Train!!</h2>
+<p>Finally we can train the network.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Flux</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">loss_rd</span><span class="x">,</span> <span class="n">Flux</span><span class="o">.</span><span class="n">params</span><span class="x">(</span><span class="n">p</span><span class="x">),</span> <span class="n">Iterators</span><span class="o">.</span><span class="n">repeated</span><span class="x">((),</span> <span class="mi">100</span><span class="x">),</span> <span class="n">opt</span><span class="x">,</span> <span class="n">cb</span> <span class="o">=</span> <span class="n">cb</span><span class="x">)</span>
+</code></pre></div></div>
+
+<h2 id="outputs">Outputs</h2>
+<p>As time goes by we get.</p>
+<ul>
+  <li><img src="/assets/img/dif2.png" alt="im" /></li>
+  <li><img src="/assets/img/dif3.png" alt="im" /></li>
+</ul>
+
+<p>And finally.</p>
+
+<ul>
+  <li><img src="/img/dif4.png" alt="im" /></li>
+</ul>
+
+<p>Yay! We have successfully modelled an equation using a neural network with barely any data. This is a first step duh. Long way to go before I get anywhere substantial. But baby steps right?</p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

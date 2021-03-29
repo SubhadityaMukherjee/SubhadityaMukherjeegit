@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Taking Batchnorm For Granted | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Taking Batchnorm For Granted" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Here we will see what happens when we “dont” take Batchnorm for granted." />
+<meta property="og:description" content="Here we will see what happens when we “dont” take Batchnorm for granted." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-03T15:52:00+00:00" />
+<script type="application/ld+json">
+{"description":"Here we will see what happens when we “dont” take Batchnorm for granted.","url":"/article/2020/10/03/TakingBatchnormForGranted.html","@type":"BlogPosting","headline":"Taking Batchnorm For Granted","dateModified":"2020-10-03T15:52:00+00:00","datePublished":"2020-10-03T15:52:00+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/10/03/TakingBatchnormForGranted.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Taking Batchnorm For Granted</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~15 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#granted">Granted?</a></li>
+  <li><a href="#what-is-batch-norm">What is Batch Norm</a></li>
+  <li><a href="#train">Train!!</a></li>
+  <li><a href="#code">Code</a></li>
+  <li><a href="#how-did-that-do">How did that do?</a></li>
+  <li><a href="#not-taking-batchnorm-for-granted">Not taking Batchnorm for granted</a></li>
+  <li><a href="#winding-up">Winding up</a></li>
+  <li><a href="#references">References</a></li>
+</ul>
+
+<p>Here we will see what happens when we “dont” take Batchnorm for granted.</p>
+
+<h1 id="granted">Granted?</h1>
+
+<p>Batch Norm is one of the most widely used layers in a neural network. Ever since it came out, it became possible to train neural networks that were faster, more accurate and more resistant to change. 
+Sounds almost magic doesn’t it? You would think, for something so magical, the implementation must be crazy hard. (You would be wrong)</p>
+
+<p>What happened is that due to the black box nature of a neural network, we started taking this magic for granted. There were many assumptions of course about how and why it had the effect it does, but I recently found a <a href="https://arxiv.org/abs/2003.00152">paper</a> which made a <strong>serious</strong> attempt to understand it.</p>
+
+<p>So what happens when we just train the batchnorm layers and freeze everything else? What happens when we use different types of networks? 
+Let us dig in…</p>
+
+<h1 id="what-is-batch-norm">What is Batch Norm</h1>
+
+<p>Before we get to anything, a quick primer on batchnorm.</p>
+
+<p>Why do we need it? Standardize inputs to the network. This will allow the network to “focus” and learn whats more important numerically speaking.</p>
+
+<p>Now, how does it look (Note that these are the components and not the entire implementation)</p>
+
+<p>Here we first generate a random array. The inputs γ, β are learnable parameters which we will look into later. ϵ is a very small number which will prevent our values from becoming 0.
+We first take the mean, then the variance and then we standardize the data using them. At the end we take a product and sum with the parameters.</p>
+
+<p>Now, consider the random array is a batch of data, we apply this over the batch and instead of just the individual mean, we take a running mean. (aka a continuously changing value based on streaming data). Thats about it.</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ran</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="mi">10</span><span class="x">,</span><span class="mi">20</span><span class="x">)</span>
+
+<span class="k">function</span><span class="nf"> bnorm_x</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">γ</span><span class="x">,</span> <span class="n">β</span><span class="x">,</span> <span class="n">ϵ</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="x">)</span>
+    <span class="n">mean_x</span> <span class="o">=</span> <span class="n">sum</span><span class="x">(</span><span class="n">x</span><span class="x">)</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">x</span><span class="x">)</span> <span class="c">#mean of x</span>
+    <span class="n">variance_x</span> <span class="o">=</span> <span class="n">sum</span><span class="x">((</span><span class="n">x</span> <span class="o">.-</span> <span class="n">mean_x</span><span class="x">)</span><span class="o">.^</span><span class="mi">2</span><span class="x">)</span><span class="o">/</span><span class="n">length</span><span class="x">(</span><span class="n">ran</span><span class="x">)</span> <span class="c">#variance of x</span>
+    <span class="n">x̂</span>  <span class="o">=</span> <span class="x">(</span><span class="n">x</span> <span class="o">.-</span> <span class="n">mean_x</span><span class="x">)</span><span class="o">/</span><span class="n">sqrt</span><span class="x">(</span><span class="n">variance_x</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ϵ</span><span class="x">)</span>
+    <span class="nd">@info</span> <span class="n">size</span><span class="x">(</span><span class="n">x̂</span> <span class="x">),</span> <span class="n">size</span><span class="x">(</span><span class="n">β</span><span class="x">),</span> <span class="n">size</span><span class="x">(</span><span class="n">γ</span><span class="x">)</span>
+    <span class="k">return</span> <span class="n">γ</span><span class="o">.*</span><span class="n">x̂</span>  <span class="o">+</span> <span class="n">β</span> 
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h1 id="train">Train!!</h1>
+
+<p>Okay so this bit will be in Pytorch. I will try to explain everything I do but I cannot paste the full code here as this will become too huge. So I will just show what is different from a standard training here.</p>
+
+<p>The entire code (with comments) can be found at <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/BatchnormOnlyBatchnorm">my repository</a></p>
+
+<p>So our main workflow remains the same as every other deep learning project.</p>
+<ol>
+  <li>Load data (check main.py)</li>
+  <li>Pre process it (check main.py)</li>
+  <li>Enumerate the batches</li>
+  <li>Optimize a loss function</li>
+  <li>Test it</li>
+</ol>
+
+<p>We focus on steps 3 and 4 here.</p>
+
+<h1 id="code">Code</h1>
+
+<p>Let us first get the libraries we need. aka Pytorch and tqdm (this is a tiny little progress bar helper which I absolutely adore)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="n">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="n">F</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+</code></pre></div></div>
+
+<p>Before we think about going ahead, let us first try to understand what we want. We need to train the network as usual, but make sure that <strong>only</strong> the batchnorm layes get trained. Just to see how far we can stretch it.</p>
+
+<p>To do that, let us create a function which goes through our entire model, and if it finds any layer which is NOT batchnorm, it will tell pytorch to forget the gradients for that layer. In the process, making sure that only the Batchnorm layers get trained. We freeze the weights and biases for that reason.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">freezeOthers</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">m</span><span class="p">.</span><span class="n">parameters</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">modules</span><span class="p">.</span><span class="n">batchnorm</span><span class="p">.</span><span class="n">_BatchNorm</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">'weight'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">m</span><span class="p">.</span><span class="n">weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">m</span><span class="p">.</span><span class="n">weight</span><span class="p">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">'bias'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">m</span><span class="p">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">m</span><span class="p">.</span><span class="n">bias</span><span class="p">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now for the main training loop.
+We first make the model trainable and send it to the GPU. Then we iterate over the data. Following pytorch standard loops, we reset the gradients and pass the batch through our model. 
+We perform back propagation and step through our optimizer.
+And then we apply our previous function. After this, our model will forget the gradients for every other layer.
+We also add a tiny little option to print out the current loss. (This helps when you are looking at it train)</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+    <span class="n">model</span><span class="p">.</span><span class="n">train</span><span class="p">()</span> <span class="c1"># Setting model to train
+</span>    <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">device</span><span class="p">(</span><span class="s">"cuda"</span><span class="p">)</span> <span class="c1"># Sending to GPU
+</span>    <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)):</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">target</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="p">.</span><span class="n">zero_grad</span><span class="p">()</span> <span class="c1">#Reset grads 
+</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1"># Passing batch through model
+</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">CrossEntropyLoss</span><span class="p">()(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="c1"># Calculate loss 
+</span>
+        <span class="n">loss</span><span class="p">.</span><span class="n">backward</span><span class="p">()</span> <span class="c1"># Backprop
+</span>        <span class="n">optimizer</span><span class="p">.</span><span class="n">step</span><span class="p">()</span> <span class="c1"># Pass through optimizer
+</span>        <span class="n">model</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">freezeOthers</span><span class="p">)</span> <span class="c1"># Dont train other layers
+</span>
+        <span class="k">if</span> <span class="n">batch_idx</span> <span class="o">%</span> <span class="n">args</span><span class="p">.</span><span class="n">log_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">loss</span><span class="p">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">dry_run</span><span class="p">:</span>
+                <span class="k">break</span>
+</code></pre></div></div>
+
+<h1 id="how-did-that-do">How did that do?</h1>
+
+<p>Well I tested ResNet110 on the CIFAR 10 dataset and for the normal network, I got a test accuracy of around 92%. 
+While only training BatchNorm, I got to around 68% test accuracy.
+Now you might think, that is very far off. Yes, it is.. but notice that we are using only around .48% of the data <a href="https://arxiv.org/abs/2003.00152">Cite1</a>
+Wow…</p>
+
+<p>But is this conclusive? Well I did a few more experiments, but instead let me point you towards an awesome <a href="https://wandb.ai/sayakpaul/training-bn-only/reports/The-Power-of-Random-Features-of-a-CNN--VmlldzoxMTIxODA">blog post</a> I found. It is by someone I admire and you can go and play around with the network and see the results for yourself instead of me giving you graphs.</p>
+
+<h1 id="not-taking-batchnorm-for-granted">Not taking Batchnorm for granted</h1>
+
+<p>Now that we understand a bit more about how expressive these layers seem to be. Let me share some points I found extremely interesting from the paper<a href="https://arxiv.org/abs/2003.00152">Cite 1</a>.</p>
+
+<ol>
+  <li>BatchNorm learns to disable features in the network which allows it to learn pretty well and impose sparsity for the features</li>
+  <li>Affine parameters (ones that perform transformation of some sort) in the layers play a really important role</li>
+  <li>The layer helps the network to learn a better representation</li>
+  <li>Random features play an important role in a neural network, to an extent that we do not fully understand yet.</li>
+  <li>Placing BatchNorm before the activation leads to better performace</li>
+  <li>If we only train the layer, increasing the depth gives a better result than increasing the width</li>
+  <li>Many features in a network can be removed without affecting the values much</li>
+  <li>The shortcut connections in ResNets might actually be throttling performance due to them not being able to use BatchNorm properly</li>
+  <li><strong>Dont take Batchnorm for granted</strong></li>
+</ol>
+
+<h1 id="winding-up">Winding up</h1>
+
+<p>By now I think we come to realize that maybe we should not take what we think we know for granted. Sometimes it takes a difficult to digest paper to make one understand that. 
+BatchNorm does play an important part in the network. And this somehow proves our need to be able to dig into the structure and the black box of Neural network architectures.</p>
+
+<p>I would love to discuss further and if you have any questions do feel free to reach out in the comments. Or connect with me on <a href="github.com/SubhadityaMukherjee/">Github</a>.</p>
+
+<h1 id="references">References</h1>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/2003.00152">Cite 1: Original paper</a> courtesy Jonathan Frankle et al.</li>
+  <li><a href="https://medium.com/deeplearningmadeeasy/everything-you-wish-to-know-about-batchnorm-6055e07fdce2">Alvaro Duran</a></li>
+  <li><a href="https://arxiv.org/pdf/1502.03167.pdf">The batchnorm paper</a></li>
+  <li><a href="https://discuss.pytorch.org/t/retrain-batchnorm-layer-only/61324">Link from pytorch forums</a></li>
+</ul>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+  <a href=/article/2020/09/02/DatasetBindings.html> Dataset Bindings&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

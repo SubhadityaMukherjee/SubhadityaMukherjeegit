@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Basic Convolution | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Basic Convolution" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Here we will talk about convolution and how to implement it from scratch." />
+<meta property="og:description" content="Here we will talk about convolution and how to implement it from scratch." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-02T13:38:00+00:00" />
+<script type="application/ld+json">
+{"description":"Here we will talk about convolution and how to implement it from scratch.","url":"/article/2020/07/02/convolution.html","@type":"BlogPosting","headline":"Basic Convolution","dateModified":"2020-07-02T13:38:00+00:00","datePublished":"2020-07-02T13:38:00+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/07/02/convolution.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Basic Convolution</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~20 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#definition">Definition</a></li>
+  <li><a href="#basic-idea">Basic idea</a></li>
+  <li><a href="#an-example">An example?</a></li>
+  <li><a href="#start-code">Start code</a></li>
+  <li><a href="#padding-and-stride">Padding and stride</a></li>
+  <li><a href="#conv">Conv!!</a></li>
+  <li><a href="#full-function">Full function</a></li>
+  <li><a href="#gray-image">Gray image</a></li>
+</ul>
+
+<p>Here we will talk about convolution and how to implement it from scratch.</p>
+
+<p>Before I begin, let me make something clear. I am trying to go from basic to optimized and so I will start with a naive implementation. And then eventually get to much better code. I could take it directly but I feel like that defeats the whole point of this exercise. And who knows? Maybe I’ll find something fun along the way :)</p>
+
+<h2 id="definition">Definition</h2>
+
+<p>Okay. Now what is a convolution operation?
+Simply put, it is a way of representing information in a compressed manner. Or in other words, representing complex information in a different way. It is the basic block of Deep learning and the reason it works so well. There are many high level abstractions to the concept and so I want to look at the simplest version of it and then move on to more complex parts.</p>
+
+<p>To be honest, I did not find many proper versions of this. Most of them tend to abstract it way to such a huge extent it is almost pointless to even try.</p>
+
+<h2 id="basic-idea">Basic idea</h2>
+
+<blockquote>
+  <p>Note that this is for a 2D image (grayscale lets say)</p>
+</blockquote>
+
+<ol>
+  <li>Images are matrices.</li>
+  <li>To understand an image, we try to identify features from images</li>
+  <li>Features? Something like edges, shapes and eventually more complex things like say eyes, lips etc</li>
+  <li>How do we do that? We use a kernel == another matrix.</li>
+  <li>What? Since the image is a huge matrix, we take a smaller matrix with specific values(called a kernel). Lets say we have a 3x3 matrix with the sides = 0 and the center = 1</li>
+</ol>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">3</span><span class="n">x3</span> <span class="kt">Array</span><span class="x">{</span><span class="kt">Int64</span><span class="x">,</span><span class="mi">2</span><span class="x">}</span><span class="o">:</span>
+ <span class="mi">0</span>  <span class="mi">1</span>  <span class="mi">0</span>
+ <span class="mi">0</span>  <span class="mi">1</span>  <span class="mi">0</span>
+ <span class="mi">0</span>  <span class="mi">1</span>  <span class="mi">0</span>
+</code></pre></div></div>
+<ol>
+  <li>if you make this into an image, quite obviously, we have a white patch in the middle of a black rectangle.</li>
+  <li>The convolution basically takes the image and for each 3x3 bit in it, does element wise multiplication. After that is done, we have a new matrix. Now we sum up all those elements and we have the first convolution.</li>
+  <li>Since the image is quite big, we still can move this kernel around. We shift it by 1 place to the right (by == stride). Then repeat step 7.</li>
+  <li>We do this for the whole matrix.</li>
+  <li>Note that we also sometimes need to pad the image with extra values.</li>
+  <li>Um…</li>
+  <li>Think about it this way, when you are moving this kernel (== a sliding window) over the image, are you really covering everything? Or are you losing bits of information around the sides?</li>
+  <li>To avoid that, we pad the image with the pixel next to it. (Of course we can change this to other stuff like copied pixels and everything but meh too much info at once makes the brain go boom)</li>
+</ol>
+
+<h2 id="an-example">An example?</h2>
+
+<p>Sure. Here is a filter and a smol image. (yes it has random values but we will get to applying it to a real image soon)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Kernel/filter</span>
+<span class="mi">2</span><span class="n">×2</span> <span class="kt">Array</span><span class="x">{</span><span class="kt">Int64</span><span class="x">,</span><span class="mi">2</span><span class="x">}</span><span class="o">:</span>
+ <span class="mi">0</span>  <span class="mi">1</span>
+ <span class="mi">2</span>  <span class="mi">3</span>
+
+<span class="c"># Image</span>
+<span class="mi">3</span><span class="n">×3</span> <span class="kt">Array</span><span class="x">{</span><span class="kt">Int64</span><span class="x">,</span><span class="mi">2</span><span class="x">}</span><span class="o">:</span>
+ <span class="mi">0</span>  <span class="mi">1</span>  <span class="mi">2</span>
+ <span class="mi">3</span>  <span class="mi">4</span>  <span class="mi">5</span>
+ <span class="mi">6</span>  <span class="mi">7</span>  <span class="mi">8</span>
+</code></pre></div></div>
+
+<p>Now let us take do the first bit of the conv. We have these. If you do not get it, read the steps above once.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="mi">0</span>  <span class="mi">1</span>
+ <span class="mi">2</span>  <span class="mi">3</span>
+
+ <span class="mi">0</span>  <span class="mi">1</span>
+ <span class="mi">3</span>  <span class="mi">4</span>
+</code></pre></div></div>
+
+<p>Now we multiply them element wise aka in position.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">2</span><span class="n">×2</span> <span class="kt">Array</span><span class="x">{</span><span class="kt">Int64</span><span class="x">,</span><span class="mi">2</span><span class="x">}</span><span class="o">:</span>
+ <span class="mh">0x0</span><span class="o">=</span><span class="mi">0</span>   <span class="mi">1</span><span class="n">x1</span><span class="o">=</span><span class="mi">1</span>
+ <span class="mi">2</span><span class="n">x3</span><span class="o">=</span><span class="mi">6</span>  <span class="mi">3</span><span class="n">x4</span><span class="o">=</span><span class="mi">12</span>
+ 
+ <span class="c"># or</span>
+ <span class="mi">2</span><span class="n">×2</span> <span class="kt">Array</span><span class="x">{</span><span class="kt">Int64</span><span class="x">,</span><span class="mi">2</span><span class="x">}</span><span class="o">:</span>
+ <span class="mi">0</span>   <span class="mi">1</span>
+ <span class="mi">6</span>  <span class="mi">12</span>
+</code></pre></div></div>
+<p>Then sum them all up and we get 1+6+12 = 19.
+Rinse and repeat and we get.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">2</span><span class="n">×2</span> <span class="kt">Array</span><span class="x">{</span><span class="kt">Float64</span><span class="x">,</span><span class="mi">2</span><span class="x">}</span><span class="o">:</span>
+ <span class="mf">19.0</span>  <span class="mf">37.0</span>
+ <span class="mf">25.0</span>  <span class="mf">43.0</span>
+</code></pre></div></div>
+<p>Fun right? (LOL)</p>
+
+<p>Okay let’s get to the code because I am getting bored now.</p>
+
+<p>What do we need? We need to read images, load a test image and be able to display it as we go. We can do this using the Images, TestImages and ImageView packages.</p>
+
+<h2 id="start-code">Start code</h2>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">using</span> <span class="n">Images</span><span class="x">,</span> <span class="n">TestImages</span><span class="x">,</span><span class="n">ImageView</span>
+ <span class="n">img</span> <span class="o">=</span> <span class="n">testimage</span><span class="x">(</span><span class="s">"mandrill"</span><span class="x">);</span>
+</code></pre></div></div>
+<p>We will not touch this image right now but we will create a test image and a kernel.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">img</span> <span class="o">=</span> <span class="x">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="x">;</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="x">;</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span><span class="x">]</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="x">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="x">;</span> <span class="mi">2</span> <span class="mi">3</span><span class="x">]</span>
+</code></pre></div></div>
+<p>Our Image is : <img src="/assets/img/deconstrucImages/img_p1.png" alt="drawing" width="200" /></p>
+
+<p>Our kernel is : <img src="/assets/img/deconstrucImages/kernel.png" alt="drawing" width="200" /></p>
+
+<p>Okay let us take stride = 1 and give ourselves the option of setting a kernel and choosing a padding. Valid means no padding and same means that the returned dimensions should be the same as the image aka there will be padding.</p>
+
+<p>We take the sizes of the image and the kernel and store them away before we do anything else.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> conv2d</span><span class="x">(</span><span class="n">img</span><span class="x">,</span> <span class="n">kernel</span><span class="x">,</span> <span class="n">stride</span> <span class="o">=</span> <span class="mi">1</span><span class="x">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s">"valid"</span><span class="x">)</span>
+    <span class="n">input_h</span><span class="x">,</span> <span class="n">input_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">img</span><span class="x">)</span>
+    <span class="n">kernel_h</span><span class="x">,</span> <span class="n">kernel_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">kernel</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>To add padding, we use the formulae :
+The amount of height added \(\frac{kernel_{height} - 1}{2}\)</p>
+
+<p>The width is the same except we use the kernel width.</p>
+
+<p>Now to we create a zero matrix with the size height x width = \(input_{h} + 2 \cdot pad_{h}, input_{w} + 2 \cdot pad_{w}\) . Why do this? Because allocating memory means faster operations.</p>
+
+<p>Now we loop over the image and add padding.</p>
+
+<h2 id="padding-and-stride">Padding and stride</h2>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> conv2d</span><span class="x">(</span><span class="n">img</span><span class="x">,</span> <span class="n">kernel</span><span class="x">,</span> <span class="n">stride</span> <span class="o">=</span> <span class="mi">1</span><span class="x">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s">"valid"</span><span class="x">)</span>
+    <span class="n">input_h</span><span class="x">,</span> <span class="n">input_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">img</span><span class="x">)</span>
+    <span class="n">kernel_h</span><span class="x">,</span> <span class="n">kernel_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">kernel</span><span class="x">)</span>
+    
+    <span class="k">if</span> <span class="n">padding</span> <span class="o">==</span> <span class="s">"same"</span>
+        <span class="n">pad_h</span> <span class="o">=</span> <span class="x">(</span><span class="n">kernel_h</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span> <span class="o">÷</span> <span class="mi">2</span>
+        <span class="n">pad_w</span> <span class="o">=</span> <span class="x">(</span><span class="n">kernel_w</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span> <span class="o">÷</span> <span class="mi">2</span>
+        
+        <span class="n">img_padded</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">(</span><span class="n">input_h</span><span class="o">+</span><span class="x">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pad_h</span><span class="x">),</span><span class="n">input_w</span><span class="o">+</span><span class="x">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pad_w</span><span class="x">))</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">input_h</span> <span class="x">,</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">input_w</span>
+            <span class="n">img_padded</span><span class="x">[</span><span class="n">i</span><span class="o">+</span><span class="n">pad_h</span><span class="x">,</span> <span class="n">j</span><span class="o">+</span><span class="n">pad_w</span><span class="x">]</span> <span class="o">=</span> <span class="n">img</span><span class="x">[</span><span class="n">i</span><span class="x">,</span><span class="n">j</span><span class="x">]</span>
+        <span class="k">end</span>
+        
+    <span class="k">elseif</span> <span class="n">padding</span> <span class="o">==</span> <span class="s">"valid"</span>
+    <span class="k">else</span>
+        <span class="n">throw</span><span class="x">(</span><span class="kt">DomainError</span><span class="x">(</span><span class="n">padding</span><span class="x">,</span> <span class="s">"Invalid padding value"</span><span class="x">))</span>
+    <span class="k">end</span>
+</code></pre></div></div>
+
+<p>Our padded image is <img src="/assets/img/deconstrucImages/padded.png" alt="drawing" width="200" /></p>
+
+<p>Now we will follow steps 7 to 9.</p>
+
+<h2 id="conv">Conv!!</h2>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">result</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">((</span><span class="n">input_h</span><span class="o">-</span> <span class="n">kernel_h</span><span class="x">)</span> <span class="o">÷</span> <span class="n">stride</span> <span class="o">+</span><span class="mi">1</span> <span class="x">,(</span><span class="n">input_w</span><span class="o">-</span> <span class="n">kernel_w</span><span class="x">)</span> <span class="o">÷</span> <span class="n">stride</span> <span class="o">+</span><span class="mi">1</span> <span class="x">)</span>
+    <span class="n">result_h</span><span class="x">,</span> <span class="n">result_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">result</span><span class="x">)</span>
+    
+    <span class="n">ih</span><span class="x">,</span> <span class="n">iw</span> <span class="o">=</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span> <span class="n">result_h</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span> <span class="n">result_w</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">kernel_h</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">kernel_w</span>
+                    <span class="n">result</span><span class="x">[</span><span class="n">i</span><span class="x">,</span><span class="n">j</span><span class="x">]</span> <span class="o">+=</span> <span class="n">img</span><span class="x">[</span><span class="n">ih</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="n">iw</span><span class="o">+</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">kernel</span><span class="x">[</span><span class="n">k</span><span class="x">,</span><span class="n">l</span><span class="x">]</span>
+                <span class="k">end</span>
+            <span class="k">end</span>
+            <span class="n">ih</span><span class="o">+=</span><span class="n">stride</span>
+        <span class="k">end</span>
+        <span class="n">iw</span><span class="o">+=</span> <span class="n">stride</span>
+        <span class="n">ih</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">result</span>
+<span class="k">end</span>
+
+<span class="n">conv2d</span><span class="x">(</span><span class="n">img</span> <span class="x">,</span> <span class="n">kernel</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>We then get :<img src="/assets/img/deconstrucImages/temp.png" alt="drawing" width="200" /></p>
+
+<p>How did I save the images?</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Cairo</span><span class="x">,</span><span class="n">Gtk</span>
+
+<span class="k">function</span><span class="nf"> write_to_png</span><span class="x">(</span><span class="n">guidict</span><span class="x">,</span> <span class="n">filename</span><span class="x">)</span>
+    <span class="n">canvas</span> <span class="o">=</span> <span class="n">guidict</span><span class="x">[</span><span class="s">"gui"</span><span class="x">][</span><span class="s">"canvas"</span><span class="x">]</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">getgc</span><span class="x">(</span><span class="n">canvas</span><span class="x">)</span>
+    <span class="n">Cairo</span><span class="o">.</span><span class="n">write_to_png</span><span class="x">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">surface</span><span class="x">,</span> <span class="n">filename</span><span class="x">)</span>
+<span class="k">end</span>
+
+<span class="n">tm2</span> <span class="o">=</span> <span class="n">imshow</span><span class="x">(</span><span class="n">conv2d</span><span class="x">(</span><span class="n">img</span> <span class="x">,</span> <span class="n">kernel</span><span class="x">))</span>
+
+<span class="n">write_to_png</span><span class="x">(</span><span class="n">tm2</span><span class="x">,</span> <span class="s">"/home/subhaditya/Desktop/GITHUB/SubhadityaMukherjee.github.io/img/deconstrucImages/temp.png"</span><span class="x">)</span>
+</code></pre></div></div>
+<h2 id="full-function">Full function</h2>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> conv2d</span><span class="x">(</span><span class="n">img</span><span class="x">,</span> <span class="n">kernel</span><span class="x">,</span> <span class="n">stride</span> <span class="o">=</span> <span class="mi">1</span><span class="x">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s">"valid"</span><span class="x">)</span>
+    <span class="n">input_h</span><span class="x">,</span> <span class="n">input_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">img</span><span class="x">)</span>
+    <span class="n">kernel_h</span><span class="x">,</span> <span class="n">kernel_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">kernel</span><span class="x">)</span>
+    
+    <span class="k">if</span> <span class="n">padding</span> <span class="o">==</span> <span class="s">"same"</span>
+        <span class="n">pad_h</span> <span class="o">=</span> <span class="x">(</span><span class="n">kernel_h</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span> <span class="o">÷</span> <span class="mi">2</span>
+        <span class="n">pad_w</span> <span class="o">=</span> <span class="x">(</span><span class="n">kernel_w</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span> <span class="o">÷</span> <span class="mi">2</span>
+        
+        <span class="n">img_padded</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">(</span><span class="n">input_h</span><span class="o">+</span><span class="x">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pad_h</span><span class="x">),</span><span class="n">input_w</span><span class="o">+</span><span class="x">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pad_w</span><span class="x">))</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">input_h</span> <span class="x">,</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">input_w</span>
+            <span class="n">img_padded</span><span class="x">[</span><span class="n">i</span><span class="o">+</span><span class="n">pad_h</span><span class="x">,</span> <span class="n">j</span><span class="o">+</span><span class="n">pad_w</span><span class="x">]</span> <span class="o">=</span> <span class="n">img</span><span class="x">[</span><span class="n">i</span><span class="x">,</span><span class="n">j</span><span class="x">]</span>
+        <span class="k">end</span>
+        
+    <span class="k">elseif</span> <span class="n">padding</span> <span class="o">==</span> <span class="s">"valid"</span>
+    <span class="k">else</span>
+        <span class="n">throw</span><span class="x">(</span><span class="kt">DomainError</span><span class="x">(</span><span class="n">padding</span><span class="x">,</span> <span class="s">"Invalid padding value"</span><span class="x">))</span>
+    <span class="k">end</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">((</span><span class="n">input_h</span><span class="o">-</span> <span class="n">kernel_h</span><span class="x">)</span> <span class="o">÷</span> <span class="n">stride</span> <span class="o">+</span><span class="mi">1</span> <span class="x">,(</span><span class="n">input_w</span><span class="o">-</span> <span class="n">kernel_w</span><span class="x">)</span> <span class="o">÷</span> <span class="n">stride</span> <span class="o">+</span><span class="mi">1</span> <span class="x">)</span>
+    <span class="n">result_h</span><span class="x">,</span> <span class="n">result_w</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">result</span><span class="x">)</span>
+    
+    <span class="n">ih</span><span class="x">,</span> <span class="n">iw</span> <span class="o">=</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span> <span class="n">result_h</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span> <span class="n">result_w</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">kernel_h</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">kernel_w</span>
+                    <span class="n">result</span><span class="x">[</span><span class="n">i</span><span class="x">,</span><span class="n">j</span><span class="x">]</span> <span class="o">+=</span> <span class="n">img</span><span class="x">[</span><span class="n">ih</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="n">iw</span><span class="o">+</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">kernel</span><span class="x">[</span><span class="n">k</span><span class="x">,</span><span class="n">l</span><span class="x">]</span>
+                <span class="k">end</span>
+            <span class="k">end</span>
+            <span class="n">ih</span><span class="o">+=</span><span class="n">stride</span>
+        <span class="k">end</span>
+        <span class="n">iw</span><span class="o">+=</span> <span class="n">stride</span>
+        <span class="n">ih</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">result</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="gray-image">Gray image</h2>
+
+<p>Cool! Let us do it for an image. Note that Julia stores images in arrays and since our example only works for 2D matrices, we convert the image into grayscale first and then apply the channelview function.</p>
+
+<p>We are using a really cute mandrill for our example.
+<img src="/assets/img/deconstrucImages/mandorig.png" alt="drawing" width="200" /></p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">img</span> <span class="o">=</span> <span class="n">testimage</span><span class="x">(</span><span class="s">"mandrill"</span><span class="x">);</span>
+<span class="n">kernel_blur</span> <span class="o">=</span> <span class="x">[</span><span class="o">-</span><span class="mi">2</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">0</span><span class="x">;</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="x">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span><span class="x">]</span>
+<span class="n">imshow</span><span class="x">(</span><span class="n">conv2d</span><span class="x">(</span><span class="n">channelview</span><span class="x">(</span><span class="n">Gray</span><span class="o">.</span><span class="x">(</span><span class="n">img</span><span class="x">)),</span><span class="n">kernel_blur</span><span class="x">))</span>
+</code></pre></div></div>
+<p>We get  :<img src="/assets/img/deconstrucImages/mandblur.png" alt="drawing" width="200" /></p>
+
+<p>Wow. What happened to the poor thing. Notice the weird numbers? Those are a specific kernel to do this.
+But why?</p>
+
+<p>Simple. Right now we are doing this by hand. Eventually the network uses this to learn specific features which allows us to do everything computer vision does.</p>
+
+<p>I will probably write another post on filters just because it is fun.</p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

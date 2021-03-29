@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Pruning | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Pruning" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Today we will look at pruning and the different approaches followed." />
+<meta property="og:description" content="Today we will look at pruning and the different approaches followed." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-09-25T19:02:00+00:00" />
+<script type="application/ld+json">
+{"description":"Today we will look at pruning and the different approaches followed.","url":"/article/2020/09/25/Pruning.html","@type":"BlogPosting","headline":"Pruning","dateModified":"2020-09-25T19:02:00+00:00","datePublished":"2020-09-25T19:02:00+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/09/25/Pruning.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Pruning</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~19 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#what-is-it">What is it</a></li>
+  <li><a href="#major-types-of-pruning-methods">Major types of pruning methods</a>
+    <ul>
+      <li><a href="#structure">Structure</a></li>
+      <li><a href="#scoring">Scoring</a></li>
+      <li><a href="#scheduling">Scheduling</a></li>
+      <li><a href="#fine-tuning">Fine tuning</a></li>
+    </ul>
+  </li>
+  <li><a href="#pruning-heuristics--code">Pruning heuristics + Code</a>
+    <ul>
+      <li><a href="#global-magnitude">Global Magnitude</a></li>
+      <li><a href="#layerwise-magnitude">Layerwise Magnitude</a></li>
+      <li><a href="#global-gradient-magnitude">Global Gradient Magnitude</a></li>
+      <li><a href="#layerwise-gradient-magnitude">Layerwise Gradient Magnitude</a></li>
+      <li><a href="#random">Random</a></li>
+    </ul>
+  </li>
+  <li><a href="#what-we-can-learn-from-papers-thanks-to-the-blalock-et-al">What we can learn from papers (Thanks to the Blalock et al)</a></li>
+  <li><a href="#that-is-awesome-but">That is awesome, but…</a></li>
+  <li><a href="#finis">~finis</a></li>
+</ul>
+
+<p>Today we will look at pruning and the different approaches followed.</p>
+
+<p>Hello. It has been a long hiatus. I have been coding a lot but writing too less. Although I did end up writing a lot of documentation haha. I also changed my environment to Vim. (More on that later). Without further rants, lets get to todays topic.</p>
+
+<blockquote>
+  <p>Note that most of this article is based on an excellent paper by Davis Blalock et al <a href="https://arxiv.org/pdf/2003.03033.pdf">WHAT IS THE STATE OF NEURAL NETWORK PRUNING?</a></p>
+</blockquote>
+
+<p>[Cite] : Blalock, D., Ortiz, J. J. G., Frankle, J., &amp; Guttag, J. (2020). What is the state of neural network pruning?. arXiv preprint arXiv:2003.03033.</p>
+
+<h1 id="what-is-it">What is it</h1>
+
+<p>Pruning is something I have been interested in for a long time but somehow I could never get around to implementing it. It interested me for a lot of reasons. Mainly that of being able to reduce the size, cost and computational requirements of my models, all while maintaning the accuracy (sort of atleast).</p>
+
+<p>TL;DR Generally this comes about by removing parameters in some form or fashion.</p>
+
+<p>Rather than taking a mask, we can prune certain parts of the network by setting them to 0 or by dropping them if required. (aka weights and biases)</p>
+
+<p>In most cases, the network is first trained for a while. Then pruned. Which reduces its accuracy and is thus trained again (fine tuning). This cycle is repeated until we get the results we require.</p>
+
+<h1 id="major-types-of-pruning-methods">Major types of pruning methods</h1>
+
+<p>There are many types of such methods but they have been categorized based on what they change from the original idea. Note that, in the end the main idea remains the same, just how it is done is varied.</p>
+
+<h2 id="structure">Structure</h2>
+<ul>
+  <li>Regarding structural choices, some authors choose to prune individual parameters which produces a sparse network (lots of 0s). This might not be very ideal for storing efficiently.</li>
+  <li>Some others consider methods where they group certain parameters and remove them as groups. This is more optimized.</li>
+</ul>
+
+<h2 id="scoring">Scoring</h2>
+<ul>
+  <li>Like all networks, scoring becomes essential when we try to choose which parameter to get rid of.</li>
+  <li>Some authors suggest removing based on absolute values, others decide to prune based on the contributions of that parameter to the entire network.</li>
+  <li>Others remove based on a score given.</li>
+  <li>Some perform pruning locally, while others perform it globally across the network.</li>
+</ul>
+
+<h2 id="scheduling">Scheduling</h2>
+<ul>
+  <li>Some prune all the weights at once</li>
+  <li>Others prune iteratively using loops or some other condition</li>
+</ul>
+
+<h2 id="fine-tuning">Fine tuning</h2>
+<ul>
+  <li>Some store weights before pruning and use that to continue training.</li>
+  <li>Others somehow try to rewind to a previous state and reinitialize the network entirely</li>
+</ul>
+
+<h1 id="pruning-heuristics--code">Pruning heuristics + Code</h1>
+
+<p>Extending this from the previous topic and trying to code a bit.</p>
+
+<p><strong>NOTE</strong> These codes are TOY examples to understand the major ideas. For proper code refer to my repository here. <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/Pruning">Link</a></p>
+
+<p>Let us get some random values in a nested array. In all cases, assume these are weights of a network. Each sub array represents a layer of the network let us say.</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">weights</span> <span class="o">=</span> <span class="x">[</span><span class="n">rand</span><span class="x">(</span><span class="mi">10</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="x">]</span>
+</code></pre></div></div>
+
+<p>We also consider a percentage of values/ number of values to drop as an input.</p>
+
+<h2 id="global-magnitude">Global Magnitude</h2>
+
+<ul>
+  <li>Takes the lowest values in the entire network. Drops them.</li>
+</ul>
+
+<p>Okay so we first flatten the nested array. Then we can easily find the n smallest values because it is a single long array now.
+We can write a tiny function to identify if the value is greater than the a value and return 0 or the original otherwise.</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> setval</span><span class="x">(</span><span class="n">val</span><span class="x">,</span> <span class="n">cmpval</span><span class="x">,</span> <span class="n">setter</span><span class="x">)</span>
+    <span class="k">if</span> <span class="n">val</span><span class="o">&lt;</span><span class="n">cmpval</span>
+        <span class="k">return</span> <span class="n">setter</span>
+    <span class="k">else</span>
+        <span class="k">return</span> <span class="n">val</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can then sort this flattened list. After we do that, we run an element wise map function (over each layer) and pass each element to our previous function. This will allow us to set all the required elements to 0 (or our own value) if the current value is smaller than the value we chose. 
+This will effectively drop the value.</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""
+weights = array
+n = lowest nth smallest value to prune below ( aka take the nth smallest value and prune below it ) (eg: 3)
+"""</span>
+<span class="k">function</span><span class="nf"> global_mag_prune</span><span class="x">(</span><span class="n">weights</span><span class="x">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span><span class="x">,</span> <span class="n">setter</span> <span class="o">=</span> <span class="mi">0</span><span class="x">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">(</span><span class="n">weights</span><span class="x">))</span>
+    <span class="n">sort!</span><span class="x">(</span><span class="n">temp</span><span class="x">)</span>
+    <span class="n">map</span><span class="o">.</span><span class="x">(</span> <span class="n">x</span><span class="o">-&gt;</span> <span class="n">setval</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">temp</span><span class="x">[</span><span class="n">n</span><span class="x">],</span> <span class="n">setter</span><span class="x">)</span> <span class="x">,</span>  <span class="n">weights</span>  <span class="x">)</span>
+    
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We also write a function to determine how sparse the network has become. (Aka how many zeros).</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">return</span> <span class="n">temp2</span><span class="x">,</span> <span class="n">sum</span><span class="x">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">==</span><span class="mi">0</span><span class="x">,</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">(</span><span class="n">temp2</span><span class="x">))</span> <span class="x">,</span> <span class="n">dims</span><span class="o">=</span><span class="mi">1</span><span class="x">)</span><span class="o">/</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">temp</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">size</span><span class="x">(</span><span class="n">temp</span><span class="x">)[</span><span class="mi">1</span><span class="x">])</span><span class="o">*</span><span class="mi">100</span>
+</code></pre></div></div>
+
+<h2 id="layerwise-magnitude">Layerwise Magnitude</h2>
+
+<ul>
+  <li>Takes the lowest values per layer in the network and prunes.</li>
+</ul>
+
+<p>Modifying the global layerwise and applying it per layer instead. 
+To do this, we first make a copy of the weights. Then for every layer in the array, we find the least n values, take the nth value and set all the others to 0.
+As an edge case, if the number of elements entered is greater than the total length of the layer, then the entire layer is set to 0.</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""
+weights = array
+n = lowest nth smallest value to prune below ( aka take the nth smallest value and prune below it ) (eg: 3)
+"""</span>
+<span class="k">function</span><span class="nf"> layer_mag_prune</span><span class="x">(</span><span class="n">weights</span><span class="x">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span><span class="x">,</span> <span class="n">setter</span> <span class="o">=</span> <span class="mi">0</span><span class="x">)</span>
+    <span class="n">backup</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="x">(</span><span class="n">weights</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">weights</span><span class="x">)</span>
+        <span class="n">sort!</span><span class="x">(</span><span class="n">backup</span><span class="x">[</span><span class="n">layer</span><span class="x">])</span>
+        <span class="k">if</span> <span class="n">n</span><span class="o">&gt;</span><span class="n">length</span><span class="x">(</span><span class="n">weights</span><span class="x">[</span><span class="n">layer</span><span class="x">])</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">weights</span><span class="x">[</span><span class="n">layer</span><span class="x">])</span>
+        <span class="k">end</span>
+        <span class="n">backup</span><span class="x">[</span><span class="n">layer</span><span class="x">]</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="x">(</span> <span class="n">x</span><span class="o">-&gt;</span> <span class="n">setval</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">weights</span><span class="x">[</span><span class="n">layer</span><span class="x">][</span><span class="n">n</span><span class="x">],</span> <span class="n">setter</span><span class="x">)</span> <span class="x">,</span>  <span class="n">weights</span><span class="x">[</span><span class="n">layer</span><span class="x">]</span>  <span class="x">)</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">backup</span><span class="x">,</span> <span class="n">sum</span><span class="x">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">==</span><span class="mi">0</span><span class="x">,</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">(</span><span class="n">backup</span><span class="x">))</span> <span class="x">,</span> <span class="n">dims</span><span class="o">=</span><span class="mi">1</span><span class="x">)</span><span class="o">/</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">)[</span><span class="mi">1</span><span class="x">])</span><span class="o">*</span><span class="mi">100</span>        
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="global-gradient-magnitude">Global Gradient Magnitude</h2>
+
+<ul>
+  <li>Identifies lowest absolute value (weight*gradient) in the whole network and removes them</li>
+</ul>
+
+<p>For this we would need to compute the gradient of the weights so far. Well, how about I just use a random array as proof of concept so to speak.
+So we basically take the previous code and change the inital part to being a product of the weights and the gradient.</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> global_grad_prune</span><span class="x">(</span><span class="n">weights</span><span class="x">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span><span class="x">,</span> <span class="n">setter</span> <span class="o">=</span> <span class="mi">0</span><span class="x">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">weights</span><span class="o">*</span><span class="n">rand</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">))</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">(</span><span class="n">weights</span><span class="x">))</span>
+    <span class="n">sort!</span><span class="x">(</span><span class="n">temp</span><span class="x">)</span>
+    <span class="n">temp2</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="x">(</span> <span class="n">x</span><span class="o">-&gt;</span> <span class="n">setval</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">temp</span><span class="x">[</span><span class="n">n</span><span class="x">],</span> <span class="n">setter</span><span class="x">)</span> <span class="x">,</span>  <span class="n">weights</span>  <span class="x">)</span>
+    <span class="k">return</span> <span class="n">temp2</span><span class="x">,</span> <span class="n">sum</span><span class="x">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">==</span><span class="mi">0</span><span class="x">,</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">(</span><span class="n">temp2</span><span class="x">))</span> <span class="x">,</span> <span class="n">dims</span><span class="o">=</span><span class="mi">1</span><span class="x">)</span><span class="o">/</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">temp</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">size</span><span class="x">(</span><span class="n">temp</span><span class="x">)[</span><span class="mi">1</span><span class="x">])</span><span class="o">*</span><span class="mi">100</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="layerwise-gradient-magnitude">Layerwise Gradient Magnitude</h2>
+
+<ul>
+  <li>Lowest absolute value per layer and removes them
+Similarly, we modify this again to fit our needs</li>
+</ul>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""
+weights = array
+n = lowest nth smallest value to prune below ( aka take the nth smallest value and prune below it ) (eg: 3)
+"""</span>
+<span class="k">function</span><span class="nf"> layer_grad_prune</span><span class="x">(</span><span class="n">weightsnew</span><span class="x">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span><span class="x">,</span> <span class="n">setter</span> <span class="o">=</span> <span class="mi">0</span><span class="x">)</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="x">(</span><span class="n">weightsnew</span><span class="x">)</span><span class="o">*</span><span class="n">rand</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">weightsnew</span><span class="x">))</span>
+    <span class="n">backup</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="x">(</span><span class="n">weights</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">weights</span><span class="x">)</span>
+        <span class="n">sort!</span><span class="x">(</span><span class="n">backup</span><span class="x">[</span><span class="n">layer</span><span class="x">])</span>
+        <span class="k">if</span> <span class="n">n</span><span class="o">&gt;</span><span class="n">length</span><span class="x">(</span><span class="n">weights</span><span class="x">[</span><span class="n">layer</span><span class="x">])</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">weights</span><span class="x">[</span><span class="n">layer</span><span class="x">])</span>
+        <span class="k">end</span>
+        <span class="n">backup</span><span class="x">[</span><span class="n">layer</span><span class="x">]</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="x">(</span> <span class="n">x</span><span class="o">-&gt;</span> <span class="n">setval</span><span class="x">(</span><span class="n">x</span><span class="x">,</span><span class="n">weights</span><span class="x">[</span><span class="n">layer</span><span class="x">][</span><span class="n">n</span><span class="x">],</span> <span class="n">setter</span><span class="x">)</span> <span class="x">,</span>  <span class="n">weights</span><span class="x">[</span><span class="n">layer</span><span class="x">]</span>  <span class="x">)</span>
+    <span class="k">end</span>
+        
+    <span class="k">return</span> <span class="n">backup</span><span class="x">,</span> <span class="n">sum</span><span class="x">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">==</span><span class="mi">0</span><span class="x">,</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">(</span><span class="n">backup</span><span class="x">))</span> <span class="x">,</span> <span class="n">dims</span><span class="o">=</span><span class="mi">1</span><span class="x">)</span><span class="o">/</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">)[</span><span class="mi">1</span><span class="x">])</span><span class="o">*</span><span class="mi">100</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="random">Random</h2>
+
+<ul>
+  <li>Each weight independantly considered and dropped with a fraction of network required</li>
+</ul>
+
+<p>For this we first take the number of values to prune by identifying the total size of the weights and then multiplying it by the fraction of values to remove.
+We then flatten the array, set the values we do not need to 0 and then reshape back to the original shape.</p>
+
+<div class="language-jl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""
+frac = percentage of values to remove
+"""</span>
+<span class="k">function</span><span class="nf"> random_prune</span><span class="x">(</span><span class="n">weights</span><span class="x">,</span> <span class="n">frac</span> <span class="o">=</span> <span class="o">.</span><span class="mi">3</span><span class="x">,</span> <span class="n">setter</span> <span class="o">=</span> <span class="mi">0</span><span class="x">)</span>
+    <span class="n">num_prune</span> <span class="o">=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">round</span><span class="x">(</span><span class="n">frac</span><span class="o">*</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span><span class="o">*</span><span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">)[</span><span class="mi">1</span><span class="x">])))</span>
+    <span class="nd">@info</span> <span class="n">num_prune</span>
+    <span class="n">backup</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">(</span><span class="n">deepcopy</span><span class="x">(</span><span class="n">weights</span><span class="x">)))</span>
+    <span class="n">backup</span><span class="x">[</span><span class="n">rand</span><span class="x">(</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">backup</span><span class="x">),</span> <span class="n">num_prune</span><span class="x">)]</span> <span class="o">.=</span> <span class="mi">0</span>
+    <span class="nd">@info</span> <span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">)</span>
+    <span class="k">return</span> <span class="n">reshape</span><span class="x">(</span><span class="n">backup</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">weights</span><span class="x">))</span>
+<span class="k">end</span>
+    
+</code></pre></div></div>
+
+<h1 id="what-we-can-learn-from-papers-thanks-to-the-blalock-et-al">What we can learn from papers (Thanks to the Blalock et al)</h1>
+
+<ul>
+  <li>Pruning methods cannot be decided by a single dataset but must be run using standardized tests over a variety of them to decide</li>
+  <li>If a small compression is required, pruning might actually improve our accuracy in some cases</li>
+  <li>Random pruning might not always be the best bet</li>
+  <li>Global pruning is better</li>
+  <li>Assigning different pruning percentages based on the layer type helps</li>
+  <li>Sparse models outperform dense ones generally</li>
+  <li>Pruned models can sometimes achieve higher accuracies than the initial architecture</li>
+  <li>More effective with architectures that are poor in the first place</li>
+  <li>Might be able to improve the time/space vs accuracy tradeoff</li>
+</ul>
+
+<h1 id="that-is-awesome-but">That is awesome, but…</h1>
+
+<ul>
+  <li>You are sometimes off choosing a better and more efficient architecture sometimes</li>
+  <li>It depends purely on what your objective is</li>
+</ul>
+
+<h1 id="finis">~finis</h1>
+<p>That ends our little journey into pruning. Wow that took longer then expected. I should go sleep.</p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+  <a href=/article/2020/09/02/DatasetBindings.html> Dataset Bindings&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+
+</script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Dataloader | Deconstructing Deep learning</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Dataloader" />
+<meta name="author" content="Subhaditya Mukherjee" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification." />
+<meta property="og:description" content="The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification." />
+<meta property="og:site_name" content="Deconstructing Deep learning" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-19T12:53:45+00:00" />
+<script type="application/ld+json">
+{"description":"The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.","url":"/article/2020/06/19/dataloader.html","@type":"BlogPosting","headline":"Dataloader","dateModified":"2020-06-19T12:53:45+00:00","datePublished":"2020-06-19T12:53:45+00:00","author":{"@type":"Person","name":"Subhaditya Mukherjee"},"mainEntityOfPage":{"@type":"WebPage","@id":"/article/2020/06/19/dataloader.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/landing.css?v=">
+  </head>
+  <body>
+    <div class="col-md-4">
+      <header>
+        <h2><a id = "imp" href="/">Home page</a></h2>
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a> <br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total number of posts : 88</h4>
+         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
+        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
+        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
+        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
+         
+        </p>
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+      <div class="col-md-5">
+  <a href = "/deeplearning.html">Go to index</a><br><br>
+
+
+<h1>Dataloader</h1>
+
+<span class="reading-time" title="Estimated read time">
+  
+  
+    <h3>Reading time : ~8 mins</h3>
+  
+</span>
+
+
+<p class="view">by Subhaditya Mukherjee</p>
+<ul>
+  <li><a href="#imports">Imports</a></li>
+</ul>
+
+<p>The first thing we need is to be able to read data. To begin with, I am starting with the problem of image classification.</p>
+
+<p>It is a pretty huge thing to deal with at first go. But if we can do it then we can progress towards bigger things :)</p>
+
+<h2 id="imports">Imports</h2>
+
+<p>We first need certain libraries (standard ones).</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">FileIO</span> <span class="c"># will help us perform basic file tasks</span>
+<span class="k">using</span> <span class="n">Images</span> <span class="c"># read images</span>
+<span class="k">using</span> <span class="n">Serialization</span> <span class="c"># A helper function</span>
+<span class="k">using</span> <span class="n">Random</span>
+<span class="k">using</span> <span class="n">CUDAapi</span> <span class="c"># Will allow us to work with the GPU directly. Obviously I wont write a CUDA kernel now</span>
+<span class="k">using</span> <span class="n">Plots</span>
+<span class="k">import</span> <span class="n">GR</span> <span class="c"># A plotting backend</span>
+<span class="k">using</span> <span class="n">Images</span>
+<span class="k">using</span> <span class="n">CuArrays</span> <span class="c"># Pop arrays to GPU</span>
+<span class="k">using</span> <span class="n">ImageView</span> <span class="c"># Display images</span>
+<span class="k">using</span> <span class="n">Statistics</span><span class="x">,</span> <span class="n">Random</span>
+<span class="k">import</span> <span class="n">ProgressMeter</span> <span class="c"># Will allow us to make a fancy looking progress bar :)</span>
+<span class="n">gr</span><span class="x">()</span>
+</code></pre></div></div>
+
+<p>If we read an image at a time, the process would be extremely slow. So we need to use as much power as we can (make <a href="https://en.wikipedia.org/wiki/Flash_(Barry_Allen)">Barry Allen</a> happy). We first find out how many CPUs we have and then set the number of parallel processes to that many. Aka we now go very very fast :)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Threads</span><span class="o">.</span><span class="n">nthreads</span><span class="x">()</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">Sys</span><span class="o">.</span><span class="n">cpu_info</span><span class="x">())</span>
+</code></pre></div></div>
+
+<p>Let us also set a path for the folder using the variable path.</p>
+
+<p>Now we need to decide a folder structure for the task. I want all my datasets to be of the format.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    - category1
+        - file1...
+    -category2
+        - file1...
+    ...
+</code></pre></div></div>
+
+<p>Now that we have decided that, time to actually read the files :)</p>
+
+<p>We write a small function to help us add the path to every file from the parent. This will help us very much later.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> add_path</span><span class="x">(</span><span class="n">cat</span><span class="o">::</span><span class="kt">String</span><span class="x">)</span>
+    <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">readdir</span><span class="x">(</span><span class="n">joinpath</span><span class="x">(</span><span class="n">path</span><span class="x">,</span><span class="n">cat</span><span class="x">));</span>
+    <span class="k">return</span> <span class="x">[</span><span class="n">joinpath</span><span class="x">(</span><span class="n">path</span><span class="x">,</span> <span class="n">cat</span><span class="x">,</span><span class="n">x</span><span class="x">)</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">temp_dir</span><span class="x">],</span><span class="n">fill</span><span class="x">(</span><span class="n">cat</span><span class="x">,</span><span class="n">size</span><span class="x">(</span><span class="n">temp_dir</span><span class="x">,</span><span class="mi">1</span><span class="x">)</span> <span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The fill function essentially repeats a variable. So in this case we have “cat” repeated as many times as the number of cat images in the folder.</p>
+
+<p>What do I need? 1. Make a list of categories(parent folders) 2. Make a list of all image files in them 3. Make a list of all categories (expand the labels for each file) 4. Create a temporary structure filled with zeros (more efficient) 5. For each image we load it, resize it to a desired size and convert them to a image format. After that we convert them to Float64 and save it to the previous array we allocated. 6. Eat, sleep, rave, repeat :)) &gt; Note that all of this is happening parallely</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> fromFolder</span><span class="x">(</span><span class="n">path</span><span class="o">::</span><span class="kt">String</span><span class="x">,</span><span class="n">imageSize</span><span class="o">=</span><span class="mi">64</span><span class="o">::</span><span class="kt">Int64</span><span class="x">)</span>
+    <span class="nd">@info</span> <span class="n">path</span><span class="x">,</span> <span class="n">imageSize</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">readdir</span><span class="x">(</span><span class="n">path</span><span class="x">)</span> <span class="c">#1</span>
+    <span class="n">total_files</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">([</span><span class="n">add_path</span><span class="x">(</span><span class="n">x</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">categories</span><span class="x">]));</span> <span class="c">#2</span>
+    <span class="n">total_categories</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">Iterators</span><span class="o">.</span><span class="n">flatten</span><span class="x">([</span><span class="n">add_path</span><span class="x">(</span><span class="n">x</span><span class="x">)[</span><span class="mi">2</span><span class="x">]</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">categories</span><span class="x">]));</span> <span class="c">#3</span>
+
+    <span class="n">images</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">((</span><span class="n">imageSize</span><span class="x">,</span> <span class="n">imageSize</span><span class="x">,</span> <span class="mi">3</span><span class="x">,</span> <span class="n">size</span><span class="x">(</span><span class="n">total_files</span><span class="x">,</span><span class="mi">1</span><span class="x">)));</span> <span class="c">#4</span>
+
+    <span class="n">Threads</span><span class="o">.</span><span class="nd">@threads</span> <span class="k">for</span> <span class="n">idx</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="x">(</span><span class="n">total_files</span><span class="x">,</span><span class="mi">1</span><span class="x">)</span> <span class="c">#5</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">channelview</span><span class="x">(</span><span class="n">imresize</span><span class="x">(</span><span class="n">load</span><span class="x">(</span><span class="n">total_files</span><span class="x">[</span><span class="n">idx</span><span class="x">]),</span> <span class="x">(</span><span class="n">imageSize</span><span class="x">,</span> <span class="n">imageSize</span><span class="x">)))</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">convert</span><span class="x">(</span><span class="kt">Array</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span><span class="n">img</span><span class="x">)</span>
+        <span class="n">images</span><span class="x">[</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="o">:</span><span class="x">,</span><span class="n">idx</span><span class="x">]</span> <span class="o">=</span> <span class="n">permutedims</span><span class="x">(</span><span class="n">img</span><span class="x">,(</span><span class="mi">2</span><span class="x">,</span><span class="mi">3</span><span class="x">,</span><span class="mi">1</span><span class="x">))</span>
+        <span class="k">end</span>
+    <span class="nd">@info</span> <span class="s">"Done loading images"</span>
+    <span class="k">return</span> <span class="n">images</span><span class="x">,</span> <span class="n">total_categories</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The @info is something I really like. It allows us to print nice versions of outputs :)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">X</span><span class="x">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">fromFolder</span><span class="x">(</span><span class="s">"/media/subhaditya/DATA/COSMO/Datasets/catDog/"</span><span class="x">,</span><span class="mi">64</span><span class="x">);</span>
+</code></pre></div></div>
+
+<p>We now have a dataloader which returns all the files in our dataset. We are testing it with the cat/dog dataset (because why not -.-).</p>
+
+
+<section>
+Related posts:&emsp;
+
+  <a href=/book/2021/03/09/AISuperpowersKaiFuLee.html> AI Superpowers Kai Fu Lee&emsp; </a>
+
+  <a href=/book/2021/03/07/DigitalMinimalismCalNewport.html> Digital Minimalism Cal Newport&emsp; </a>
+
+  <a href=/article/2021/03/05/tricksFromLectures.html> More Deep Learning, Less Crying - A guide&emsp; </a>
+
+  <a href=/article/2020/10/09/SuperRes.html> Super resolution&emsp; </a>
+
+  <a href=/article/2020/10/07/FederatedLearning.html> Federated Learning&emsp; </a>
+
+  <a href=/article/2020/10/03/TakingBatchnormForGranted.html> Taking Batchnorm For Granted&emsp; </a>
+
+  <a href=/article/2020/09/28/AdversarialAttack.html> A murder mystery and Adversarial attack&emsp; </a>
+
+  <a href=/article/2020/09/26/An.html> Thank you and a rain check&emsp; </a>
+
+  <a href=/article/2020/09/25/Pruning.html> Pruning&emsp; </a>
+
+  <a href=/article/2020/09/04/Documentation.html> Documentation using Documenter.jl&emsp; </a>
+
+
+</section>
+
+
+    </div>
+  </body>
+</html>
