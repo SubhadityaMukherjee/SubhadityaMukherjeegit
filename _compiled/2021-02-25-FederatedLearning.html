@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 33</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>Paper notes for the paper</p>
+<p><strong>[35]</strong> Federated Learning (original paper)
+- Konečný, J., McMahan, H. B., Yu, F. X., Richtárik, P., Suresh, A. T., &amp; Bacon, D. (2016). Federated learning: Strategies for improving communication efficiency. arXiv preprint arXiv:1610.05492.  <a href="https://arxiv.org/pdf/1610.05492">Paper</a></p>
+<p>I also wrote a detailed blog post for this <a href="https://medium.com/datadriveninvestor/federated-learning-d466aba3abbd?source=friends_link&amp;sk=91072a0b0d19c2f6641af5c471159c80">Post</a></p>
+<h1 id="notes-from-the-paper">Notes from the paper</h1>
+<ul>
+<li>training data remains distributed over a large number of clients each with unreliable and relatively slow network connections</li>
+<li>computes an update to the current model based on its local data, and communicates this update to a central server, where the client-side updates are aggregated to compute a new global model. </li>
+<li>slight degradation in convergence speed </li>
+</ul>
+<h2 id="types-of-updates">Types of updates</h2>
+<ul>
+<li>Structured updates, where we directly learn an update from a restricted space that can be
+parametrized using a smaller number of variables.</li>
+<li>Sketched updates, where we learn a full model update, then compress it before sending to
+the server.</li>
+</ul>
+<h2 id="structured-update">Structured Update</h2>
+<ul>
+<li>we train directly the updates of this structure</li>
+<li>Random mask. We restrict the update Hit to be a sparse matrix, following a pre-defined random
+sparsity pattern </li>
+</ul>
+<h2 id="sketched-update">Sketched update</h2>
+<ul>
+<li>first computes the full Hit during local training without any constraints, and then approximates, or encodes, the update in a (lossy) compressed form before sending to the server. The server decodes the updates before doing the aggregation. </li>
+<li>Subsampling. Instead of sending Hit , each client only communicates matrix Ĥit which is formed
+from a random subset of the (scaled) values of Hit.</li>
+<li>Quantize the weights</li>
+<li>Improving the quantization by structured random rotations. The above 1-bit and multi-bit quan-
+tization approach work best when the scales are approximately equal across different dimensions.</li>
+<li>In the decoding phase, the server needs to perform the inverse rotation before aggregating all the
+updates. </li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

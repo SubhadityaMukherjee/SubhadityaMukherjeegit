@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Have you heard of fractal patterns? Here we will try to make some :) (look at the pictures at the end)</p>
+<p>A mandelbrot set is obtained from the recurrence relation $$ Z_{n} = Z^2_{n-1} + c$$ where $$ Z_{0} $$ is a complex number.
+Note : Most of the code is from a python source which I converted to Julia <a href="https://levelup.gitconnected.com/mandelbrot-set-with-python-983e9fc47f56">Link</a></p>
+<p>Okay lets get to it. </p>
+<h2 id="what-we-want">What we want</h2>
+<p>We take complex numbers
+See if they diverge to infinity
+Or converge to 0 (over a fixed number of iterations and not infinity because well inifnity is too far away xD)
+At every point, provide a color if the condition is satisfied
+Since I am really bored, let us add multiple conditions based on randomness.</p>
+<h2 id="coding-what-we-want">Coding what we want</h2>
+<p>Let us load the one package we need for this.</p>
+<pre><code class="language-julia">using Plots
+</code></pre>
+<p>First to find out if the number diverges and how many steps it takes to do so. (Given a constraint)</p>
+<p>Let us create a backup of our complex number, and give it a max steps. Since we cannot check for infinity, let us also define a threshold to check if the number is diverging till there or not.</p>
+<p>Now Julia handles complex numbers a bit differently so to work the python way, we need to hack it a bit and add the two halves that Julia stores it as. We also do that for c because the clone z does not affect c.
+Now as long as we do not exceed the maximum steps we have defined, we check for the breaking condition </p>
+<p>$$\left( \mathrm{real}\left( z \cdot \mathrm{conj}\left( z \right) \right) \lt threshold \right)$$</p>
+<p>If this is also satisfied, we basically keep doing  $$z = z \cdot z + c$$ until the condition is not met and keep incrementing i. When the loop ends, we have the count of the number of steps it took and that is our i which we return.</p>
+<blockquote>
+<p>I really love the @show . It gives an output like z = "some val" y = "some val" which makes it really easy to debug. Even @info is really cool</p>
+</blockquote>
+<pre><code class="language-julia">function get_iter(c,thresh=4, max_steps = 25)
+    z, i = c, 1
+
+    z = z[1]+z[2]im
+    c = c[1]+c[2]im
+    conz = conj(z)
+    #@show z, conj.(z)
+    #@show z*z
+    while (i&lt;max_steps) &amp;&amp; (real(z*conz) &lt; thresh)
+        z = z*z +c
+
+        i +=1
+    end
+    #@show z    
+    return i 
+end
+</code></pre>
+<p>Okay now for the actual loop for to generate our image.</p>
+<p>This could look a little complicated, but it is really simple. We do have to make use of some predefined equations though. We pass in the how big we want our initial matrix (n) and the maximum number of steps we want it to run for. The equations are</p>
+<p>$$mx = \frac{2.48}{n - 1} ; my = \frac{2.26}{n - 1} $$</p>
+<p>Now we define an empty matrix of size (n,n) and multiply it by 255. Since we want an image, 255 is the color black which will allow us to make a blank image.
+Now for every point in the image (which is a matrix) we use a function to obtain its value.</p>
+<p>$$mapper(x,y) = (mx \cdot x - 2, my \cdot y - 1.13) $$</p>
+<p>We pass this obtained value to the function which we had defined to check if the number is diverging or not and for every point, return 255 - the obtained value.
+We are almost done by now but I wanted to add something extra before we get to plotting it.</p>
+<pre><code class="language-julia">function plotter(n , thresh, max_steps= 50,mxv = 2.48, myv = 2.26)
+    mx = mxv/(n-1)
+    my = myv/(n-1)
+    mapper(x,y) = (mx*x - 2, my*y - 1.13)
+    img = ones(n,n).*255
+    for x in collect(1:n)
+        for y in collect(1:n)
+            temp = mapper(x-1,y-1)
+            #@info temp
+            temp = complex.(temp)
+            #@info temp
+            it = get_iter(temp,thresh, max_steps)
+            #@show it
+            #@info x,y
+        end
+        #break
+    end
+    return img
+end
+</code></pre>
+<p>After this we have an output like this.</p>
+<p><img src="{{site.baseurl}}/assets/img/frac2.png" alt="drawing" width="500"/></p>
+<p>What if we wanted to add noise to the output?</p>
+<pre><code class="language-julia">  prob = rand(1)[1]
+            if prob&gt;.5
+                img[y,x] = 255- it
+            elseif prob &gt;.8
+                img[y,x] = 155- it
+            else
+                img[y,x] = 100- it
+            end
+</code></pre>
+<p>Let us just return different values at random points.</p>
+<p>Okay now for the final bit.</p>
+<p>Let us use a (1000, 1000) matrix with threshold 50 and max iterations 200.
+We need to plot a heatmap. Of course, the colors are defined by the colormap which can be chosen as whatever looks the prettiest.</p>
+<pre><code class="language-julia">fractal_img = plotter(1000,50,200);
+heatmap(fractal_img, fillcolor = :blues)
+</code></pre>
+<h2 id="outputs">Outputs</h2>
+<p>Aren't these pretty??</p>
+<p><img src="{{site.baseurl}}/assets/img/frac3.png" alt="drawing" width="500"/></p>
+<p><img src="{{site.baseurl}}/assets/img/madel.png" alt="drawing" width="500"/></p>
+<p><img src="{{site.baseurl}}/assets/img/madel2.png" alt="drawing" width="500"/></p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

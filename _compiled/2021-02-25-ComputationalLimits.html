@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 33</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>Paper notes for the paper</p>
+<p><strong>[31]</strong> Computational Limits (Just notes)
+- Thompson, N. C., Greenewald, K., Lee, K., &amp; Manso, G. F. (2020). The Computational Limits of Deep Learning. arXiv preprint arXiv:2007.05558. <a href="https://arxiv.org/pdf/2007.05558">Paper</a></p>
+<ul>
+<li>Deep learning is quickly becoming unsustainable economically, environmentally and technically</li>
+<li>deep learning might soon become computationally constrained even though substantial improvements might be possible</li>
+</ul>
+<h1 id="theory">theory</h1>
+<ul>
+<li>over parameterizing a neural network basically means that it would be given more parameters and there are data points</li>
+<li>a cost of training the neural network scales with the product of the number of parameters with the number of data points</li>
+<li>theoretically, It grows by at least the square of the number of data points in an over parameterized setting</li>
+<li>we should always be aware of a performance plateau</li>
+<li>as the amount of data increases, standard flexible models are performed expert models because they do not capture all the contributing factors</li>
+<li>traditional machine learning techniques to better when data is small and deep learning does better when there's a huge amount of data. This is because of over parameterization which makes use of implicit regularization </li>
+</ul>
+<h1 id="performance">performance</h1>
+<ul>
+<li>We find highly-statistically significant slopes and strong explanatory power (R2 between 29% and 68%) for all benchmarks except machine translation, English to German, where we have very little variation in the computing power used. </li>
+<li>Object detection, named-entity recognition and machine translation show large increases in hardware burden with relatively small improvements</li>
+<li>polynomial models best explain this data, but that models implying an exponential increase in computing power as the right functional form are also plausible.</li>
+<li>more-optimistic model, it is estimated to take an additional 10^5× more computing to get to an error rate of 5% for ImageNet.</li>
+<li>fundamental rearchitecting is needed to lower the computational intensity</li>
+<li>For deep learning, these included mostly GPU and TPU implementations, although it has increasingly also included FPGA and other ASICs.</li>
+<li>analog hardware with in-memory computation, neuromorphic computing, optical computing , and quantum computing based approaches [90], as well as hybrid approaches</li>
+<li>quantum computing is the approach with perhaps the most long-term upside</li>
+<li>pruning” away weights ,quantizing the network, or using low-rank compression are important </li>
+<li>overhead of doing meta learning or neural architecture search is itself computationally intense</li>
+<li>move to other, perhaps as yet undiscovered or underappreciated types of machine learning.</li>
+<li>era when improvements in hardware perfor- mance are slowing. </li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

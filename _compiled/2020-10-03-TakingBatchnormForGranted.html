@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Here we will see what happens when we "dont" take Batchnorm for granted.</p>
+<h1 id="granted">Granted?</h1>
+<p>Batch Norm is one of the most widely used layers in a neural network. Ever since it came out, it became possible to train neural networks that were faster, more accurate and more resistant to change. 
+Sounds almost magic doesn't it? You would think, for something so magical, the implementation must be crazy hard. (You would be wrong)</p>
+<p>What happened is that due to the black box nature of a neural network, we started taking this magic for granted. There were many assumptions of course about how and why it had the effect it does, but I recently found a <a href="https://arxiv.org/abs/2003.00152">paper</a> which made a <strong>serious</strong> attempt to understand it.</p>
+<p>So what happens when we just train the batchnorm layers and freeze everything else? What happens when we use different types of networks? 
+Let us dig in...</p>
+<h1 id="what-is-batch-norm">What is Batch Norm</h1>
+<p>Before we get to anything, a quick primer on batchnorm.</p>
+<p>Why do we need it? Standardize inputs to the network. This will allow the network to "focus" and learn whats more important numerically speaking.</p>
+<p>Now, how does it look (Note that these are the components and not the entire implementation)</p>
+<p>Here we first generate a random array. The inputs γ, β are learnable parameters which we will look into later. ϵ is a very small number which will prevent our values from becoming 0.
+We first take the mean, then the variance and then we standardize the data using them. At the end we take a product and sum with the parameters.</p>
+<p>Now, consider the random array is a batch of data, we apply this over the batch and instead of just the individual mean, we take a running mean. (aka a continuously changing value based on streaming data). Thats about it.</p>
+<pre><code class="language-jl">ran = rand(10,20)
+
+function bnorm_x(x,γ, β, ϵ = 1e-5)
+    mean_x = sum(x)/length(x) #mean of x
+    variance_x = sum((x .- mean_x).^2)/length(ran) #variance of x
+    x̂  = (x .- mean_x)/sqrt(variance_x^2 + ϵ)
+    @info size(x̂ ), size(β), size(γ)
+    return γ.*x̂  + β 
+end
+</code></pre>
+<h1 id="train">Train!!</h1>
+<p>Okay so this bit will be in Pytorch. I will try to explain everything I do but I cannot paste the full code here as this will become too huge. So I will just show what is different from a standard training here.</p>
+<p>The entire code (with comments) can be found at <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/BatchnormOnlyBatchnorm">my repository</a></p>
+<p>So our main workflow remains the same as every other deep learning project.
+1. Load data (check main.py)
+2. Pre process it (check main.py)
+3. Enumerate the batches
+4. Optimize a loss function
+5. Test it</p>
+<p>We focus on steps 3 and 4 here. </p>
+<h1 id="code">Code</h1>
+<p>Let us first get the libraries we need. aka Pytorch and tqdm (this is a tiny little progress bar helper which I absolutely adore)</p>
+<pre><code class="language-py">import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from tqdm import tqdm
+</code></pre>
+<p>Before we think about going ahead, let us first try to understand what we want. We need to train the network as usual, but make sure that <strong>only</strong> the batchnorm layes get trained. Just to see how far we can stretch it.</p>
+<p>To do that, let us create a function which goes through our entire model, and if it finds any layer which is NOT batchnorm, it will tell pytorch to forget the gradients for that layer. In the process, making sure that only the Batchnorm layers get trained. We freeze the weights and biases for that reason.</p>
+<pre><code class="language-py">def freezeOthers(m):
+    for param in m.parameters():
+        if not isinstance(m, torch.nn.modules.batchnorm._BatchNorm):
+            if hasattr(m, 'weight') and m.weight is not None:
+                m.weight.requires_grad_(False)
+            if hasattr(m, 'bias') and m.bias is not None:
+                m.bias.requires_grad_(False)
+</code></pre>
+<p>Now for the main training loop.
+We first make the model trainable and send it to the GPU. Then we iterate over the data. Following pytorch standard loops, we reset the gradients and pass the batch through our model. 
+We perform back propagation and step through our optimizer.
+And then we apply our previous function. After this, our model will forget the gradients for every other layer.
+We also add a tiny little option to print out the current loss. (This helps when you are looking at it train)        </p>
+<pre><code class="language-py">def train(args, model, device, train_loader, optimizer, epoch):
+    model.train() # Setting model to train
+    device = torch.device(&quot;cuda&quot;) # Sending to GPU
+    for batch_idx, (data, target) in tqdm(enumerate(train_loader)):
+        data, target = data.to(device), target.to(device)
+        optimizer.zero_grad() #Reset grads 
+
+        output = model(data) # Passing batch through model
+
+        loss = nn.CrossEntropyLoss()(output, target) # Calculate loss 
+
+        loss.backward() # Backprop
+        optimizer.step() # Pass through optimizer
+        model.apply(freezeOthers) # Dont train other layers
+
+        if batch_idx % args.log_interval == 0:
+            print(loss.item())
+            if args.dry_run:
+                break
+</code></pre>
+<h1 id="how-did-that-do">How did that do?</h1>
+<p>Well I tested ResNet110 on the CIFAR 10 dataset and for the normal network, I got a test accuracy of around 92%. 
+While only training BatchNorm, I got to around 68% test accuracy.
+Now you might think, that is very far off. Yes, it is.. but notice that we are using only around .48% of the data <a href="https://arxiv.org/abs/2003.00152">Cite1</a>
+Wow...</p>
+<p>But is this conclusive? Well I did a few more experiments, but instead let me point you towards an awesome <a href="https://wandb.ai/sayakpaul/training-bn-only/reports/The-Power-of-Random-Features-of-a-CNN--VmlldzoxMTIxODA">blog post</a> I found. It is by someone I admire and you can go and play around with the network and see the results for yourself instead of me giving you graphs.</p>
+<h1 id="not-taking-batchnorm-for-granted">Not taking Batchnorm for granted</h1>
+<p>Now that we understand a bit more about how expressive these layers seem to be. Let me share some points I found extremely interesting from the paper<a href="https://arxiv.org/abs/2003.00152">Cite 1</a>.</p>
+<ol>
+<li>BatchNorm learns to disable features in the network which allows it to learn pretty well and impose sparsity for the features</li>
+<li>Affine parameters (ones that perform transformation of some sort) in the layers play a really important role</li>
+<li>The layer helps the network to learn a better representation</li>
+<li>Random features play an important role in a neural network, to an extent that we do not fully understand yet.</li>
+<li>Placing BatchNorm before the activation leads to better performace</li>
+<li>If we only train the layer, increasing the depth gives a better result than increasing the width</li>
+<li>Many features in a network can be removed without affecting the values much</li>
+<li>The shortcut connections in ResNets might actually be throttling performance due to them not being able to use BatchNorm properly</li>
+<li><strong>Dont take Batchnorm for granted</strong></li>
+</ol>
+<h1 id="winding-up">Winding up</h1>
+<p>By now I think we come to realize that maybe we should not take what we think we know for granted. Sometimes it takes a difficult to digest paper to make one understand that. 
+BatchNorm does play an important part in the network. And this somehow proves our need to be able to dig into the structure and the black box of Neural network architectures. </p>
+<p>I would love to discuss further and if you have any questions do feel free to reach out in the comments. Or connect with me on <a href="github.com/SubhadityaMukherjee/">Github</a>.</p>
+<h1 id="references">References</h1>
+<ul>
+<li><a href="https://arxiv.org/abs/2003.00152">Cite 1: Original paper</a> courtesy Jonathan Frankle et al.</li>
+<li><a href="https://medium.com/deeplearningmadeeasy/everything-you-wish-to-know-about-batchnorm-6055e07fdce2">Alvaro Duran</a></li>
+<li><a href="https://arxiv.org/pdf/1502.03167.pdf">The batchnorm paper</a></li>
+<li><a href="https://discuss.pytorch.org/t/retrain-batchnorm-layer-only/61324">Link from pytorch forums</a></li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

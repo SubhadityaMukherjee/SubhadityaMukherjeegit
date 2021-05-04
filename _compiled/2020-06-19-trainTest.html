@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Defining a function to split the dataset into train/test bits and oversample it as well.</p>
+<h2 id="what-we-need-to-do-and-steps-we-will-try-to-follow">What we need to do and steps we will try to follow.</h2>
+<ol>
+<li>Take all the files and labels as X,y</li>
+<li>Class distribution</li>
+<li>Oversample?</li>
+<li>Split into train/test</li>
+</ol>
+<h2 id="class-distribution">Class distribution</h2>
+<p>This is extremely important for classification so we first try to see if the classes are balanced or not.
+Should be quite simple. We first take the labels(lesser computation) and then count each of them. Let us also plot it because graphs are pretty.
+We also return the maximum count to help with oversampling.
+We make this default to oversample if the differences between the classes are greater than 100 images.</p>
+<pre><code class="language-julia">function classDistribution(y)
+    &quot;&quot;&quot;
+    Function to plot class distribution to see if balanced or not.
+    &quot;&quot;&quot;
+    labels = unique(y)
+    cnts = [sum(y .== i) for i in labels]
+    display(plot(cnts,seriestype = [:bar]))
+    return cnts,maximum(cnts)
+end
+</code></pre>
+<p>Done :)</p>
+<h2 id="oversample">Oversample</h2>
+<p>This is a technique in which the lower sampled classes are copied till the number of samples are equal.
+So turns out adding it here doesnt help and makes it worse. So I copied the code to the start and we are adding on to the read file function.
+We modify the initial loader once to add the images from the end of the array and repeat the labels. </p>
+<p>The modified function is as follows.</p>
+<pre><code class="language-julia">#export
+
+&quot;&quot;&quot;
+Function to create an array of images and labels -&gt; when the directory structure is as follows
+- main
+    - category1
+        - file1...
+    -category2
+        - file1...
+    ...
+&quot;&quot;&quot;
+function fromFolder(path::String,imageSize=64::Int64)
+    @info path, imageSize
+    categories = readdir(path)
+    total_files = collect(Iterators.flatten([add_path(x)[1] for x in categories]));
+    total_categories = collect(Iterators.flatten([add_path(x)[2] for x in categories]));
+    distrib,max_dis = classDistribution(total_categories)
+
+    indices_repeat = indexin(unique(y), y)
+    # oversample
+    total_add = max_dis.-distrib # get the differences to oversample
+    oversample = false;
+    if sum(total_add)&gt;100
+        images = zeros((imageSize, imageSize, 3, size(max_dis*length(unique(total_categories)),1)));
+        oversample= true;
+        oversample_index = length(y)- sum(total_add)# keep a track of indices from the back
+    else
+        images = zeros((imageSize, imageSize, 3, size(total_categories,1)));
+        oversample= false;
+    end
+
+    Threads.@threads for idx in collect(1:size(total_files,1))
+        img = channelview(imresize(load(total_files[idx]), (imageSize, imageSize)))
+        img = convert(Array{Float64},img)
+        images[:,:,:,idx] = permutedims(img,(2,3,1))
+#         @info oversample
+        if oversample==true
+
+            if idx in indices_repeat
+                labelrep = findfirst(x-&gt;x==idx,indices_repeat) # index in the repeated list
+                to_repeat = total_add[labelrep] # no of times to repeat
+                total_categories = vcat(total_categories, fill(total_categories[indices_repeat[labelrep]],to_repeat))
+                Threads.@threads for idx2 in collect(oversample_index:to_repeat)
+                    images[:,:,:,idx2] = images[:,:,:,indices_repeat[labelrep] ]
+
+                end
+
+
+            end
+        end
+    end
+
+
+    @info &quot;Done loading images&quot;
+
+2    return images, total_categories
+
+
+
+end
+
+</code></pre>
+<p>Done :)</p>
+<h2 id="split-into-train-test">Split into train test</h2>
+<p>I did not think this would turn out very well but it did somehow. And pretty easily.
+Instead of shuffling the order around. We shuffle the indexes. This means that we do not need to take care of linked sorting etc.
+After we shuffle it, we split the array into 2 bits by a percentage. 
+The view takes care of that bit.
+Then we use the same indexing types we have used so far and pop the shuffled indexes into them. And viola! Train test split is here!</p>
+<pre><code class="language-julia">#export
+function splitter(pct_split=0.7::Float16)
+    &quot;&quot;&quot;
+    Splits into train/test by pct_split%
+    &quot;&quot;&quot;
+    n = length(y)
+    idx = shuffle(1:n)
+    train_idx = view(idx, 1:floor(Int, pct_split*n));
+    test_idx = view(idx, (floor(Int, pct_split*n)+1):n);
+    ytrain,ytest = y[train_idx,:], y[test_idx,:]
+    Xtrain,Xtest = X[:,:,:,train_idx], X[:,:,:,test_idx]
+    return Xtrain, ytrain, Xtest, ytest
+end
+</code></pre>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>We look at some image processing techniques and try to implement them from scratch.</p>
+<p>So before we start, let us import the usual packages and load two images. Our beloved mandrill and an image of the earth.
+We also define a function to take an array and resize it and display it as an image.</p>
+<pre><code class="language-julia">using Plots, Images, ImageView,Statistics, Distributions, TestImages
+imageret(x) = imresize(colorview(RGB,x),(200,200))
+
+image1 = TestImages.testimage(&quot;mandrill&quot;);
+imageret(image1)
+
+image2 = TestImages.testimage(&quot;earth_apollo17&quot;)
+imageret(image2)
+</code></pre>
+<h2 id="random-crop">Random crop</h2>
+<p>Once we have this, we can look at our first pre processing technique. Random cropping. We aim to randomly black out parts of the image in this.
+We first copy the image (to prevent the original from being modified) and convert it to an array.
+Then we index into it and randomly choose a range of x and y coordinates to set to 0. 
+We then just return the image.</p>
+<pre><code class="language-julia">function randomCrop(im)
+    temp = copy(channelview(im))
+    temp[:,1:rand((1:end)),1:rand((1:end))] .=0
+    return temp
+end
+imageret(randomCrop(im2))
+</code></pre>
+<p><img alt="" src="/img/crop.png" /></p>
+<p>As you can see, part of the image is gone. This does lead to a loss in the image content.</p>
+<h2 id="random-change-in-brightness-and-contrast">Random change in brightness and contrast</h2>
+<p>We use the formula $$\alpha \cdot x + \beta$$ where $$\alpha$$ and $$\beta$$ are values between 0 and 1 which represent the brightness and contrast in the image. 
+To modify it, We convert all the values in the image using this formula and randomly generated values for $$\alpha$$ and $$\beta$$. We also clamp the values between -1 and 1 as the function is defined there.</p>
+<pre><code class="language-julia">function imageJitter(im)
+    changer(x,α, β) = clamp.(α .*x .+β, -1, 1);
+    α,β = rand(Uniform(0, 1.0),1)[1], rand(Uniform(0, 1.0),1)[1];
+    return changer(im, α, β)
+end
+</code></pre>
+<p><img alt="" src="/img/jit.png" /></p>
+<p>Here we get an image with high brightness and low contrast. </p>
+<h2 id="random-flip">Random Flip</h2>
+<p>This was almost hilariously easy but anyway. We need to randomly flip either up/down and/or left/right or not at all. So we index into the arrays and flip them.
+We also keep 3 cases and then just output a single choice between them.</p>
+<pre><code class="language-julia">function randomflip(x)
+    rand([x,x[:,end:-1:1,:],x[:,:,end:-1:1]])
+end
+</code></pre>
+<p><img alt="" src="/img/flip.png" /></p>
+<p>In this case it was flipped upside down.</p>
+<h2 id="gray-scale">Gray scale</h2>
+<p>We have done this many times before but for the sake of consistency.</p>
+<pre><code class="language-julia">togray(x)= return Gray.(x)
+</code></pre>
+<h2 id="mixup">Mixup</h2>
+<p>This is a newer technique and was talked about in this <a href="https://arxiv.org/abs/1710.09412">paper</a>. It basically involves choosing a weight and superimposing an image onto another. 
+The network is then forced to spit out 2 labels instead of one. This prevents overfitting and leads to greater generalization. The drawback is that mixup generally takes a longer time to converge. But when it does, it works better.
+It is also said that mixup might remove the need to have any other data augmentation techniques.</p>
+<p>We resize both the images into the same size first.
+Then we convert them into arrays.
+We also take a random value between .5 to 1.0 as the weight.
+The formula for mixup involves taking both the image matrices and weighted adding them together like this
+$$t \cdot im1 + \left( 1 - t \right) \cdot im2$$</p>
+<pre><code class="language-julia">function mixup(im1,im2)
+    im2 = imresize(im2, size(im1))
+    im1, im2 = channelview(im1),channelview(im2)
+    t = rand(Uniform(.5, 1.0),1)[1]
+    @show t
+    return (t.*im1) .+ (1-t).*(im2)
+end
+
+tem  = mixup(image1,image2);
+</code></pre>
+<p><img alt="" src="/img/mixup.png" /></p>
+<h2 id="multiple-transforms">Multiple transforms</h2>
+<p>The last thing we will see for now is how to chain multiple transforms for an image. Honestly, I could do more but I am so tired I just want to sleep. Anywayy.
+This is stupidly simple in Julia. All we have to do is use the |&gt; operation. 
+This is called a pipe and basically passes an output to another function or an input to a function and so on.</p>
+<p>So to call all the functions so far, and display the image.</p>
+<pre><code class="language-julia">imageret(im2 |&gt; randomCrop |&gt; randomflip |&gt; imageJitter )
+</code></pre>
+<p><img alt="" src="/img/multiput.png" /></p>
+<p>If you look closely, you can see random cropping, vertical flipping and obviously changed brightness and contrast values. Yay!</p>
+<blockquote>
+<p>There are other functions like warp/ affine transform. I tried making those but it seemed really complicated so I will leave that for a future blog post.</p>
+</blockquote>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

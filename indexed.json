@@ -1,0 +1,270 @@
+{
+    "2021-02-25-AlexNet.md": [
+        "post",
+        "paper",
+        "",
+        "Alex Net",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-Class Imbalance.md": [
+        "post",
+        "paper",
+        "",
+        "Class Imbalance Problem",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-ComputationalLimits.md": [
+        "post",
+        "paper",
+        "",
+        "Computational Limits (Just notes)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-DCGan.md": [
+        "post",
+        "paper",
+        "",
+        "DC GAN",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-DRlNeuro.md": [
+        "post",
+        "paper",
+        "",
+        "DRL and neuroscience (Just notes",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-DeepDream.md": [
+        "post",
+        "paper",
+        "",
+        "Inceptionism (Google Deep Dream)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-DeepLab (Semantic seg).md": [
+        "post",
+        "paper",
+        "",
+        "Semantic segmentation DeepLab",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-Dropout.md": [
+        "post",
+        "paper",
+        "",
+        "Dropout (Just notes)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-FederatedLearning.md": [
+        "post",
+        "paper",
+        "",
+        "Federated Learning (original paper)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-FederatedLearningGboard.md": [
+        "post",
+        "paper",
+        "",
+        "Google Keyboard Federated Learning(Notes only. refer to [35] for code)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-Focal Loss.md": [
+        "post",
+        "paper",
+        "",
+        "Focal Loss",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-GoogLeNet.md": [
+        "post",
+        "paper",
+        "",
+        "GoogLe Net",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-HRNet.md": [
+        "post",
+        "paper",
+        "",
+        "HRNet (WIP)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-LightSeg.md": [
+        "post",
+        "paper",
+        "",
+        "LightSeg (only notes for now)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-MobileNet.md": [
+        "post",
+        "paper",
+        "",
+        "Mobile Net",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-NN hyper-parameters disciplined approach.md": [
+        "post",
+        "paper",
+        "",
+        "A disciplined approach to neural network hyper-parameters",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-NVAE.md": [
+        "post",
+        "paper",
+        "",
+        "NVAE (WIP)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-OneCycle.md": [
+        "post",
+        "paper",
+        "",
+        "One cycle paper",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-Perceptual Loss.md": [
+        "post",
+        "paper",
+        "",
+        "Perceptual Loss",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-Pruning.md": [
+        "post",
+        "paper",
+        "",
+        "What is the state of pruning",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-SRCNN.md": [
+        "post",
+        "paper",
+        "",
+        "SRCNN",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-Spatial Transformer Network.md": [
+        "post",
+        "paper",
+        "",
+        "Spatial Transformer Networks",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-SqueezeNet.md": [
+        "post",
+        "paper",
+        "",
+        "Squeeze Net",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-SuperResolution.md": [
+        "post",
+        "paper",
+        "",
+        "Super Resolution using Sub Pixel Convolutions",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-Thinking machines - Turing.md": [
+        "post",
+        "paper",
+        "",
+        "Thinking machines - Turing (Just notes)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-Unet.md": [
+        "post",
+        "paper",
+        "",
+        "Unets",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-VAE.md": [
+        "post",
+        "paper",
+        "",
+        "VAE (Auto-Encoding Variational Bayes)",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-VGGNet.md": [
+        "post",
+        "paper",
+        "",
+        "VGG net",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-WGAN.md": [
+        "post",
+        "paper",
+        "",
+        "WGAN",
+        "2020-06-19",
+        "Paper notes"
+    ],
+    "2021-02-25-bagOfTricks.md": [
+        "post",
+        "paper",
+        "",
+        "Bag Of Tricks",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-02-25-swish.md": [
+        "post",
+        "paper",
+        "",
+        "swish",
+        "2020-06-19",
+        "paper notes"
+    ],
+    "2021-03-05-tricksFromLectures.md": [
+        "post",
+        "article",
+        [
+            ""
+        ],
+        "More Deep Learning, Less Crying - A guide",
+        "2021-03-05",
+        "Guide to make DL less messy"
+    ],
+    "2021-03-07-DigitalMinimalismCalNewport.md": [
+        "post",
+        "book",
+        [
+            ""
+        ],
+        "Digital Minimalism Cal Newport",
+        "2021-03-07",
+        "Notes on the book"
+    ]
+}

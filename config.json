@@ -1,0 +1,14 @@
+{
+    "name": "mysimplesite",
+    "math": true,
+    "toc": true,
+    "fenced_code" : true,
+    "sane_lists" : true,
+    "wikilinks" : true,
+    "codehilite" : true,
+    "author": "Subhaditya Mukherjee",
+    "title": "Deconstructing Deep learning",
+    "description": "Digging into deep learning books, papers and code", 
+    "date_format" : "%B %Y",
+    "index_format" : "<li><a href = 'link'>title: date</a><br>summary</li>"
+}

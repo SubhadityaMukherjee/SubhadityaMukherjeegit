@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>A simple Variational Auto Encoder using just what we made so far!!</p>
+<blockquote>
+<p>Since we made everything in this from scratch already I will be using Flux directly. (I will attempt to do optimizers in the next post)</p>
+</blockquote>
+<p>Okay so what is that? it is a neural network which is used for things like Image compression, Image generation etc etc. It is cool because it is pretty cheap computationally.</p>
+<p>So what do we need to build it? </p>
+<h2 id="architecture">Architecture</h2>
+<p>-<img alt="" src="/img/vae.png" /></p>
+<ul>
+<li>This is the what makes the VAE special. If you notice, the conv sizes first start off huge (Encoder), then reduce to a really small point and then go back up huge again(Decoder).</li>
+<li>So the thing is, the Encoder is responsible for taking the input data and encoding it so to speak into what is called the latent space representation. In human terms it means that it tries to find a very high dimensional representation of the images. Aka it tries to "learn" what the image is so it can recreate it. </li>
+<li>The middle bit which has the smallest sizes is called the bottle neck (because it looks like one lol) and this is what helps in image compression. Since the Convolution and max pool layers fundamentally try to represent images in a very compressed manner, this is the effect. Now the fun part is that we can take the representation space (which the encoder pops things in) and sample from it to get representations of the initial data. These we pop into the decoder.</li>
+<li>The last bit of the architecture is the Decoder which is responsible for giving us back our images (albeit similar and not the same ones). What this does is takes the input as the probability distribution of the data (which is a single pixel in the Bernoulli distribution) and outputs a parameter for every pixel in the image. (aka what it thinks should be the image).</li>
+</ul>
+<h2 id="loss-function">Loss function</h2>
+<ul>
+<li>This is a cool looking equation haha.
+$$ l_i(\Theta,\Phi) = -\mathbb{E}<em>{q\Theta(z|x_i)}[log(p</em>\Theta(x_i|z)] + \mathbb{KL}(q_\Theta(z|x_i) || p(z)) $$</li>
+</ul>
+<p>Let us break it down or I will break down.</p>
+<ul>
+<li>$$ l_i(\Theta,\Phi) $$ =&gt;  Greek way of writing the loss between two things. (Could be x and y if you are not awake yet).</li>
+<li>$$ -\mathbb{E}<em>{q\Theta(z|x_i)}[log(p</em>\Theta(x_i|z)] $$ =&gt;
+likelihood of something happening -&gt; the log of it -&gt; negative of it -&gt; Expected value of all this drama. This lets the network learn that it needs to remake the data again. Since the outputs are probabilities, it is a nice way of seeing how well we did</li>
+<li>$$  \mathbb{KL}(q_\Theta(z|x_i) || p(z)) $$
+This is the KL divergence. It is a nice measure to see how far away we are from what we need. Aka how much data is lost in translation so to speak. This acts as a regularizer and reduces the chances of mode collapse (everything is similar so output random nonsesense).</li>
+</ul>
+<h2 id="issues">Issues</h2>
+<ul>
+<li>A lot of data is lost in translation because the decoder reconstructs from a reduced version of the image. </li>
+<li>Outputs are really blurry (This was fixed in a recent <a href="https://arxiv.org/abs/2007.03898">paper</a>. I made notes for it but I havent pushed it yet)</li>
+</ul>
+<h2 id="code">Code</h2>
+<h3 id="libraries-data">Libraries + data</h3>
+<p>We load all required libraries. Batch the data and split it to train and test.</p>
+<pre><code class="language-julia">using Flux, Flux.Data.MNIST, Statistics, Flux.Optimise
+using Flux: throttle, params
+X = (float.(hcat(vec.(MNIST.images())...)) .&gt; 0.5) 
+N, M = size(X, 2), 100
+data = [X[:,i] for i in Iterators.partition(1:N,M)]
+</code></pre>
+<h3 id="encoder-bottleneck">Encoder + Bottleneck</h3>
+<p>We need to pick something from the sampled space and also run our encoder.
+- (Dense(784, 500, tanh), Dense(500, 5), Dense(500, 5))</p>
+<pre><code class="language-julia">Dz, Dh = 5, 500
+A, μ, logσ = Dense(28^2, Dh, tanh) , Dense(Dh, Dz) , Dense(Dh, Dz) 
+
+g(X) = (h = A(X); (μ(h), logσ(h)))
+
+function sample_z(μ, logσ)
+    eps = randn(Float32, size(μ)) 
+    return μ + exp.(logσ) .* eps
+end
+</code></pre>
+<h3 id="decoder-aka-generative">Decoder aka Generative</h3>
+<p>We define the decoder here.
+- Chain(Dense(5, 500, tanh), Dense(500, 784, σ))</p>
+<pre><code class="language-julia">f = Chain(Dense(Dz, Dh, tanh), Dense(Dh, 28^2, σ))
+kl_q_p(μ, logσ) = 0.5f0 * sum(exp.(2f0 .* logσ) + μ.^2 .- 1f0 .+ logσ.^2)
+
+function logp_x_z(x, z)
+    p = f(z)
+    ll = x .* log.(p .+ eps(Float32)) + (1f0 .- x) .* log.(1 .- p .+ eps(Float32))
+    return sum(ll)
+end
+
+L̄(X) = ((μ̂, logσ̂) = g(X); (logp_x_z(X, sample_z(μ̂, logσ̂)) - kl_q_p(μ̂, logσ̂)) * 1 // M)
+
+</code></pre>
+<h3 id="loss-function_1">Loss function</h3>
+<p>Let us define the loss function. And also attempt to sample from the model.</p>
+<pre><code class="language-julia">loss(X) = -L̄(X) + 0.01f0 * sum(x-&gt;sum(x.^2), params(f))
+
+function modelsample()  
+  ϕ = zeros(Float32, Dz)
+  p = f(sample_z(ϕ, ϕ))
+  u = rand(Float32, size(p))
+  return (u .&lt; p) 
+end
+</code></pre>
+<h3 id="loop-de-loop">Loop de loop</h3>
+<p>Now for the actual training. I will be using ADAM (yes cheating I know but I am trying really hard to get it done from scratch ): ). Also no GPU.</p>
+<pre><code class="language-julia">evalcb = throttle(() -&gt; @show(-L̄(X[:, rand(1:N, M)])), 10)
+opt = ADAM()
+
+ps = params(A, μ, logσ, f)
+
+for i = 1:10
+  @info &quot;Epoch $i&quot;
+  Flux.train!(loss, ps, zip(data), opt, cb=evalcb)
+end
+</code></pre>
+<h3 id="output">Output</h3>
+<p>Finally let us visualize the outputs. Note that it was only for 10 epochs so it is kinda dumb but well.</p>
+<pre><code class="language-julia">using Images
+
+img(x) = Gray.(reshape(x, 28, 28))
+sample = hcat(img.([modelsample() for i = 1:10])...)
+save(&quot;sample.png&quot;, sample)
+</code></pre>
+<p>-<img alt="" src="/img/vaeo.png" /></p>
+<blockquote>
+<p>Finis</p>
+</blockquote>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

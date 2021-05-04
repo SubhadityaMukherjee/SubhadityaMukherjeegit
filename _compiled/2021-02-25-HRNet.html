@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 33</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>Paper notes for the paper</p>
+<p><strong>[27]</strong> HRNet (WIP)
+- Wang, J., Sun, K., Cheng, T., Jiang, B., Deng, C., Zhao, Y., ... &amp; Liu, W. (2020). Deep high-resolution representation learning for visual recognition. IEEE transactions on pattern analysis and machine intelligence. <a href="https://arxiv.org/pdf/1908.07919">Paper</a></p>
+<h1 id="notes">Notes</h1>
+<ul>
+<li>first encode the input image as a low-resolution representation through a subnetwork that is formed by connecting high-to-low resolution convolutions in series and then recover the high-resolution representation from the encoded low-resolution representation.</li>
+<li>maintains high-resolution representations through the whole process.</li>
+<li>Connect the high-to-low resolution convolution streams in parallel; (ii) Repeatedly exchange the information across resolutions</li>
+<li>semantically richer and spatially more precise.</li>
+<li>human pose estimation, semantic segmentation, and object detection</li>
+<li>HRNetV1, only outputs the high-resolution representation computed from the high-resolution convolution stream. We apply it to human pose estimation</li>
+<li>HRNetV2, combines the representations from all the high-to-low resolution parallel streams. We apply it to semantic segmentation</li>
+<li>stem, which consists of two stride 2 3x3 convolutions decreasing the resolution to 1/4 , and subsequently the main body that outputs the representation with the same resolution ( 1/4 ).</li>
+<li>We start from a high-resolution convolution stream as the first stage, gradually add high-to-low resolution streams</li>
+<li>(a) HRNetV1: only output the representation from the high-resolution convolution stream. (b) HRNetV2: Concatenate representations that are from all 1x1 convolution is not shown for clarity). (c) HRNetV2p: form a feature pyramid from the representation by HRNetV representations</li>
+<li>Heads -&gt; HRNetV1. The output is the representation only from the high-resolution stream. Other three representations are ignored. HRNetV2. We rescale the low-resolution representations through bilinear upsampling without changing the number of channels to the high resolution, and concatenate the four representations, followed by a 1x1 convolution to mix the
+four representations. HRNetV2p. We construct multi-level representations by downsampling the high-resolution representation output from HRNetV2 to multiple levels. .</li>
+<li>parallel convolution of the modularized block</li>
+<li>multi-resolution parallel convolutions, and multi-resolution fusion  The multi-resolution parallel convolution resembles the group convolution. It divides the input channels into several subsets of channels and performs a regular convolution over each subset over different spatial resolutions separately, while in the group convolution, the resolutions are the same</li>
+<li>multi-resolution fusion unit resembles the multibranch full-connection form of the regular convolution</li>
+<li>multi-resolution fusion needs to handle the resolution change.</li>
+<li>Pose estimation -&gt; transform this problem to estimating K heatmaps where each heatmap Hk indicates the location confidence of
+the k th keypoint.</li>
+<li>Semantic seg -&gt; Semantic segmentation is a problem of assigning a class label to each pixel.  feed the input image to the HRNetV2 and then pass the resulting 15C -dimensional representation at each position to a linear classifier with the softmax loss to predict the segmentation maps. The segmentation maps are upsampled (4 times) to the input size by bilinear upsampling for both training and testing</li>
+<li>
+<p>We pretrain our network, which is augmented by a classification head shown in Figure 11, on ImageNet/ The
+classification head is described as below. First, the four-resolution feature maps are fed into a bottleneck and the output
+channels are increased from C , 2C , 4C , and 8C to 128, 256, 512, and 1024, respectively. Then, we downsample the high-
+resolution representation by a 2-strided 3x3 convolution outputting 256 channels and add it to the representation of the
+second-high-resolution. This process is repeated two times to get 1024 feature channels over the small resolution. Last, we
+transform the 1024 channels to 2048 channels through a 1x1 convolution, followed by a global average pooling operation.
+The output 2048-dimensional representation is fed into the classifier.</p>
+</li>
+<li>
+<p>For semantic segmentation, the time cost of the HRNettraining is slightly smaller and for inference significantly smaller than PSPNet and DeepLabv3</p>
+</li>
+<li>For object detection, the time cost of the HRNet for training is larger than ResNet based networks and smaller than ResNext based
+networks, and for inference the HRNet is smaller for similar GFLOPs</li>
+<li>For human pose estimation, the time cost of the HRNet for training is similar and for inference larger; and the time cost of the HRNet for training and inference in the MXNet platform is similar as SimpleBaseline</li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

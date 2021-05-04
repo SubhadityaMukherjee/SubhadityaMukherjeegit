@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Here we will talk about spreading awareness about endangered species through AI powered art.</p>
+<p>Have a look at this website before we start -&gt; <a href="/endangered.html">Link</a></p>
+<blockquote>
+<p>This will also be in Python.</p>
+</blockquote>
+<p>Over the past few centuries, we have wreaked havoc on this planet. Most of the species affected by our expansion are already dead but there are some which aren't. Our job is to make sure that this stays that way. 
+How deep is this impact? Let us find out. <a href="https://www.worldwildlife.org/">WWO</a></p>
+<h2 id="art">Art</h2>
+<p>Why art? 
+Well, art is an amazing medium to spread awareness. Maybe this project goes nowhere, maybe it does. At the end of the day.. I tried to do something in my own small way.</p>
+<p>Our objective is to first identify endangered animals, get their information and images and then use neural style transfer to convert them into artistic pictures. </p>
+<p>Like these </p>
+<p><img src="{{site.baseurl}}/outputs/african-elephant.jpg" alt="drawing" width="200"/></p>
+<h2 id="what-we-need-for-it">What we need for it</h2>
+<pre><code class="language-py">import pandas as pd
+from requests import get
+import urllib
+from bs4 import BeautifulSoup
+from tqdm import tqdm
+</code></pre>
+<p>Pandas will allow us to make a table and read it.
+Requests and urrlib allow us to save the html of a website
+bs4 is a web scraping library which will allow us to identify content from the page.
+tqdm is a fancy wrapper for making progress bars pretty (I mean.. why not)</p>
+<h2 id="data-collection">Data collection</h2>
+<p>Okay let us first get the data. I went to <a href="https://www.worldwildlife.org/">WWO</a> and scraped the data using bs4.
+Then I save it to a csv file so I can read it again.</p>
+<p>Now to find out the names of the animals.</p>
+<pre><code class="language-py">animals = pd.read_csv(&quot;data/animals.csv&quot;)
+animals[&quot;Common name  &quot;]
+names = animals[&quot;Common name  &quot;].values
+</code></pre>
+<p>Turns out the website has the names saved like "amur-leopard" and the data we have right now has it as "Amur Leopard" so let us fix that as well by splitting the string, converting it to lower case and adding a - between the words. </p>
+<p>After that we apply this function to the whole column.</p>
+<pre><code class="language-py">names = animals[&quot;Common name  &quot;].values
+def conve(x): return &quot;-&quot;.join(str(x).strip().lower().split(&quot; &quot;))
+animals[&quot;Common name  &quot;] = animals[&quot;Common name  &quot;].apply(conve)
+def conv2(x): return x.text.strip().replace(&quot;,&quot;,&quot;&quot;)
+</code></pre>
+<p>Now we also want to scrape the status of the animals aka endangered etc. Here we use beautiful soup. I had a look at the url and this is how we can format it to work out. We save the html in our cache and then use bs4 to find all images and divs (this is how webscraping works and you can identify the exact ones using "inspect element"). </p>
+<pre><code class="language-py">def status(x):
+    url = f&quot;species/{x}&quot;
+    response = get(url)
+    html_soup = BeautifulSoup(response.text, 'html.parser')
+    html_soup
+    return list(map(conv2,html_soup.find_all('div', class_ = 'container')[:2])),html_soup.find_all('img')[0][&quot;src&quot;]
+</code></pre>
+<p>After we have this, we save the images to a folder for easy access, same way as above.</p>
+<pre><code class="language-py">for a in names:
+    try:
+        urllib.request.urlretrieve(status(a)[1],f&quot;data/{a}.jpg&quot;)
+    except:
+        print(a)
+
+</code></pre>
+<p>Done! </p>
+<h2 id="nst">NST</h2>
+<p>Now let us get to using style transfer. What is that? Simply put, it is taking one image and applying its style to another. Something like taking a painting and making a photo look like a painting. </p>
+<p>There are many ways to do it, and I have done it so many times at this point I'd rather just take an efficient implementation of it. More explanation about NST -&gt; <a href="https://github.com/SubhadityaMukherjee/neural_style_transfer">A repo of mine</a></p>
+<p>Okay so I will be using <a href="https://github.com/zhanghang1989/PyTorch-Multi-Style-Transfer">this</a> implementation.</p>
+<p>To do that, we first import os (which allows us to access files) and the random module (will allow us to choose a style at random)</p>
+<p>Now for a bit of complicated code.
+Since this person has actually made his code as a script, I need to call it using the terminal (aka bash). </p>
+<p>Obviously I do not want to do that, so I use the !python3 command. The ! lets me use the system shell directly.
+All I am doing is using python strings to choose a random style image and then using a pretrained style transfer model to transfer my image into that style.
+The weird strings are fancy string formats and {} basically allows me to replace that with a variable directly.</p>
+<p>I also have a GPU, so I can use CUDA.</p>
+<p>Here goes!</p>
+<pre><code class="language-py">import os
+import random
+
+fils = os.listdir(&quot;data/&quot;)[2::]
+
+styles = os.listdir(&quot;/home/subhaditya/Downloads/PyTorch-Multi-Style-Transfer-master/experiments/images/21styles/&quot;)
+
+for a in tqdm(fils):
+    if not &quot;csv&quot; in a:
+        !python3 &quot;/home/subhaditya/Downloads/PyTorch-Multi-Style-Transfer-master/experiments/main.py&quot; eval --content-image &quot;data/{a}&quot; --style-image &quot;/home/subhaditya/Downloads/PyTorch-Multi-Style-Transfer-master/experiments/images/21styles/{random.choice(styles)}&quot; --output-image &quot;outputs/{a}&quot; --model &quot;/home/subhaditya/Downloads/PyTorch-Multi-Style-Transfer-master/experiments/models/21styles.model&quot; --content-size 1024 --cuda 1
+
+</code></pre>
+<p>Wow that was messed up.</p>
+<h2 id="website">Website</h2>
+<p>Now this part is funny. I am too lazy to code a website, so I will use python to do it for me. </p>
+<p>First we create a black html file and write the title of the site. 
+Then we iterate over the list of names and convert our formatted name to plain text again. Then we write the image along with the name of the animal and the status of it. </p>
+<p>We run this until it is done and now we have our site. (This is how I made the site shown above)</p>
+<p><img src="{{site.baseurl}}/outputs/screen1.png" alt="drawing" width="200"/></p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

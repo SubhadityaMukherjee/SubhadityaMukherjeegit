@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 33</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>Paper notes for the paper</p>
+<p><strong>[32]</strong> What is the state of pruning
+- Blalock, D., Ortiz, J. J. G., Frankle, J., &amp; Guttag, J. (2020). What is the state of neural network pruning?. arXiv preprint arXiv:2003.03033. <a href="https://arxiv.org/pdf/2003.03033.pdf">Paper</a></p>
+<h1 id="code">Code</h1>
+<h2 id="how-to-run-the-code">How to run the code?</h2>
+<pre><code class="language-bash">main.py --epochs 10 --lr 0.1 --log-interval 100 --arch &quot;my&quot;
+</code></pre>
+<p>will run default</p>
+<h2 id="advanced-run-important">Advanced run (IMPORTANT)</h2>
+<ul>
+<li>Check the main.py file, you will find a list of all supported arguments there. Just follow the previous pattern and modify it to suit your purpose</li>
+</ul>
+<p>This post wass previously done at my <a href="https://www.subhadityamukherjee.me/2020/09/25/Pruning.html">blog</a></p>
+<h1 id="post">Post</h1>
+<p>Today we will look at pruning and the different approaches followed.</p>
+<p>Hello. It has been a long hiatus. I have been coding a lot but writing too less. Although I did end up writing a lot of documentation haha. I also changed my environment to Vim. (More on that later). Without further rants, lets get to todays topic.</p>
+<blockquote>
+<p>Note that most of this article is based on an excellent paper by Davis Blalock et al <a href="https://arxiv.org/pdf/2003.03033.pdf">WHAT IS THE STATE OF NEURAL NETWORK PRUNING?</a></p>
+</blockquote>
+<p>[Cite] : Blalock, D., Ortiz, J. J. G., Frankle, J., &amp; Guttag, J. (2020). What is the state of neural network pruning?. arXiv preprint arXiv:2003.03033.</p>
+<h1 id="what-is-it">What is it</h1>
+<p>Pruning is something I have been interested in for a long time but somehow I could never get around to implementing it. It interested me for a lot of reasons. Mainly that of being able to reduce the size, cost and computational requirements of my models, all while maintaning the accuracy (sort of atleast). </p>
+<p>TL;DR Generally this comes about by removing parameters in some form or fashion. </p>
+<p>Rather than taking a mask, we can prune certain parts of the network by setting them to 0 or by dropping them if required. (aka weights and biases)</p>
+<p>In most cases, the network is first trained for a while. Then pruned. Which reduces its accuracy and is thus trained again (fine tuning). This cycle is repeated until we get the results we require.</p>
+<h1 id="major-types-of-pruning-methods">Major types of pruning methods</h1>
+<p>There are many types of such methods but they have been categorized based on what they change from the original idea. Note that, in the end the main idea remains the same, just how it is done is varied.</p>
+<h2 id="structure">Structure</h2>
+<ul>
+<li>Regarding structural choices, some authors choose to prune individual parameters which produces a sparse network (lots of 0s). This might not be very ideal for storing efficiently. </li>
+<li>Some others consider methods where they group certain parameters and remove them as groups. This is more optimized.</li>
+</ul>
+<h2 id="scoring">Scoring</h2>
+<ul>
+<li>Like all networks, scoring becomes essential when we try to choose which parameter to get rid of. </li>
+<li>Some authors suggest removing based on absolute values, others decide to prune based on the contributions of that parameter to the entire network. </li>
+<li>Others remove based on a score given. </li>
+<li>Some perform pruning locally, while others perform it globally across the network.</li>
+</ul>
+<h2 id="scheduling">Scheduling</h2>
+<ul>
+<li>Some prune all the weights at once</li>
+<li>Others prune iteratively using loops or some other condition</li>
+</ul>
+<h2 id="fine-tuning">Fine tuning</h2>
+<ul>
+<li>Some store weights before pruning and use that to continue training.</li>
+<li>Others somehow try to rewind to a previous state and reinitialize the network entirely</li>
+</ul>
+<h1 id="pruning-heuristics-code">Pruning heuristics + Code</h1>
+<p>Extending this from the previous topic and trying to code a bit.</p>
+<p><strong>NOTE</strong> These codes are TOY examples to understand the major ideas. For proper code refer to my repository here. <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/Pruning">Link</a></p>
+<p>Let us get some random values in a nested array. In all cases, assume these are weights of a network. Each sub array represents a layer of the network let us say.</p>
+<pre><code class="language-jl">weights = [rand(10) for _ in 1:10]
+</code></pre>
+<p>We also consider a percentage of values/ number of values to drop as an input.</p>
+<h2 id="global-magnitude">Global Magnitude</h2>
+<ul>
+<li>Takes the lowest values in the entire network. Drops them.</li>
+</ul>
+<p>Okay so we first flatten the nested array. Then we can easily find the n smallest values because it is a single long array now.
+We can write a tiny function to identify if the value is greater than the a value and return 0 or the original otherwise.</p>
+<pre><code class="language-jl">function setval(val, cmpval, setter)
+    if val&lt;cmpval
+        return setter
+    else
+        return val
+    end
+end
+</code></pre>
+<p>We can then sort this flattened list. After we do that, we run an element wise map function (over each layer) and pass each element to our previous function. This will allow us to set all the required elements to 0 (or our own value) if the current value is smaller than the value we chose. 
+This will effectively drop the value.</p>
+<pre><code class="language-jl">&quot;&quot;&quot;
+weights = array
+n = lowest nth smallest value to prune below ( aka take the nth smallest value and prune below it ) (eg: 3)
+&quot;&quot;&quot;
+function global_mag_prune(weights, n = 3, setter = 0)
+    temp = collect(Iterators.flatten(weights))
+    sort!(temp)
+    map.( x-&gt; setval(x,temp[n], setter) ,  weights  )
+
+end
+</code></pre>
+<p>We also write a function to determine how sparse the network has become. (Aka how many zeros).</p>
+<pre><code class="language-jl">return temp2, sum(x-&gt;x==0, collect(Iterators.flatten(temp2)) , dims=1)/(size(temp)[1]*size(temp)[1])*100
+</code></pre>
+<h2 id="layerwise-magnitude">Layerwise Magnitude</h2>
+<ul>
+<li>Takes the lowest values per layer in the network and prunes.</li>
+</ul>
+<p>Modifying the global layerwise and applying it per layer instead. 
+To do this, we first make a copy of the weights. Then for every layer in the array, we find the least n values, take the nth value and set all the others to 0.
+As an edge case, if the number of elements entered is greater than the total length of the layer, then the entire layer is set to 0. </p>
+<pre><code class="language-jl">&quot;&quot;&quot;
+weights = array
+n = lowest nth smallest value to prune below ( aka take the nth smallest value and prune below it ) (eg: 3)
+&quot;&quot;&quot;
+function layer_mag_prune(weights, n = 3, setter = 0)
+    backup = deepcopy(weights)
+    for layer in 1:length(weights)
+        sort!(backup[layer])
+        if n&gt;length(weights[layer])
+            n = length(weights[layer])
+        end
+        backup[layer] = map.( x-&gt; setval(x,weights[layer][n], setter) ,  weights[layer]  )
+    end
+    return backup, sum(x-&gt;x==0, collect(Iterators.flatten(backup)) , dims=1)/(size(weights)[1]*size(weights)[1])*100        
+end
+</code></pre>
+<h2 id="global-gradient-magnitude">Global Gradient Magnitude</h2>
+<ul>
+<li>Identifies lowest absolute value (weight*gradient) in the whole network and removes them</li>
+</ul>
+<p>For this we would need to compute the gradient of the weights so far. Well, how about I just use a random array as proof of concept so to speak.
+So we basically take the previous code and change the inital part to being a product of the weights and the gradient. </p>
+<pre><code class="language-jl">function global_grad_prune(weights, n = 3, setter = 0)
+    temp = weights*rand(size(weights))
+    temp = collect(Iterators.flatten(weights))
+    sort!(temp)
+    temp2 = map.( x-&gt; setval(x,temp[n], setter) ,  weights  )
+    return temp2, sum(x-&gt;x==0, collect(Iterators.flatten(temp2)) , dims=1)/(size(temp)[1]*size(temp)[1])*100
+end
+</code></pre>
+<h2 id="layerwise-gradient-magnitude">Layerwise Gradient Magnitude</h2>
+<ul>
+<li>Lowest absolute value per layer and removes them
+Similarly, we modify this again to fit our needs</li>
+</ul>
+<pre><code class="language-jl">&quot;&quot;&quot;
+weights = array
+n = lowest nth smallest value to prune below ( aka take the nth smallest value and prune below it ) (eg: 3)
+&quot;&quot;&quot;
+function layer_grad_prune(weightsnew, n = 3, setter = 0)
+    weights = deepcopy(weightsnew)*rand(size(weightsnew))
+    backup = deepcopy(weights)
+    for layer in 1:length(weights)
+        sort!(backup[layer])
+        if n&gt;length(weights[layer])
+            n = length(weights[layer])
+        end
+        backup[layer] = map.( x-&gt; setval(x,weights[layer][n], setter) ,  weights[layer]  )
+    end
+
+    return backup, sum(x-&gt;x==0, collect(Iterators.flatten(backup)) , dims=1)/(size(weights)[1]*size(weights)[1])*100
+
+end
+</code></pre>
+<h2 id="random">Random</h2>
+<ul>
+<li>Each weight independantly considered and dropped with a fraction of network required</li>
+</ul>
+<p>For this we first take the number of values to prune by identifying the total size of the weights and then multiplying it by the fraction of values to remove.
+We then flatten the array, set the values we do not need to 0 and then reshape back to the original shape.</p>
+<pre><code class="language-jl">&quot;&quot;&quot;
+frac = percentage of values to remove
+&quot;&quot;&quot;
+function random_prune(weights, frac = .3, setter = 0)
+    num_prune = Int(round(frac*(size(weights)[1]*size(weights)[1])))
+    @info num_prune
+    backup = collect(Iterators.flatten(deepcopy(weights)))
+    backup[rand(1:length(backup), num_prune)] .= 0
+    @info size(weights)
+    return reshape(backup, size(weights))
+end
+
+</code></pre>
+<h1 id="what-we-can-learn-from-papers-thanks-to-the-blalock-et-al">What we can learn from papers (Thanks to the Blalock et al)</h1>
+<ul>
+<li>Pruning methods cannot be decided by a single dataset but must be run using standardized tests over a variety of them to decide</li>
+<li>If a small compression is required, pruning might actually improve our accuracy in some cases</li>
+<li>Random pruning might not always be the best bet</li>
+<li>Global pruning is better</li>
+<li>Assigning different pruning percentages based on the layer type helps </li>
+<li>Sparse models outperform dense ones generally </li>
+<li>Pruned models can sometimes achieve higher accuracies than the initial architecture</li>
+<li>More effective with architectures that are poor in the first place</li>
+<li>Might be able to improve the time/space vs accuracy tradeoff</li>
+</ul>
+<h1 id="that-is-awesome-but">That is awesome, but...</h1>
+<ul>
+<li>You are sometimes off choosing a better and more efficient architecture sometimes</li>
+<li>It depends purely on what your objective is</li>
+</ul>
+<h1 id="finis">~finis</h1>
+<p>That ends our little journey into pruning. Wow that took longer then expected. I should go sleep.</p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

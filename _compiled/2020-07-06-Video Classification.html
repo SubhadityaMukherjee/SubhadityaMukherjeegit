@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>I try to reimplement Video recognition from <a href="https://github.com/jfzhang95/pytorch-video-recognition">Link</a> and explain the code as I go along.</p>
+<blockquote>
+<p>This will be rather long so I will split it into parts. Since it has a lot of parts and I want to make sense of each, I will try to explain everything as I go along</p>
+</blockquote>
+<p>Lets go!!!!</p>
+<h2 id="get-data-and-fix-it-to-required-format">Get data and fix it to required format.</h2>
+<p>Let us use the UCF101 video dataset for this task. It has 101 categories of actions that were taken from youtube videos.
+We first get our data from <a href="http://www.thumos.info/download.html">here</a> since the main site of the dataset is down.</p>
+<p>Since these are just files, we need to put them in the required format of folders and the videos inside them. How do we do that? Well for starters we make a list of all the videos. Then we extract the names from them and pop them into a unique set. 
+Now we have 101 names and we make a folder for each.</p>
+<p>Once that is done, we use shutil to move each video to its respective folder just by virtue of its name. Done :)</p>
+<pre><code class="language-python">import os
+import shutil
+from tqdm import tqdm
+
+dirs = os.listdir(&quot;/home/subhaditya/Desktop/Datasets/UCF101/&quot;)
+dirs = [x for x in dirs if &quot;.avi&quot; in x]
+print(dirs[1])
+
+def get_dir(x):
+    return x.split(&quot;_&quot;)[1]
+
+unique_dirs = list(set([get_dir(x) for x in dirs]))
+
+print(len(unique_dirs))
+# [os.makedirs(x) for x in unique_dirs]
+for a in tqdm(dirs):
+    shutil.move(f&quot;/home/subhaditya/Desktop/Datasets/UCF101/{a}&quot;,f&quot;/home/subhaditya/Desktop/Datasets/UCF101/{get_dir(a)}/&quot;)
+</code></pre>
+<p>tqdm is fancy progress bars
+os allows us to interact with the system
+and shutil makes file operations like copy/move easier</p>
+<p>We will get back to these videos later</p>
+<h2 id="defining-the-network">Defining the network</h2>
+<p>The model is obviously the most important thing here, so let us first define the network.
+The classes are actually just pytorch syntax so we just follow it.</p>
+<p>Let us first define what we need,
+Conv3d - Wait what. 3d? I have only used 2d so far. What is 3d now? 
+Wow okay this is the 3d cross correlation operation. It applies the convolution when there are several input planes.
+It is used with 3D image data such as MRI, CT scans and event detection. 
+So apparently they are not just limited to 3d space but also work with 2d space but I am not sure how well they will perform.</p>
+<p>MaxPool -&gt; we have talked about this before. It basically takes the max of slices of input data and pools together all of them in the form of a single 3d matrix.</p>
+<p>Relu -&gt; Non linearity which we introduce so the neural network can learn more complex functions.</p>
+<p>Linear -&gt; Basic Dense layer which we talked about</p>
+<p>Last Linear layer -&gt; SInce we have 101 classes, and we want a softmax at the end somewhere, we use num_classes as the final no of channels</p>
+<p>Dropout -&gt; We havent talked about this but simply put, it randomly drops a percentage of the connections in every layer. This helps prevent overfitting and helps the network generalize more.</p>
+<blockquote>
+<p>See how the network grows from smaller to larger? That helps a lot when choosing model architectures. Sometimes they even go back up to smaller heights. </p>
+</blockquote>
+<pre><code class="language-python">import torch
+from torch import mode
+import torch.nn as nn
+from mypath import Path
+
+class C3D(nn.Module):
+    def __init__(self, num_classes, pretrained=False):
+        super(C3D, self).__init__()
+
+        self.conv1 = nn.Conv3d(3, 64, kernel_size=(3, 3, 3), padding=(1, 1, 1))
+        self.pool1 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
+
+        self.conv2 = nn.Conv3d(
+            64, 128, kernel_size=(3, 3, 3), padding=(1, 1, 1))
+        self.pool2 = nn.MaxPool3d(kernel_size=(2, 2, 2), stride=(2, 2, 2))
+
+        self.conv3a = nn.Conv3d(
+            128, 256, kernel_size=(3, 3, 3), padding=(1, 1, 1))
+        self.conv3b = nn.Conv3d(
+            256, 256, kernel_size=(3, 3, 3), padding=(1, 1, 1))
+        self.pool3 = nn.MaxPool3d(kernel_size=(2, 2, 2), stride=(2, 2, 2))
+
+        self.conv4a = nn.Conv3d(
+            256, 512, kernel_size=(3, 3, 3), padding=(1, 1, 1))
+        self.conv4b = nn.Conv3d(
+            512, 512, kernel_size=(3, 3, 3), padding=(1, 1, 1))
+        self.pool4 = nn.MaxPool3d(kernel_size=(2, 2, 2), stride=(2, 2, 2))
+
+        self.conv5a = nn.Conv3d(
+            512, 512, kernel_size=(3, 3, 3), padding=(1, 1, 1))
+        self.conv5b = nn.Conv3d(
+            512, 512, kernel_size=(3, 3, 3), padding=(1, 1, 1))
+        self.pool5 = nn.MaxPool3d(kernel_size=(
+            2, 2, 2), stride=(2, 2, 2), padding=(0, 1, 1))
+
+        self.fc6 = nn.Linear(8192, 4096)
+        self.fc7 = nn.Linear(4096, 4096)
+        self.fc8 = nn.Linear(4096, num_classes)
+
+        self.dropout = nn.Dropout(p=0.5)
+
+        self.relu = nn.ReLU()
+
+        self.__init_weight()
+
+        if pretrained:
+            self.__load_pretrained_weights()
+
+</code></pre>
+<h2 id="initialization">Initialization</h2>
+<p>All you need is a good init! <a href="https://arxiv.org/abs/1511.06422">Link</a> I mean not really but you still need a good one.
+We are using kaiming init which we also discussed before. Notice that we using it only for the conv3d layers. for batchnorm3d (which we do not have here but might have later), we just fill it with 1s and make the bias 0.</p>
+<pre><code class="language-python">    def __init_weight(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv3d):
+                torch.nn.init.kaiming_normal_(m.weight)
+            elif isinstance(m, nn.BatchNorm3d):
+                m.weight.data.fill_(1)
+                m.bias.data.zero_()
+</code></pre>
+<p>We now make generators to yield our data as and when we need it. In this case we get parameters for the convs and the final classification layer.
+Also note that we enable gradient computing here. </p>
+<pre><code class="language-python">def get_1x_lr_params(model):
+    b = [model.conv1, model.conv2, model.conv3a,model.conv3b, model.conv4a,model.conv4b,model.conv5a, model.conv5b, model.fc6, model.fc7]
+
+    for i in range(len(b)):
+        for k in b[i].parameters():
+            if k.requires_grad:
+                yield k
+
+def get_10x_lr_params(model):
+    b = [model.fc8]
+
+    for j in range(len(b)):
+        for k in b[j].parameters():
+            if k.requires_grad:
+                yield k
+</code></pre>
+<p>Now for the final part today, something to check if the module works or not.</p>
+<pre><code class="language-python">
+if __name__ == &quot;main__&quot;:
+    inputs = torch.rand(1, 3, 16, 112, 112)
+    net = C3D(num_classes = 101, pretrained = True)
+
+    outputs = net.forward(inputs)
+    print(outputs.size())   
+</code></pre>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Tiny post on datasets and a unified downloader for standard ones.</p>
+<p>I wanted an easy way to download the standard datasets. I guess Metalhead does it already but it has limited support and there's around 5 datasets. <i>Boooringg<i></p>
+<h2 id="objective">Objective</h2>
+<p>The objective is to have a list of standard datasets from Computer Vision, Natural Language Processing and maybe Graphs at some point.
+Very nicely enough, <a href="https://course.fast.ai/datasets">fastai</a> has already done this for us. Althought it is for python. So I will take that list and add some on my own.</p>
+<h2 id="file-downloader">File Downloader</h2>
+<p>Now for actually downloading the files. We follow a simple workflow. 
+Get a URL -&gt; Check if it exists -&gt; Download it -&gt; Choose a name -&gt; Write to file</p>
+<pre><code class="language-julia">function downloader(url::String, dest::String, fname::String)
+    HTTP.open(:GET, url) do http
+        open(dest*fname, w) do file
+            write(file, http)
+        end
+    end
+    return dest*fname
+end
+</code></pre>
+<h2 id="get-all-supported">Get all supported</h2>
+<p>There are so many of them, I need a way to get a list of all existing datasets so I can pop it into functions later.
+Fortunately, this is a dictionary and I can just take out the keys of it.</p>
+<pre><code class="language-jl">alldatasets()= keys(dataset_list)
+</code></pre>
+<h2 id="get-extensions">Get extensions</h2>
+<p>I need a way to get the extension of the file so I can add it to the downloaded name. This is also very simply done because our files are primarily of the following types :
+- *.*     <strong>eg</strong>:name.zip
+- *.*.*  <strong>eg</strong>:name.tar.gz </p>
+<p>This will be a bit complex but I am basically just chaining a few things together. 
+Wait. Why not pipe it then it should be easier to explain. Let me try.</p>
+<pre><code class="language-jl">function getext(st::String)
+    return &quot;.&quot;*join(split(split(st, &quot;/&quot;)[end],&quot;.&quot;)[2:end],&quot;.&quot;)
+end
+</code></pre>
+<p>I will blatantly ignore the previous explanation because turnings out.... piping ... WORKS.</p>
+<pre><code class="language-jl">@pipe split(st, &quot;/&quot;)[end] |&gt; split(_, &quot;.&quot;)[2:end] |&gt; &quot;.&quot;*join(_, &quot;.&quot;)
+</code></pre>
+<p>Just look at this beauty.
+Now let me explain. 
+I take the string as st. Then I split it based on "/"s. Then I take the last split (with the extension) and then split it again based on ".". This will give me all the extension parts (eg tar , gz). 
+After that I can join all the parts with a ".". 
+PS. The _ basically takes the output of the last chain and allows you to use it directly in the next chain.</p>
+<h2 id="downloading-the-standard-datasets">Downloading the standard datasets</h2>
+<p>Now we can use all these functions to get our dataset with the tiny name instead of searching for them.</p>
+<p>I will follow this workflow.</p>
+<ul>
+<li>Get name of dataset and path to save</li>
+<li>Check if name entered<ul>
+<li>If name in dataset -&gt; Get the url from the dictionary -&gt; Get extension -&gt; Use the name -&gt; Download it</li>
+<li>If not -&gt; Show all datasets </li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-jl">function get_data(name::String, path::String)
+
+    if name in alldatasets()
+        @info &quot;Downloading $name&quot;
+        url = dataset_list[name]
+        finfile = downloader(url, path, name*getext(url))
+        # finfile = &quot;/tmp/mnist.tgz&quot;
+        @info &quot;Done downloading&quot;
+    else
+        @info &quot;Please choose something from here&quot;; @info alldatasets()
+    end
+end
+</code></pre>
+<h2 id="supported-datasets">Supported Datasets</h2>
+<p>I add them in a dictionary like this</p>
+<pre><code class="language-jl">dataset_list = Dict(
+
+    # Computer Vision
+        &quot;mnist&quot; =&gt; &quot;https://s3.amazonaws.com/fast-ai-imageclas/mnist_png.tgz&quot;,
+        &quot;cifar10&quot; =&gt; &quot;https://s3.amazonaws.com/fast-ai-imageclas/cifar10.tgz&quot;,
+        &quot;cifar100&quot; =&gt; &quot;https://s3.amazonaws.com/fast-ai-imageclas/cifar100.tgz&quot;,
+</code></pre>
+<p>Here are the datasets I am currently supporting. I will keep this as a table for future reference too lol.</p>
+<p>|<strong>Dataset</strong> | <strong>Link</strong> |
+|mnist|<a href="https://s3.amazonaws.com/fast-ai-imageclas/mnist_png.tgz">Source</a>|
+|cifar10|<a href="https://s3.amazonaws.com/fast-ai-imageclas/cifar10.tgz">Source</a>|
+|cifar100|<a href="https://s3.amazonaws.com/fast-ai-imageclas/cifar100.tgz">Source</a>|
+|birds|<a href="https://s3.amazonaws.com/fast-ai-imageclas/CUB_200_2011.tgz">Source</a>|
+|caltech101|<a href="https://s3.amazonaws.com/fast-ai-imageclas/caltech_101.tar.gz">Source</a>|
+|pets|<a href="https://s3.amazonaws.com/fast-ai-imageclas/oxford-iiit-pet.tgz">Source</a>|
+|flowers|<a href="https://s3.amazonaws.com/fast-ai-imageclas/oxford-102-flowers.tgz">Source</a>|
+|food|<a href="https://s3.amazonaws.com/fast-ai-imageclas/food-101.tgz">Source</a>|
+|cars|<a href="https://s3.amazonaws.com/fast-ai-imageclas/stanford-cars.tgz">Source</a>|
+|imagenette|<a href="https://s3.amazonaws.com/fast-ai-imageclas/imagenette.tgz">Source</a>|
+|imagenette320|<a href="https://s3.amazonaws.com/fast-ai-imageclas/imagenette-320.tgz">Source</a>|
+|imagenette160|<a href="https://s3.amazonaws.com/fast-ai-imageclas/imagenette-160.tgz">Source</a>|
+|imagewoof|<a href="https://s3.amazonaws.com/fast-ai-imageclas/imagewoof.tgz">Source</a>|
+|imagewoof320|<a href="https://s3.amazonaws.com/fast-ai-imageclas/imagewoof-320.tgz">Source</a>|
+|imagewoof160|<a href="https://s3.amazonaws.com/fast-ai-imageclas/imagewoof-160.tgz">Source</a>|
+|imdb|<a href="https://s3.amazonaws.com/fast-ai-nlp/imdb.tgz">Source</a>|
+|wikitext103|<a href="https://s3.amazonaws.com/fast-ai-nlp/wikitext-103.tgz">Source</a>|
+|wikitext2|<a href="https://s3.amazonaws.com/fast-ai-nlp/wikitext-2.tgz">Source</a>|
+|wmt|<a href="https://s3.amazonaws.com/fast-ai-nlp/giga-fren.tgz">Source</a>|
+|ag|<a href="https://s3.amazonaws.com/fast-ai-nlp/ag_news_csv.tgz">Source</a>|
+|amazon|<a href="https://s3.amazonaws.com/fast-ai-nlp/amazon_review_full_csv.tgz">Source</a>|
+|p-amazon|<a href="https://s3.amazonaws.com/fast-ai-nlp/amazon_review_polarity_csv.tgz">Source</a>|
+|dbpedia|<a href="https://s3.amazonaws.com/fast-ai-nlp/dbpedia_csv.tgz">Source</a>|
+|sogou|<a href="https://s3.amazonaws.com/fast-ai-nlp/sogou_news_csv.tgz">Source</a>|
+|yahoo|<a href="https://s3.amazonaws.com/fast-ai-nlp/yahoo_answers_csv.tgz">Source</a>|
+|yelp|<a href="https://s3.amazonaws.com/fast-ai-nlp/yelp_review_full_csv.tgz">Source</a>|
+|p-yelp|<a href="https://s3.amazonaws.com/fast-ai-nlp/yelp_review_polarity_csv.tgz">Source</a>|
+|camvid|<a href="https://s3.amazonaws.com/fast-ai-imagelocal/camvid.tgz">Source</a>|
+|pascal|<a href="https://s3.amazonaws.com/fast-ai-imagelocal/pascal-voc.tgz">Source</a>|
+|hmbd|<a href="http://serre-lab.clps.brown.edu/wp-content/uploads/2013/10/hmdb51_org.rar">Source</a>|
+|ucf|<a href="https://www.crcv.ucf.edu/data/UCF101/UCF101.rar">Source</a>|
+|kinetics700|<a href="https://storage.googleapis.com/deepmind-media/Datasets/kinetics700.tar.gz">Source</a>|
+|kinetics600|<a href="https://storage.googleapis.com/deepmind-media/Datasets/kinetics600.tar.gz">Source</a>|
+|kinetics400|<a href="https://storage.googleapis.com/deepmind-media/Datasets/kinetics400.tar.gz">Source</a>|</p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

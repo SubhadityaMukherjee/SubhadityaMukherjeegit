@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>What makes Neural Networks tick mathematically.</p>
+<p>This is going to be a really short article but I decided it was important to talk about it. So the reason why NNs work is due to a theorem called the Universal Approximation theorem.</p>
+<h2 id="what-is-it">What is it</h2>
+<p>What this means that given an x and a y, the NN can identify a mapping between them. "Approximately". This is required when we have non linearly separable data. (Aka you can't split them directly into n parts just by say drawing a line between them. This could be complex structures like images or text or anything which cannot be directly modelled.</p>
+<p>So we take a non linear function, for example the sigmoid. $$\frac{1}{1 + e^{ - \left( w^{T}x + b \right)}}$$.
+Then we have to combine multiple such neurons in a way such that we can accurately model our problem. The end result is a complex function and the existing weights are distributed across many layers. Sounds familiar? Welcome to Deep Learning (lol).</p>
+<p>The Universal approximation theorem states that</p>
+<blockquote>
+<p>a feed forward network with a single hidden layer containing a finite number of neurons can approximate continuous functions on compact subsets of $$\mathbb{R}$$ , under mild assumptions on the activation function.</p>
+</blockquote>
+<p>Um. Can these guys speak normally. -.- Lets break it down a bit.</p>
+<ul>
+<li>a feed forward network : take an input, apply a function, get an output, repeat</li>
+<li>a single hidden layer : yes you can use more, but theoretically...</li>
+<li>finite number of neurons: you can do it without needing an infinite computer</li>
+<li>approximate continuous functions: continuous functions are anything which dont have breaks/holes in between. This just says that it is possible to approximate the mapping which we talked about</li>
+<li>$$\mathbb{R}$$ is just the set of all real numbers</li>
+<li>An activation function is something like the ReLU/Sigmoid</li>
+<li>All this boils down to the fact that a neural network can approximate any complex relation given an input and an output.</li>
+</ul>
+<h2 id="how-does-it-work">How does it work?</h2>
+<p>Well here is an image. See if you can understand whats happening.
+ <img alt="" src="/img/uat.png" /></p>
+<p>Makes sense right? Every curve at an infinitely small point can be a collection of lines (approximately).
+Oh and as a form of citation, <a href="https://medium.com/hackernoon/illustrative-proof-of-universal-approximation-theorem-5845c02822f6">here</a> is where I got this image from. Its a great blog you should really check it out.</p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

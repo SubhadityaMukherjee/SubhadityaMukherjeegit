@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>To implement a faster conv we need padding, so here we will try to explore what that means and try to implement it.</p>
+<p>The objective is to get the kernel to be the same size as the image and fill it with some value so as to be able to apply FFT to it.</p>
+<p>We first import the packages we need, I am just using the image packages for visualization and then take a small image and a kernel (just for testing, we can scale it up later). 
+We are also making the kernel a solid block of white as it is just easier to see since the img is random numbers.</p>
+<pre><code class="language-julia">using Images,ImageView, Plots,LinearAlgebra,Statistics
+img = rand(Float32,50,50)
+kernel = ones(Float32,15,15);
+</code></pre>
+<h2 id="constant-padding">Constant padding</h2>
+<p>Okay now for constant padding. This means that we choose a value and then apply it to the figure.</p>
+<p>Steps followed : 
+1. To save memory, let us first allocate an image of constants with the size of the image. We do this by making an array of ones and then element wise multiplying it by constant. (Note that the number should be in the range of 0-1 for a gray scale image)
+2. Then we identify the center of the image
+3. We then find out the space required by the kernel to fit in this array
+4. Just set this space in the padded version = the kernel
+5. Convert it to grayscale so we can plot it and see if it worked.
+6. Note that we scale the constant between 0 and 1 using the sigmoid function</p>
+<pre><code class="language-julia">function pad_constant(img,kernel,constant)
+    kernel_h, kernel_w = size(kernel)
+    img_h, img_w = size(img)
+    padded_kernel= ones(img_h,img_w).*(1/(1+exp(-constant)));
+    pad_h, pad_w = size(padded_kernel)
+    center_x,center_y = pad_w ÷2, pad_h ÷2
+    tmp_x = center_x-(kernel_w÷2)
+    tmp_y = center_y-(kernel_h÷2)
+    padded_kernel[collect(tmp_x:tmp_x+kernel_w-1),collect(tmp_y:tmp_y+kernel_h-1)] = kernel;
+    return Gray.(padded_kernel)
+end
+pad_constant(img,kernel,.3)
+</code></pre>
+<p>Since our kernel was white and we supplied a constant of .3(grayish), we get this -&gt;</p>
+<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/pad_const.png" alt="drawing" width="200"/></p>
+<p>It works!!</p>
+<h2 id="max-padding">Max padding</h2>
+<ul>
+<li>Pad with the max value in the image.</li>
+<li>We will repurpose our previous function for this</li>
+</ul>
+<pre><code class="language-julia">pad_constant(img,kernel,maximum(kernel))
+</code></pre>
+<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/pad_max.png" alt="drawing" width="200"/></p>
+<h2 id="min-padding">Min padding</h2>
+<ul>
+<li>Pad with the min value in the image.</li>
+<li>We will repurpose our previous function for this</li>
+</ul>
+<pre><code class="language-julia">pad_constant(img,kernel,minimum(kernel))
+</code></pre>
+<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/pad_min.png" alt="drawing" width="200"/></p>
+<h2 id="mean-padding">Mean padding</h2>
+<ul>
+<li>Pad with the min value in the image.</li>
+<li>We will repurpose our previous function for this</li>
+</ul>
+<pre><code class="language-julia">pad_constant(img,kernel,mean(kernel))
+</code></pre>
+<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/pad_mean.png" alt="drawing" width="200"/></p>
+<h2 id="median-padding">Median padding</h2>
+<ul>
+<li>Pad with the median value in the image.</li>
+<li>We will repurpose our previous function for this</li>
+</ul>
+<pre><code class="language-julia">pad_constant(img,kernel,mean(kernel))
+</code></pre>
+<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/pad_median.png" alt="drawing" width="200"/></p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

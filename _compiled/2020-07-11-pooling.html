@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Here we will look at the pooling operation and its types.</p>
+<p>Okay so what is a pooling layer? Let us take this matrix.</p>
+<pre><code class="language-julia">1 2
+3 4
+</code></pre>
+<p>If we take max pool the output should be 4. Simple enough? That is pretty much it.</p>
+<p>The challenge is to apply it to a whole image while taking into account different pooling sizes, different image depths (2 for gray 3 for color) as well as different strides (how many columns to move while doing a pool).</p>
+<p>Let us get to it.</p>
+<h2 id="max-pool">Max pool</h2>
+<p>We first check if the image has a depth or not (aka does it have more than 2 channels). Note that most of the code remains the same for both except a few minor changes (I have to reduce the code size and remove redundancy but for the sake of this example I willl leave it as it is).</p>
+<h3 id="with-depth">With depth</h3>
+<p>Okay. Case 1. Where there is a depth.
+We first calculate the size of the output image so we can pre allocate an array.</p>
+<p>$$output_{height} = \frac{input_{height} - poolsize}{stride} ; output_{width} = \frac{input_{width} - poolsize}{stride}$$</p>
+<p>Once we have that, we can allocate an array with those dimensions.</p>
+<pre><code class="language-julia">function maxpool(img, pool_size=2,stride = 2,depth=false)
+
+    if depth == true
+        input_d , input_h, input_w = size(img)
+         output_h = Integer((input_h - pool_size)/stride )
+        output_w = Integer((input_w - pool_size)/stride )
+
+        result = zeros(input_d,output_h, output_w)  
+</code></pre>
+<p>Now for the main loop. We iterate over the width and height of the output, and since we have a depth, we can use the : index (which takes all the channels) , i, j. Then we can allocate this to the maximum of the current window we are considering. </p>
+<pre><code class="language-julia">for i in collect(1:output_h),j in collect(1:output_w)  
+            result[:, i,j] .= maximum(img[:, i*stride:i*stride+pool_size, j*stride:j*stride+pool_size])  
+        end
+</code></pre>
+<h3 id="without-depth">Without depth</h3>
+<p>If we do not have a depth, then we simply ignore the : and use the rest of it.</p>
+<pre><code class="language-julia">else
+        input_h, input_w = size(img)
+        output_h = Integer((input_h - pool_size)/stride )
+        output_w = Integer((input_w - pool_size)/stride )
+
+        result = zeros(output_h, output_w)  
+
+        for i in collect(1:output_h),j in collect(1:output_w)
+            result[i,j] = maximum(img[i*stride:i*stride+pool_size, j*stride:j*stride+pool_size])
+        end
+
+
+    end
+
+    return result
+end
+</code></pre>
+<p>Now if we take our beloved mandrill and apply max pool to one channel of it.
+Say pool size 10 and stride 2. (These are the actual output sizes)</p>
+<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/mp1.png" alt="drawing"/></p>
+<p>Pool size 11, stride 1. Note that this image is bigger because our stride is lesser.</p>
+<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/mp2.png" alt="drawing"/></p>
+<h2 id="average-pooling">Average pooling</h2>
+<p>Okay how about average pooling? We just need to change a bit from the previous code. We create a view into the current window, then instead of maximum, we take the sum and divide it by the total number of elements in the window. (aka average)</p>
+<pre><code class="language-julia">temp = @view img[:, i*stride:i*stride+pool_size, j*stride:j*stride+pool_size]
+
+result[:, i,j] .= sum(temp)/prod(size(temp))
+</code></pre>
+<p>Pool size 10 and stride 1.</p>
+<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/ap1.png" alt="drawing"/></p>
+<p>See the difference? This is why max pool is more commonly used. Average pool blurs out too much of the information.</p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

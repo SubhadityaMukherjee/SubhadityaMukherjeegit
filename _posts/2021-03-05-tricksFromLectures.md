@@ -1,9 +1,10 @@
 ---
 layout: post
 title: More Deep Learning, Less Crying - A guide
-date: 2021-03-05T18:42+04:00
+date: 2021-03-05
 tags: 
 categories: article
+summary: Guide to make DL less messy
 ---
 
 This is a guide to make deep learning less messy and hopefully give you a way to use less tissues next time you code.

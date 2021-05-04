@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 33</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>Paper notes for the paper</p>
+<p><strong>[24]</strong> swish
+- Ramachandran, P., Zoph, B., &amp; Le, Q. V. (2017). Searching for activation functions. arXiv preprint arXiv:1710.05941. <a href="https://arxiv.org/pdf/1710.05941;%20http://arxiv.org/abs/1710.05941">Paper</a></p>
+<h1 id="notes">Notes</h1>
+<ul>
+<li>Supposedly does better than selu and relu sometimes (Nope)</li>
+<li>Slower than relu</li>
+<li>f (x) = x · sigmoid(βx)</li>
+<li>found using RL techniques using "core units"</li>
+<li>simple search space inspired by the optimizer search space
+of Bello et al. (2017) that composes unary and binary functions to construct the activation function</li>
+<li>activation function is constructed by repeatedly composing the the “core
+unit”, which is defined as b(u1 (x1 ), u2 (x2 )). The core unit takes in two scalar inputs, passes each
+input independently through an unary function, and combines the two unary outputs with a binary
+function that outputs a scalar</li>
+</ul>
+<h2 id="tips-for-activation-fns">Tips for activation fns</h2>
+<ul>
+<li>Complicated activation functions consistently underperform simpler activation functions,
+potentially due to an increased difficulty in optimization. </li>
+<li>A common structure shared by the top activation functions is the use of the raw preactiva-
+tion x as input to the final binary function</li>
+<li>The searches discovered activation functions that utilize periodic functions, such as sin and
+cos.</li>
+<li>Functions that use division tend to perform poorly because the output explodes when the
+denominator is near 0</li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

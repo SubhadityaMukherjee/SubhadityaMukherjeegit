@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 33</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>Paper notes for the paper</p>
+<p><strong>[14]</strong> A disciplined approach to neural network hyper-parameters
+- Smith, L. N. (2018). A disciplined approach to neural network hyper-parameters: Part 1--learning rate, batch size, momentum, and weight decay. arXiv preprint arXiv:1803.09820.
+<a href="https://arxiv.org/pdf/1803.09820">Paper</a></p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>examine the training validation/test loss function for subtle
+clues of underfitting and overfitting</li>
+<li>The test/validation loss is a good indicator of the network’s convergence</li>
+<li>Achieving the horizontal part of the test loss is the goal of hyper-
+parameter tuning.
+<img alt="img" src="fig1.png" /></li>
+<li>If the hyper-parameters are set well at the beginning, they will perform well through the entire training process. In addition, if the hyper- parameters are set using only a few epochs, a significant time savings is possible in the search for hyper-parameters.</li>
+<li>Increasing the learning rate moves the training from underfitting towards overfitting</li>
+<li>Test loss decreases more rapidly during the initial iterations and is then horizontal. This is one of the early positive clues that indicates that this curve’s configuration will produce a better final accuracy than the other configuration, which it does.</li>
+<li>Use Cyclical learning rates (CLR) and the learning rate range test (LR range test)</li>
+<li>Take note that there is a maximum speed the learning rate can increase without the training becoming unstable, which effects your choices for the minimum and maximum learning rates</li>
+<li>always use one cycle that is smaller than the total number of iterations/epochs and allow the learning rate to decrease several orders of magnitude less than the initial learning rate for the remaining iterations. We named this learning rate policy “1cycle”</li>
+<li>MNIST, Cifar10, Cifar-100, and Imagenet, and various architectures,
+such as shallow nets, resnets, wide resnets, densenets, inception-resnet, show that all can be trained more quickly with large learning rates, provided other forms of regularizations are reduced to an optimal balance point.</li>
+<li>larger batch size when using the 1cycle learning rate schedule. Larger batch sizes used larger learning rates</li>
+<li>Although the larger batch sizes have lower loss values early in the training, the final loss values are lower as the batch sizes decrease, which is the opposite performance as accuracy results</li>
+<li>Although the increasing momentum stabilizes the convergence to a larger learning rate, the
+minimum test loss is higher than the minimum test loss for the constant momentum case.</li>
+<li>With either cyclical learning rate or constant learning rate, a good procedure is to test momentum values in the range of 0.9 to 0.99 and choose a value that performs best</li>
+<li>complex dataset requires less regularization so test smaller weight decay values, such as
+10−4 , 10−5, 10−6, 0. A shallow architecture requires more regularization so test larger
+weight decay values, such as 10−2 , 10−3, 10−4</li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

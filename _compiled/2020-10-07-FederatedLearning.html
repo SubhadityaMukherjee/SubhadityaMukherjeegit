@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Today we will talk about Federated Learning</p>
+<p>Want the smarts machine learning offers? That is awesome, but how secure is your data there really? And what if you could have the benefits without there being a chance of your data being leaked? </p>
+<p>We will have a look at Federated Learning and understand how it works. We will also look at a few papers and what they have to say on the matter and take the library <a href="https://github.com/OpenMined/PySyft/">Syft</a> for a whirl.</p>
+<h1 id="why-is-this-a-problem">Why is this a problem?</h1>
+<p>Think about this from the perspective of an app that connects you with your doctor. It is a great app, and even has the ability to forecast future appointments and sometimes even suggest common medication. Now one fine day the company gets sold and all your data is in someone else's hands. And not just medical information, but what the Deep Learning algorithm learned about you and your behaviour. 
+Just data privacy is great for standard data like medical reports etc. But what about a DL algorithm?
+What about a model that learns how you speak, how you text your friends, what food you like? </p>
+<p>Scary isn't it? 
+Now let us look at how we can prevent Company X from having more information on you than you have about yourself.</p>
+<h1 id="enter-federated-learning">Enter Federated Learning</h1>
+<p>Drumroll.. 
+Let us first understand what we want to do. 
+Consider a keyboard app. Say we have 200 users of our keyboard app.(Not very popular sadly). Now this is an intelligent keyboard and as time goes by, it learns how the users type, what words they use and is even able to predict what they might say to a given sentence. We want to make sure that if there is a leak, it should not be possible for whoever gets it to identify a unique model for the user.</p>
+<p>You might think, hey that's easy. Let's just train the network on their phones!
+You are right. Almost.
+The only issue is that our phones cannot afford to train the entire model. And if we use a pretrained one? Well.. the predictions are just not personalized enough.</p>
+<p>So how about we train the model first on huge clusters of computers and then send the pretrained ones to the phones? Perfect. How about personalization? Why not <strong>update</strong> the model on the phone? 
+That's great. But how will the main model get better? If we send the model this phone has learnt, it would defeat our purpose.
+How about we aggregate the learning across users? </p>
+<p>There we go.. lets call that federated learning :)</p>
+<p>P.S (The keyboard example is from the <a href="https://arxiv.org/pdf/1903.10635.pdf">Google keyboard paper</a>)</p>
+<h1 id="what-is-this-magic">What is this magic?</h1>
+<p>Let us dig into the steps involved in making a Deep learning algorithm and identify what changes we need to make</p>
+<ol>
+<li>Get data (Hopefully a lot)</li>
+<li>Preprocess (aka clean up) the data</li>
+<li>Find/create an architecture</li>
+<li>Train the model using the data(1) and the architecture(3). This step is done once. And then periodically updated as the data changes over time. Keep this in mind.</li>
+<li>Push the model out to n users</li>
+<li>Collect data about how well the model did. (Bye bye privacy)</li>
+<li>Send this data back to the main model.
+7 (#new). Find the difference between the original model and the personalized one's parameters. Do this for multiple users. Remove identifiable information.
+7.1 (#new). Aggregate (eg. average) the information and then send that to the main model</li>
+<li>Retrain the model on new data</li>
+</ol>
+<h1 id="yay-what-does-this-do">Yay! What does this do?</h1>
+<ul>
+<li>All your information is locally stored and is never sent anywhere</li>
+<li>Saves your personalized data from being leaked</li>
+<li>Removes all connections to you</li>
+<li>Allows the model to be updated and become better without compromizing on privacy</li>
+<li>Nobody "owns" your data except you</li>
+</ul>
+<h1 id="can-i-add-this-to-my-model">Can I add this to my model?</h1>
+<p>Yes! There are many ways but the easiest by far is by using a library in Pytorch called Syft. It is as easy as adding a few lines to your code.</p>
+<p>(Since the entire code is huge, I will only put snippets here. For the entire code, refer to my <a href="https://github.com/SubhadityaMukherjee/pytorchTutorialRepo/tree/master/FederatedLearningPySyft">repository</a>)</p>
+<ol start="0">
+<li>Do look at this <a href="https://blog.openmined.org/upgrade-to-federated-learning-in-10-lines/">article</a> by Open Mined</li>
+<li>Let us take a simple architecture with 2 Conv layers and 2 linear (fully connected) layers</li>
+<li>Import the library(along with the other pytorch ones) and add 2 users</li>
+</ol>
+<pre><code class="language-py">import syft as sy
+hook = sy.TorchHook(torch)
+bob = sy.VirtualWorker(hook, id=&quot;bob&quot;)  # person1
+alice = sy.VirtualWorker(hook, id=&quot;alice&quot;)  # person2
+</code></pre>
+<ol start="3">
+<li>Modify the pytorch train dataloader in this way. The test does not change because it is local.</li>
+</ol>
+<pre><code class="language-py">train_loader = sy.FederatedDataLoader( # this is now a FederatedDataLoader
+    datasets.MNIST('/home/eragon/Documents/datasets', train=True, download=True,
+            transform=transforms.Compose([
+                       transforms.ToTensor(),
+                       transforms.Normalize((0.1307,), (0.3081,))
+
+            ]))
+    .federate((bob, alice)), # This will simulate a federated learning system
+    shuffle=True, **kwargs )
+</code></pre>
+<ol start="4">
+<li>Modify the main training loop like this</li>
+</ol>
+<pre><code class="language-py">def train(args, model, device, train_loader, optimizer, epoch):
+    model.train()  # Setting model to train
+    device = torch.device(&quot;cuda&quot;)  # Sending to GPU
+    for batch_idx, (data, target) in tqdm(enumerate(train_loader)):
+        model.send(data.location)  # Send to location (worker)
+        data, target = data.to(device), target.to(device)
+        optimizer.zero_grad()  # Reset grads
+        output = model(data)  # Passing batch through model
+
+        loss = F.nll_loss(output, target )
+
+        loss.backward()  # Backprop
+        optimizer.step()  # Pass through optimizer
+        model.get()  # Get it back
+
+        if batch_idx % args.log_interval == 0:
+            loss = loss.get()
+            if args.dry_run:
+                break
+</code></pre>
+<ol start="5">
+<li>The test loop remains the same</li>
+<li>Train the model!!</li>
+<li>Write a blog post about it and cry when nobody reads it</li>
+</ol>
+<h1 id="great-so-where-is-it-used">Great, so where is it used?</h1>
+<p>It <strong>could</strong> be used in a lot of places but for now it is still in testing stage. Although there have been a few early adopters. Some of the ones I found are:
+- Google Keyboard (Gboard) : They used it to update their predictions and learn words that were not in the initial dataset (like lmao).
+- Digital health Companies <a href="https://doi.org/10.1038/s41746-020-00323-1">Paper</a>  ; Huge promise here
+- Military (Not sureof any use cases obviously but I did read that it was being used)
+- Companies like OpenMined (who made the library), Nvidia, Google, Apple etc</p>
+<h1 id="use-it">Use it!</h1>
+<p>This is an upcoming field and there are many things left to be done. Contribute to the libraries if you can, or just learn how things work and why they do. Want to read further? Look at the resources section. You will find many interesting links.</p>
+<p>Thank you! Do reach out if you have any queries.</p>
+<h1 id="resources">Resources</h1>
+<ul>
+<li><a href="https://blog.openmined.org/upgrade-to-federated-learning-in-10-lines/">OpenMined Blog</a></li>
+<li><a href="https://blogs.nvidia.com/blog/2019/10/13/what-is-federated-learning/">Nvidia</a></li>
+<li><a href="https://www.unite.ai/what-is-federated-learning/">Unite.ai</a></li>
+<li><a href="https://ai.googleblog.com/2017/04/federated-learning-collaborative.html">Google blog</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Federated_learning">Wiki</a></li>
+<li>Digital health : Rieke, N., Hancox, J., Li, W. et al. The future of digital health with federated learning. npj Digit. Med. 3, 119 (2020). https://doi.org/10.1038/s41746-020-00323-1</li>
+<li>Gboard : Chen, M., Mathews, R., Ouyang, T., &amp; Beaufays, F. (2019). Federated learning of out-of-vocabulary words. arXiv preprint arXiv:1903.10635. <a href="https://arxiv.org/pdf/1903.10635.pdf">Paper</a></li>
+<li>Chen, M., Mathews, R., Ouyang, T., &amp; Beaufays, F. (2019). Federated learning of out-of-vocabulary words. arXiv preprint arXiv:1903.10635.</li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

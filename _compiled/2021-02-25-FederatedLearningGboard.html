@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 33</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>Paper notes for the paper</p>
+<p><strong>[34]</strong> Google Keyboard Federated Learning(Notes only. refer to [35] for code)
+- Chen, M., Mathews, R., Ouyang, T., &amp; Beaufays, F. (2019). Federated learning of out-of-vocabulary words. arXiv preprint arXiv:1903.10635.  <a href="https://arxiv.org/pdf/1903.10635">Paper</a></p>
+<h1 id="paper-notes">Paper notes</h1>
+<ul>
+<li>character-level recurrent neural network is able to learn out- of-vocabulary</li>
+<li>High-frequency words can be sampled from the trained generative model by drawing from the joint posterior directly</li>
+<li>Studied using 1. Simulation, 2. Gboard App</li>
+<li>Learning frequently typed words</li>
+<li>Words missing from the vocabulary cannot be predicted on the keyboard suggestion strip</li>
+<li>neural machine translation (NMT), rely on a vocabulary to encode words during endto-end training </li>
+<li>uploading only ephemeral model updates to the server for aggregation, and leaving the users’ raw data on their device. </li>
+<li>the privacy risk of unintended memorization still exists</li>
+<li>We further show that the top sampled words are very meaningful and are able to capture words we know to be trending in the news at the time of the experiments</li>
+</ul>
+<h2 id="lstm-modeling">LSTM Modeling</h2>
+<ul>
+<li>In this work we use a variant of LSTM with a Coupled Input and Forget Gate (CIFG) (Greff et al., 2017), peephole con- nections (Gers and Schmidhuber, 2000) and a pro- jection layer (Sak et al., 2014) </li>
+<li>Cross entropy loss</li>
+<li>This parallel sampling approach avoids the dependency between each sampling thread, which might occur in beam search or shortest path search sampling</li>
+<li>Adaptive L2 -norm clipping is performed on each client’s gradient, as it is found to improve the robustness of model convergence</li>
+<li>The larger model (on training with Reddit data) does not lead to significant gains. Momentum and adaptive clipping lead to faster convergence and more stable performance.</li>
+</ul>
+<h1 id="conclusion">Conclusion</h1>
+<ul>
+<li>We also perform live experiments with on-device data from 3 populations of Gboard users and demonstrate that this method can learn OOV words effectively in a real-world setting.</li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

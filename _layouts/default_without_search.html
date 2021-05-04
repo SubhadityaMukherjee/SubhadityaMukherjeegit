@@ -12,7 +12,7 @@
 
 {% seo %}
 
-    <link rel="stylesheet" href="{{ "/assets/css/landing.css?v=" | append: site.github.build_revision | relative_url }}">
+    <link rel="stylesheet" href="./assets/css/landing.css">
   </head>
   <body>
     <div class="col-md-4">
@@ -26,12 +26,7 @@
           Format : 
           Date | Title<br>
           &emsp;&emsp;TL; DR<br>
-          <h4>Total number of posts : {{ site.posts | size }}</h4>
-         Go To : <a style="font-size:20px;color:white;" href="#PAPER">PAPERS</a> o
-        <a style="font-size:20px;color:white;" href="#ARTICLE">ARTICLES</a> o
-        <a style="font-size:20px;color:white;" href="#BOOK">BOOKS</a> o
-        <a style="font-size:20px;color:white;" href="#SPACE">SPACE</a>
-         
+          <h4>Total number of posts : [total_posts]</h4>
         </p>
         
         <p class="view">
@@ -43,7 +38,7 @@
     </div>
 <section>
       <div class="col-md-5">
-  {{ content }}
+  [content]
     </div>
   </body>
 </html>

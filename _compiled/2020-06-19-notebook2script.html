@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>I want to convert my work as a script. Selectively.</p>
+<h2 id="repository">Repository</h2>
+<p><a href="https://github.com/SubhadityaMukherjee/notebook2script.jl">https://github.com/SubhadityaMukherjee/notebook2script.jl</a></p>
+<h2 id="what">What?</h2>
+<p>I like to do my development in jupyter notebooks. When I convert them to scripts I need to save the whole notebook as a script and then remove what I dont need. WHY -.-
+I want to make a script to save only the cells I finally want for my script by adding an #export to them.</p>
+<h2 id="what-do-i-need">What do I need?</h2>
+<ul>
+<li>Understand JSON tags for the cells</li>
+<li>Find the cells with #export</li>
+<li>Save them separately.</li>
+</ul>
+<h2 id="lets-goooo">Lets goooo</h2>
+<p>Let us first import JSON since jupyter notebooks are JSON files</p>
+<pre><code class="language-julia">using JSON
+</code></pre>
+<p>After that we allocate a dictionary and parse the notebook. Since JSONs are just pretty dictionaries, we convert the whole file into one.</p>
+<pre><code class="language-julia">dict2 = Dict()
+open(ARGS[1], &quot;r&quot;) do f
+    global dict2
+    dict2=JSON.parse(f)  
+end
+
+</code></pre>
+<p>Now to identify the cells we need we have to add a #export to the start of the cell. Once we do that, we can go through all the cells and take the ones which have this #export in it. Then we filter this out so it does not appear in the end script. We add all this to a string. </p>
+<pre><code class="language-julia">gstr = &quot;&quot;;
+
+for a in dict2[&quot;cells&quot;]
+    if &quot;#export\n&quot; in a[&quot;source&quot;]
+        temp = a[&quot;source&quot;]
+        temp = filter!(e-&gt;e|&quot;#export\n&quot;,temp)
+        gstr*= join(temp)
+        gstr*=&quot;\n&quot;
+    end
+end
+</code></pre>
+<p>Then we write the file and we are done :)</p>
+<pre><code class="language-julia">io = open(ARGS[2]*&quot;.jl&quot;, &quot;w&quot;)
+write(io, gstr)
+close(io)
+</code></pre>
+<h2 id="usage">Usage</h2>
+<ul>
+<li>julia notebook2script.jl "pathToInput.ipynb" "pathToOutput"</li>
+<li>No need to add a .jl</li>
+<li>Done :)</li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

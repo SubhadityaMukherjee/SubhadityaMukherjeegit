@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Here we will look at the various ways of implementing convolutions and benchmark them.</p>
+<p>Let us define a huge image and a smallish kernel first to let us compare them.</p>
+<pre><code class="language-julia">img = rand(Float32,1000,1000)
+kernel = rand(Float32,15,15);
+</code></pre>
+<h2 id="our-old-method">Our old method</h2>
+<p>We already implemented Conv2D once. So let us just take that and run it for these images as a benchmark. I think 10kx10k is a pretty crazy huge operation but anyway let us see what happens.</p>
+<pre><code class="language-julia">    ih, iw = 1, 1
+    for i in 1: result_h
+        for j in 1: result_w
+            for k in 1:kernel_h
+                for l in 1:kernel_w
+                    result[i,j] += img[ih+k-1, iw+l-1]*kernel[k,l]
+                end
+            end
+            ih+=stride
+        end
+        iw+= stride
+        ih = 1
+    end
+</code></pre>
+<p>Time taken -&gt;</p>
+<pre><code class="language-julia">  0.536841 seconds (53.66 k allocations: 10.141 MiB)
+</code></pre>
+<p>Okay that's good but toooo slow xD</p>
+<h2 id="optimize-p1-did-not-work">Optimize P1 (Did not work)</h2>
+<p>Let us remove those loops. First let us remove the inner loop with k and l.</p>
+<p>We have our new code..</p>
+<pre><code class="language-julia">    ih, iw = 1, 1
+    for i in 1: result_h
+        for j in 1: result_w
+                [result[i,j] += img[ih+k-1, iw+l-1]*kernel[k,l] for k in 1:kernel_h, l in 1:kernel_w]
+            ih+=stride
+        end
+        iw+= stride
+        ih = 1
+    end
+</code></pre>
+<p>Time taken -&gt;</p>
+<pre><code class="language-julia"> 34.546620 seconds (1.09 G allocations: 18.201 GiB, 3.21% gc time)
+</code></pre>
+<p>Wow okay that went crazy pretty fast. That did not work xD</p>
+<h2 id="fft">FFT</h2>
+<p>So I did a <a href="https://en.wikipedia.org/wiki/Convolution_theorem">google search </a> and turns out the way to increase speed is by using the Convolution algorithm. Basically this says</p>
+<p>$$f*g= ℱ^{-1}\big{ℱ{f}\cdot ℱ{g}\big}$$</p>
+<p>where $$ℱ$$ is the fourier transform operation. And we first take the FT of both the image and the kernel. Then we perform point wise multiplication. And then we finally do an inverse FT.</p>
+<p>FFT stands for fast fourier transform.</p>
+<p>The sad part is that to do this, both the image and the kernel need to be of the same size, which means that we need to apply padding.</p>
+<blockquote>
+<p>So I will take a break from this post and make another one padding and then come back when I have achieved that.</p>
+</blockquote>
+<h2 id="fourier-transform">Fourier transform</h2>
+<p>But before that I want to write a bit more about the FT. Let us see what it does I am curious.</p>
+<p>Here is an awesome video I found. <a href="https://www.youtube.com/watch?v=spUNpyF58BY">3Blue1Brown</a></p>
+<ul>
+<li>What does it do : Take any function and decompose it into its parts</li>
+<li>For example music -&gt; Decompose into separate waves</li>
+<li>How? Apply a "winding" function which basically means that for every point on the wave, try to plot it in the form of a circle(sort of)</li>
+<li>So for the whole time duration, if a stable graph is obtained at any frequency, that will allow us to decompose the wave.</li>
+<li>Math? Take a function g(x) and multiply it using Eulers fomula </li>
+<li>$$g(t)e^{-2 \cdot {\pi}ift}$$</li>
+<li>Note that these are in the complex plane.</li>
+<li>Sample a whole bunch of points from the domain and take the integral of them.</li>
+<li>$$\mathrm{\int}g\left( t \right) \cdot e^{-2 \cdot {\pi}ift \cdot dt}$$</li>
+<li>This would give the center of mass of the wound up graph, scaled up by some amount</li>
+<li>The effect is that it would be multiplied by the duration of the portion of the graph being considered. </li>
+<li>If a particular frequency spans for a long time, then the FT at that point is scaled up more.</li>
+</ul>
+<h2 id="conv2d-using-fft">Conv2D using FFT</h2>
+<p>Okay so I managed to solve the padding issue. (Check the next post)
+For now, I will take the example of constant padding.</p>
+<pre><code class="language-julia">using Images,ImageView, Plots,LinearAlgebra,Statistics, FFTW,TestImages
+img = rand(Float32,1000,1000)
+kernel = rand(Float32,15,15);
+
+function pad_constant(img,kernel,constant=0)
+    kernel_h, kernel_w = size(kernel)
+    img_h, img_w = size(img)
+    padded_kernel= ones(img_h,img_w).*(1/(1+exp(-constant)));
+    pad_h, pad_w = size(padded_kernel)
+    center_x,center_y = pad_w ÷2, pad_h ÷2
+    tmp_x = center_x-(kernel_w÷2)
+    tmp_y = center_y-(kernel_h÷2)
+    padded_kernel[collect(tmp_x:tmp_x+kernel_w-1),collect(tmp_y:tmp_y+kernel_h-1)] = kernel;
+    return padded_kernel
+end
+
+ker_pad = pad_constant(img, kernel, .3);
+@time ifft(fft(channelview(img)).*fft(ker_pad))
+</code></pre>
+<p>Now I am not sure if this is the perfect approach but I will trust the internet for now.</p>
+<p>Speed? </p>
+<pre><code class="language-julia"> 0.063075 seconds (190 allocations: 76.304 MiB)
+</code></pre>
+<p>Wait. <strong>WHAT</strong>.
+That is around 8 times faster. What even.</p>
+<p>Okay let us try this for a 10000x10000 array then. Just because we can. xD</p>
+<p>Okay so our old method took </p>
+<pre><code class="language-julia">53.943691 seconds (59.00 k allocations: 763.824 MiB, 0.08% gc time)
+</code></pre>
+<p>And FFT takes</p>
+<pre><code class="language-julia"> 0.075766 seconds (190 allocations: 76.304 MiB, 5.42% gc time)
+</code></pre>
+<p><strong>Um</strong></p>
+<h2 id="cuda">CUDA</h2>
+<p>GPUs were meant for performance. So how about we try to do our implementation on a GPU? I have an Nvidia RTX2070 which is pretty great. CUDA? Compute Unified Device Architecture is a programming paradigm by Nvidia. It allows massive parallelism which gives the boost we need for Deep Learning.</p>
+<p>I have never actually used a CUDA array directly and I need to find out how to do it first.</p>
+<p>Okay so let us use the FFT thing from CUDA. We can't use the old method because it has scalar indexing. (Aka non vectorized operations)</p>
+<pre><code class="language-julia">using CUDA.CUFFT,CUDA,Images
+
+function pad_constant(img,kernel,constant=0)
+    kernel_h, kernel_w = size(kernel)
+    img_h, img_w = size(img)
+    padded_kernel= CUDA.ones(img_h,img_w).*(1/(1+exp(-constant)));
+    pad_h, pad_w = size(padded_kernel)
+    center_x,center_y = pad_w ÷2, pad_h ÷2
+    tmp_x = center_x-(kernel_w÷2)
+    tmp_y = center_y-(kernel_h÷2)
+    padded_kernel[collect(tmp_x:tmp_x+kernel_w-1),collect(tmp_y:tmp_y+kernel_h-1)] = kernel;
+    return CuArray(padded_kernel)
+end
+
+img = CuArray(channelview(rand(Float32,1000,1000)));
+kernel = CuArray(rand(Float32,15,15));
+
+ker_pad = pad_constant(img, kernel, .3);
+
+@time ifft(fft(img)*fft(ker_pad))
+</code></pre>
+<p>So that took...</p>
+<pre><code class="language-julia">0.018873 seconds (851 allocations: 26.781 KiB)
+</code></pre>
+<p>Okay..........</p>
+<h2 id="testing-limits">Testing limits</h2>
+<p>How about for a 10k x 10k array</p>
+<p>Oh no.. I do not think my GPU can take this ):</p>
+<p>Okay 9k x 9k </p>
+<pre><code class="language-julia">23.501186 seconds (973 allocations: 31.203 KiB, 1.67% gc time)
+</code></pre>
+<p>Heh. I guess it took time to send it to the GPU. And bring it back :/
+I am confusion.</p>
+<p>Ah yes it was that. Once it did go to the GPU, it took 1 second. Which means that it could take lesser on the next run, except my dear ol GPU wont let me do it for such a huge array.</p>
+<p>But I guess I should be satsified with 1k x 1k. I mean come on, do we even use such huge images for DL. (Unless you work at Google LOL)</p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

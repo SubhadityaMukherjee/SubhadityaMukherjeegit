@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 33</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>Paper notes for the paper</p>
+<p><strong>[29]</strong> NVAE (WIP)
+- Vahdat, A., &amp; Kautz, J. (2020). NVAE: A Deep Hierarchical Variational Autoencoder. arXiv preprint arXiv:2007.03898. <a href="https://arxiv.org/abs/2007.03898">Paper</a></p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>VAEs have the advantage of fast and tractable sampling and easy-to-access encoding networks</li>
+<li>carefully designing neural ar- chitectures for hierarchical VAEs</li>
+<li>Nouveau VAE</li>
+<li>depth-wise separable convolu- tions and batch normalization</li>
+<li>residual parameterization of Normal distributions and its training is stabilized by spectral regularization.</li>
+<li>first successful VAE applied to natural images as large as 256x256 pixels.</li>
+<li>VAEs maximize the mutual information between the input and latent variables requiring the networks to retain the information content of the input data as much as possible.</li>
+<li>VAEs often respond differently to the over-parameterization in neural networks.</li>
+<li>The current state-of-the-art VAEs omit batch normalization (BN) to combat the sources of randomness that could potentially amplify their instability.</li>
+<li>turns out BN is an important component of the success of deep VAEs. </li>
+<li>spectral regularization is key to stabilizing VAE training.</li>
+<li>the case of VAEs with unconditional decoder, such long-range correlations are encoded in the latent space and are projected back to the pixel space by the decoder.</li>
+<li>Our generative model starts from a small spatially arranged latent variables as z1 and samples from the hierarchy group-by-group while gradually doubling the spatial dimensions</li>
+<li>capture global long-range correlations at the top of the hierarchy and local fine-grained dependencies at the lower groups.</li>
+<li>increas- ing the receptive field of the networks</li>
+<li>increasing the kernel sizes in the convolutional pat</li>
+<li>depthwise convolutions outperform regular convolutions while keeping the number of parameters and the computational complexity orders of magnitudes smaller</li>
+<li>BN has a negative during evaluation but not training</li>
+<li>modify the momentum parameter of BN such that running statistics can catch up faster with the batch statistics. We also apply a regularization on the norm of scaling parameters in BN layers to ensure that a small mismatch in statistics is not amplified by BN</li>
+<li>We also observe that the combination of BN and Swish outperforms WN and ELU activation</li>
+<li>Similar to mobile net 2 with two additional BN layers at the beginning and the end of the cell and it uses Swish activation function and SE.</li>
+<li>mixed precision</li>
+<li>to fuse BN and Swish and we store only one feature map for the backward pass, instead of two</li>
+<li>To bound KL, we need to ensure that the encoder output does not change dramatically as its input changes. This notion of smoothness is characterized by the Lipschitz constant.</li>
+<li>apply a few additional normalizing flows to the samples generated at each group in q   </li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

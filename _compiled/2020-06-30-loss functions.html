@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>In this post we shall explore as many loss functions as I can find.</p>
+<p>Loss functions are arguably one of the most important factors in a machine learning model. It gives the model an understanding of how well it did and basically allows it to learn. Simply put, it is the difference between the required result and the produced one. Quite obviously this is different in every place.
+For example in a Generative Adversarial Network (GANs), the loss function is the completely different. In WGAN, it is a distance metric called Wassertein distance.
+In a unet, the loss is the difference between the two images and so on and so forth.</p>
+<p>Anyway let us explore everything we can about loss functions. I first made a list of all the loss functions offered by keras. It seems to be pretty comprehensive and I have not heard of many of them so far so lets see.
+Edit : Maybe this isnt a fully comprehensive list. But I will add to it if I find more later. I realized that most of these seem to just be small modifications on previous ones. And some are beyond my understanding right now. But I will come back to them when I get it. (I added a tiny list of those I dont understand yet at the bottom)</p>
+<blockquote>
+<p>Since I am arbitrarily hooking together loss functions from every library I can find, if you feel something is wrong do let me know :)
+Also note that the examples used are not necessarily the ones that will be used while training and are random values used to test if the code is working</p>
+</blockquote>
+<h2 id="log-softmax">Log softmax</h2>
+<p>$$\log\left( \frac{e^{ŷ}}{\mathrm{sum}\left( e^{ŷ} \right)} \right)$$</p>
+<pre><code class="language-julia">logsoftmax(ŷ) = log.(exp.(ŷ)/sum(exp.(ŷ)))
+</code></pre>
+<h2 id="bce-logits">BCE Logits</h2>
+<p>$$\left(  - \mathrm{sum}\left( y \cdot \mathrm{logsoftmax}\left( ŷ \right) \cdot weight \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)$$</p>
+<pre><code class="language-julia">bcelogits(y,ŷ,weight)  =-sum(y .* logsoftmax(ŷ) .* weight) * 1 // size(y, 2)
+</code></pre>
+<h2 id="margin-ranking">Margin Ranking</h2>
+<ul>
+<li>Creates a criterion that measures the loss given inputs x1x1x1 , x2x2x2 , two 1D mini-batch Tensors, and a label 1D mini-batch tensor yyy (containing 1 or -1).</li>
+<li>If y=1y = 1y=1 then it assumed the first input should be ranked higher (have a larger value) than the second input, and vice-versa for y=−1y = -1y=−1 .</li>
+<li>take avg</li>
+</ul>
+<p>$$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \mathrm{max}\left( 0, \left(  - y \right) \cdot x1 - x2 + margin \right) \right)$$</p>
+<pre><code class="language-julia">marginranking(x1,x2,y,margin=0.0) = (1/length(y))*sum(max.(0, -y.*(x1.-x2).+margin))
+</code></pre>
+<h2 id="hubersmooth-l1smooth-mae">Huber/Smooth L1/Smooth MAE</h2>
+<ul>
+<li>It is less sensitive to outliers than the MSELoss and in some cases prevents exploding gradients</li>
+<li>Fast RCNN</li>
+</ul>
+<p>if $$\left( \left\|y - ŷ\right\| \lt 1.0 \right) &gt;1 $$</p>
+<p>$$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( 0.5 \cdot \left( y - ŷ \right)^{2} \right)$$</p>
+<p>else</p>
+<p>$$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|y - ŷ\right\| - 0.5 \right)$$</p>
+<pre><code class="language-julia">function huber(y,ŷ) 
+
+    if count(x-&gt;x==0, all.(abs.(y.-ŷ).&lt;1.0))&gt;=1
+        return (1/length(y)).*sum(0.5 .*(y .- ŷ).^2)
+    else
+        return (1/length(y)).*sum(abs.(y .- ŷ).-0.5)
+    end
+end
+</code></pre>
+<h2 id="negative-log-likelihood">Negative log likelihood</h2>
+<ul>
+<li>Classification,  Smaller quicker training, Simple tasks.</li>
+</ul>
+<p>$$ - \mathrm{sum}\left( \log\left( y \right) \right)$$</p>
+<pre><code class="language-julia">nll(y) = -sum(log.(y))
+nll(x,y) = -sum(log.(y))
+</code></pre>
+<h2 id="bce">BCE</h2>
+<ul>
+<li>classification 2 cat</li>
+</ul>
+<p>$$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( y \cdot \log\left( ŷ \right) + \log\left( 1 - y \right) \cdot \log\left( 1 - ŷ \right) \right)$$</p>
+<pre><code class="language-julia">bce(y,ŷ) = (1/length(y))*sum(y.*log.(ŷ).+(log.(1 .-y).*log.(1 .-ŷ)))
+</code></pre>
+<h2 id="categoricalce">CategoricalCE</h2>
+<ul>
+<li>classification n cat</li>
+</ul>
+<p>$$ - \mathrm{sum}\left( y \cdot \log\left( ŷ \right) \right)$$</p>
+<pre><code class="language-julia">cce(y,ŷ) = -sum(y.*log.(ŷ))
+</code></pre>
+<h2 id="cosine-similarity">Cosine similarity</h2>
+<p>L2 norm is $$\sqrt{\mathrm{sum}\left( \left( \left\|x\right\| \right)^{2} \right)}$$</p>
+<p>Cosine similarity is $$ - \mathrm{sum}\left( \mathrm{l2norm}\left( y \right) \cdot \mathrm{l2norm}\left( ŷ \right) \right)$$</p>
+<pre><code class="language-julia">l2_norm(x) = sqrt.(sum((abs.(x).^2)))
+function cosinesimilarity(y,ŷ)
+    return -sum(l2_norm(y).*l2_norm(ŷ))
+end
+</code></pre>
+<h2 id="kl-divergence">KL Divergence</h2>
+<ul>
+<li>Classification</li>
+<li>Same can be achieved with cross entropy with lesser computation, so avoid it.</li>
+</ul>
+<p>We first define xlogx for a weird edge case $$x \cdot \log\left( x \right)$$</p>
+<p>Then entropy $$\mathrm{sum}\left( \mathrm{xlogx}\left( y \right) \right) \cdot \mathrm{//}\left( 1, \mathrm{size}\left( y, 2 \right) \right)$$</p>
+<p>Then cce as defined before $$ - \mathrm{sum}\left( y \cdot \log\left( ŷ \right) \right)$$</p>
+<p>Finally KLD $$entropy + crossentropyloss$$</p>
+<pre><code class="language-julia">function xlogx(x)
+  result = x * log(x)
+  ifelse(iszero(x), zero(result), result)
+end
+
+function kldivergence( y,ŷ)
+  entropy = sum(xlogx.(y)) * 1 //size(y,2)
+  cross_entropy = cce(ŷ, y)
+  return entropy + cross_entropy
+end
+</code></pre>
+<h2 id="log-cosh">Log Cosh</h2>
+<ul>
+<li>works like the MSE, but is smoothed towards large errors (presumably caused by outliers) so that the final error score isn’t impacted thoroughly.</li>
+</ul>
+<p>We first define the softplus function $$\log\left( e^{x} + 1 \right)$$</p>
+<p>Then , $$x = ŷ - y$$</p>
+<p>logcosh = $$\mathrm{mean}\left( x + \mathrm{softplus}\left( -2 \cdot x \right) - \log\left( 2.0 \right) \right)$$</p>
+<pre><code class="language-julia">softplus(x) = log.(exp.(x).+1)
+function logcosh(y,ŷ)
+    x = ŷ - y
+    return mean(x.+softplus(-2 .*x) .- log(2.))
+end
+</code></pre>
+<h2 id="mae-l1">MAE == L1</h2>
+<ul>
+<li>Mean absolute error</li>
+<li>Use Mean absolute error when you are doing regression and don’t want outliers to play a big role. It can also be useful if you know that your distribution is multimodal, and it’s desirable to have predictions at one of the modes, rather than at the mean of them.</li>
+<li>Denoising, reconstruction</li>
+</ul>
+<p>There are two ways of doing this, mean and sum.
+For mean,</p>
+<p>$$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|y - ŷ\right\| \right)$$</p>
+<p>For sum,</p>
+<p>$$\mathrm{sum}\left( \left\|y - ŷ\right\| \right)$$</p>
+<pre><code class="language-julia">function mae(y,ŷ,reduction= &quot;mean&quot;) 
+    if reduction==&quot;mean&quot;
+        return (1/length(y))*sum(abs.(y .- ŷ))
+    elseif reduction==&quot;sum&quot;
+        return sum(abs.(y .- ŷ))
+    end
+end
+</code></pre>
+<h2 id="mape">MAPE</h2>
+<ul>
+<li>mean absolute % error</li>
+</ul>
+<p>$$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left\|\frac{y - ŷ}{y}\right\| \right)$$</p>
+<pre><code class="language-julia">mape(y,ŷ) = (1/length(y))*sum( abs.((y-ŷ)/y))
+</code></pre>
+<h2 id="msle">MSLE</h2>
+<ul>
+<li>Mean squared log error</li>
+<li>Use MSLE when doing regression, believing that your target, conditioned on the input, is normally distributed, and you don’t want large errors to be significantly more penalized than small ones, in those cases where the range of the target value is large.</li>
+</ul>
+<p>$$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( \log\left( y + 1 \right) - \log\left( ŷ + 1 \right) \right)^{2} \right)$$</p>
+<pre><code class="language-julia">msle(y,ŷ) = (1/length(y))*sum((log.(y.+1).-log.(ŷ.+1)).^2)
+</code></pre>
+<h2 id="mse">MSE</h2>
+<ul>
+<li>Regression</li>
+<li>Two types again with mean and no mean</li>
+<li>
+<p>Mean $$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)$$</p>
+</li>
+<li>
+<p>Sum $$\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)$$</p>
+</li>
+</ul>
+<pre><code class="language-julia">function mse(y,ŷ,reduction= &quot;mean&quot;) 
+    if reduction==&quot;mean&quot;
+        return (1/length(y))*sum((y .- ŷ).^2 )
+    elseif reduction==&quot;sum&quot;
+        return sum((y .- ŷ).^2 )
+    end
+end
+</code></pre>
+<h2 id="rmse">RMSE</h2>
+<ul>
+<li>Root mean squared</li>
+<li>Regression</li>
+<li>Two types again with mean and no mean</li>
+<li>
+<p>Mean $$\sqrt{\frac{1}{2} \cdot \mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}$$</p>
+</li>
+<li>
+<p>Sum $$\sqrt{\mathrm{sum}\left( \left( y - ŷ \right)^{2} \right)}$$</p>
+</li>
+</ul>
+<pre><code class="language-julia">bcelogits(y,ŷ,weight)  =-sum(y .* logsoftmax(ŷ) .* weight) * 1 // size(y, 2)
+</code></pre>
+<h2 id="poisson">Poisson</h2>
+<ul>
+<li>When data is from poisson distr</li>
+</ul>
+<p>$$\frac{1}{\mathrm{length}\left( y \right)} \cdot \mathrm{sum}\left( ŷ - \log\left( ŷ \right) \right)$$</p>
+<pre><code class="language-julia">poisson(y,ŷ) = (1/length(y))*sum(ŷ.-log.(ŷ))
+</code></pre>
+<h2 id="sparse-ce">Sparse CE</h2>
+<ul>
+<li>For sparse matrices</li>
+<li>Categorical crossentropy</li>
+</ul>
+<p>$$ - \mathrm{sum}\left( ŷ \cdot \log\left( ŷ \right) \right)$$</p>
+<pre><code class="language-julia">sparsece(y,ŷ) = -sum(ŷ.*log.(ŷ))
+</code></pre>
+<h2 id="squared-hinge">Squared Hinge</h2>
+<ul>
+<li>problems involving yes/no (binary) decisions and when you’re not interested in knowing how certain the classifier is about the classification</li>
+<li>tanh for last layer</li>
+<li>maximum margin</li>
+</ul>
+<p>$$\mathrm{sum}\left( \left( \mathrm{max}\left( 0, 1 - y \cdot ŷ \right) \right)^{2} \right)$$</p>
+<pre><code class="language-julia">squaredhinge(y,ŷ) = sum(max.(0,1 .-(y.*ŷ)).^2)
+</code></pre>
+<h2 id="triplet-margin">Triplet margin</h2>
+<ul>
+<li>Requires tuples of anchor, positive, negative </li>
+<li>alpha is the distance between positive and negative sample, arbitrarily set to 0.3</li>
+</ul>
+<p>We first find the positive distance $$pos{distance} = \left( anchor - positive \right)^{2} -1$$</p>
+<p>Then the negative distance $$neg{distance} = \left( anchor - negative \right)^{2} -1$$</p>
+<p>Then the temporary loss $$posdistance - negdistance + \alpha$$</p>
+<p>And the final loss $$\mathrm{sum}\left( \mathrm{max}\left( loss_{1}, 0.0 \right) \right)$$</p>
+<pre><code class="language-julia">function tripletloss(anchor , positive, negative, α = 0.3)
+    pos_distance = (anchor.-positive).^2 .+ (-1)
+    neg_distance =  (anchor.-negative).^2 .+ (-1)
+    loss_1 = (pos_distance.-neg_distance).+α
+    return sum(max.(loss_1, 0.0))
+end
+</code></pre>
+<h2 id="hinge">Hinge</h2>
+<ul>
+<li>Classification</li>
+<li>SVMs</li>
+<li>the w are weights of the model (wow)</li>
+</ul>
+<p>$$\mathrm{max}\left( 0, 1 + \mathrm{max}\left( w_{y} \cdot x - w_{t} \cdot x \right) \right)$$</p>
+<pre><code class="language-julia">hinge(x,w_y,w_t) = max.(0,1 .+ max.(w_y.*x .- w_t.*x))
+</code></pre>
+<h2 id="loss-functions-i-cant-make-sense-of-right-now">Loss functions I can't make sense of right now</h2>
+<ul>
+<li>Honestly I feel like most of these are from NLP, which is why they dont make sense to me. I am yet to do NLP properly. But that's good because it means I can get back to them as and when I do them.</li>
+<li>Multi label margin</li>
+<li>CTC</li>
+<li>Categorical hinge</li>
+<li>Soft margin</li>
+<li>Multi label soft margin</li>
+</ul>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

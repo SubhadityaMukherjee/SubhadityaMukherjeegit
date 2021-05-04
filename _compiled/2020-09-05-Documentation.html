@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>Here we will talk about how to document your code using Documenter.jl and a few tips along the way.</p>
+<p>Before we go on, look at this as an example. <a href="https://subhadityamukherjee.github.io/DDL.jl/build/index.html">Source</a></p>
+<p>[Edit] : Adding on to using the helpful hints from <a href="https://discourse.julialang.org/t/step-by-step-documentation-tutorial/46093/4">link</a></p>
+<h2 id="why">Why</h2>
+<p>I know. It is really boring and why would you bother anyway. Or. "This is only for me". Trust me I have been in your shoes for a majority part of my coding life. Which funnily enough has only been there for around 4 years. Of which the first doesn't even count.</p>
+<p>But we are coders! So how do we go about making it easy to maintain.</p>
+<h2 id="what-are-we-trying-to-do">What are we trying to do?</h2>
+<p>This</p>
+<p><img alt="img" src="/assets/img/docu.png" /></p>
+<h2 id="how">How</h2>
+<p>We will be using a package called <a href="https://juliadocs.github.io/Documenter.jl/stable/man/guide/#Navigation">Documenter.jl</a> for this although it would be easy enough to implement things if we wanted to. But since a package exists, why reinvent the wheel.</p>
+<p>What this allows us to do is write documentation in the code itself which we do anyway and convert it into a website. I had written something similar for Python a long time ago but this takes it further by allowing full markdown support. Which means you can do pretty much anything without too much drama.</p>
+<p>The process is a bit wonky so the aim of this is to give you a nice flow of how to use it.</p>
+<ol>
+<li>Toml who? This is very generic to Julia and you can get it by going to your folder, opening Julia and typing these. <a href="https://invenia.github.io/PkgTemplates.jl/stable/user/">Source</a><ul>
+<li><code>jl
+]add PkgTemplates
+using PkgTemplates
+t = Template()
+t("MyPkg")</code>
+This will create a bunch of default folders which we will use.<blockquote>
+<p>Note that PkgTemplates can generate the documentation for you. It requires a bit of tinkering but you can skip a few steps if you want. (Go to step 8 directly :) )</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>Get the package
+   <code>jl
+   ]add Documenter</code></li>
+<li>Put your code in the folder called src</li>
+<li>Create a folder called docs<ul>
+<li>Follow this structure if you can (most of this is auto generated)</li>
+<li>DDL.jl<ul>
+<li>src</li>
+<li>DDL.jl</li>
+<li>classif.jl</li>
+<li>docs</li>
+<li>tests</li>
+<li>README.md</li>
+<li>Manifest.toml</li>
+<li>Project.toml</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Now in the docs folder make this heirarchy</p>
+<ul>
+<li>docs</li>
+<li>make.jl</li>
+<li>src</li>
+<li>
+<p>Project.toml (To take care of related dependencies)</p>
+<blockquote>
+<p>Tip: If you have a clean repo you can do this to speed up your workflow</p>
+</blockquote>
+<p><code>jl
+$ julia --project=docs/
+pkg&gt; instantiate
+pkg&gt; dev .
+julia&gt; include("docs/make.jl")</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Inside the make.jl file, take this and modify it for your purpose.</p>
+<ul>
+<li>
+<p>```jl
+    using Documenter, classification, Datasets</p>
+<p>Documenter.makedocs(
+    sitename = "DDL Documentation",
+    repo = "https://github.com/SubhadityaMukherjee/DDL.jl"
+)
+    <code>- Instead of classification and Datasets, put the names of the other files you have in your source
+    - Note that this is a very basic initialization and more complex ones can be found in their [documentation](https://juliadocs.github.io/Documenter.jl/stable/man/guide/#Navigation)
+7. After that, go to the docs folder and do 
+    -</code>jl
+    julia make.jl
+    <code>8. This will generate everything you need. You can test it out by opening docs/build/index.html
+9. To add content, go to docs/src/index.md and type whatever you need in markdown
+10. The coolest thing is how to auto add documentation from your code. 
+    - Suppose you have something like this</code>jl
+    """
+    - Takes paths generated from load_classes as input
+    - Takes a function defining a custom label
+    - eg: labeller(x) = split(x, "/")[-1]
+    - Returns labels based on function specified
+    """
+    function labelFromPattern(paths, labeller)
+labeller.(paths)
+    end
+    <code>- Format all your docs to be this way
+    - Then go to index.md and add this block</code>md
+    <code>@autodocs
+    Modules = [modulename]
+    `` `</code>
+    - If you have done every step correctly, this should automatically get your documentation here
+    - Style it or add whatever you want
+    - When you are done, run the make.jl file once more
+11. If you want to host this on github, upload the repo first
+12. Then go to github.com/username/reponame
+13. Go to settings and then scroll down till you find "Github Pages". Click publish and choose the gh-pages branch (Make a branch if you do not have one. It would save hassle later.) 
+14. Done! To access your site go to username.github.io/projectname/build/index.html
+15. You can also mess around with the paths if you know how to. Or add extra features. But this will get you set up with all the needed basics!</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="tips-and-informal-rules">Tips and informal rules</h2>
+<p>Some tips from experience..</p>
+<ol>
+<li>Write docstrings as you go. Because you will never feel like writing them later</li>
+<li>No need to write paragraphs, just explain what to do and how to invoke the function</li>
+<li>Be short and to the point</li>
+<li>If possible, include an example too. 
+    This function takes a url and a destination and downloads the file there with a name specified.
+    <code>md
+    url: The url to be downloaded
+    dest: Path
+    fname: File name</code>julia
+    downloader("http://www.julialang.org/", "/tmp/","index. html")<code></code></li>
+<li>
+<h3 id="learn-markdown">Learn markdown</h3>
+It will save your life over and over again.
+Here is the best cheat sheet I found to learn it <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">CHEAT</a></li>
+<li>
+<h3 id="automation">Automation!</h3>
+If you want to automate this workflow, use a <a href="https://discourse.julialang.org/t/step-by-step-documentation-tutorial/46093/4">github action</a></li>
+</ol>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

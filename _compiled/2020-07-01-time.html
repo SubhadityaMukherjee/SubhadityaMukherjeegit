@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>How to deal with imposter syndrome and what causes it.</p>
+<blockquote>
+<p>This is a repost of the blog I posted on medium. I am writing it here for sake of consistency and because it fits into the flow of this blog.  <a href="https://medium.com/datadriveninvestor/it-needs-to-be-said-imposter-syndrome-in-the-research-community-e84665f640ec">Original Link</a></p>
+</blockquote>
+<p>Dear Researchers,</p>
+<p>The lockdown is over and you are standing in a line to the movies. You can feel the excitement, feel your pulse racing. Yes! This is going to be amazing. Due to high demand, seats are first come first serve. A member of the staff comes and screams that everyone can go in now. Suddenly there is absolute chaos.</p>
+<p>7 doors, a few hundred people. Everyone starts running. In their midst, you stand paralyzed. Which door do I pick? What if… I don’t get in? By the time you start running.. it is too late. You have missed your chance. The doors slam shut in your face. Silence.</p>
+<p>Scary?</p>
+<h2 id="welcome-to-research">Welcome to research.</h2>
+<p>Except, instead of 4 doors, there around about a few thousand. And people? I will not disclose the number for fear of a spike in anxiety.</p>
+<p>Due to the huge influx in data and the raw compute available, research in every field has suddenly boomed. Below is a graph of papers published on [<a href="http://arxiv.org">Arxiv</a>] from 1992 to 2018. (Data from arxiv itself)</p>
+<p><img alt="" src="https://static.arxiv.org/static/arxiv.marxdown/0.1/help/stats/2018_by_area/newsubs.png" /></p>
+<p>Oh, are you a CS major? That’s great! Care to look at 130000 papers? Oh, you only care about deep learning? Stanford HAI’s yearly [<a href="https://hai.stanford.edu/research/ai-index-2019">AI report</a>] shows “just” over 7500 papers in Machine Learning alone in 2018. Wow! Just a regular Monday.</p>
+<p>Do you now have the slow sinking feeling? How can I ever reach there? How can anything I do even be an impact on the field? Every day someone publishes something insane. A neural network that can cut paste objects from the real world? [<a href="https://www.androidauthority.com/ar-cut-and-paste-1114757/">Link</a>]. Another that allows translation from any language to another? [<a href="https://arxiv.org/abs/1912.02047">Link</a>]</p>
+<h2 id="breaking-it-down">Breaking it down</h2>
+<p>Okay now that you are terrified enough. Let us get to the main bit. How do we fight this fear? How do we not feel like an imposter? Like most things, it is actually quite simple. How about we first identify what causes it?</p>
+<ol>
+<li>
+<p>Data. Sadly, we are not computers. Give me 100 papers and I will cry. Give a computer a million, it won’t even lag.</p>
+</li>
+<li>
+<p>Misinformation. If you have read papers/seen code, you will notice that it is almost never mentioned how long it took to make it. Neither is it mentioned how much effort it took. Ever thought about it?</p>
+</li>
+<li>
+<p>What else was done? This is almost funny. How many researchers publish papers on their own? Even if they do, how many do they actually get done in a year? 50? 100? 200? Or is it more realistic — 2? 5?</p>
+</li>
+<li>
+<p>Social media. Go to Twitter. Search for #<a href="https://twitter.com/hashtag/machinelearning?f=live">machinelearning</a>. Note the post. Refresh it after a few minutes. See if you can find it again. Cry :)</p>
+</li>
+<li>
+<p>Companies. I really admire the amazing research companies like Google/Microsoft/Neuralink etc (way too many to list) do. But funnily enough. How many times do we consider the number of people involved? How many brains do you have? <em>(Please excuse me, time travelers)</em>.</p>
+</li>
+<li>
+<p>Time. This is by far the saddest. How long did it take to write <insert fancy 6-word name> paper? Sorry, I finished it overnight. I mean, over 730 nights. Oops.</p>
+</li>
+</ol>
+<p>Do you see the pattern? If you don’t yet. That is perfectly okay. Come back to this article in a few months. If you can find it.</p>
+<p><img alt="" src="https://cdn-images-1.medium.com/max/2000/0*aEqec-QaMuev1SgC.jpg" /></p>
+<h2 id="solution">Solution</h2>
+<p>Now for the main question. How can I not cry every time I open arxiv and see 100 papers with symbols from another language? &lt;τϵαr&gt; Here are some tips.</p>
+<ol>
+<li>
+<p>Most research builds upon another. Try to find the differences instead. This makes it so much easier to understand.</p>
+</li>
+<li>
+<p>If there are a million doors. It does not matter which one you pick. There is no right or wrong. As long as you enjoy the show. And not punch your fellow audience.</p>
+</li>
+<li>
+<p>Please remember that you are not C-3PO. It’s perfectly okay if you don’t read those 200 papers right now. Go step by step.</p>
+</li>
+<li>
+<p>This is Bill. Bill uses tools like [<a href="http://www.arxiv-sanity.com/">Arxiv sanity</a>] and [<a href="https://paperscape.org/">Paperscape</a>] to not get bogged down and be able to focus. Be like Bill.</p>
+</li>
+<li>
+<p>Why do you code? What do you want to do? Do you want to help people of determination? Create art? Solve quantum equations? Discover new stars? Scream in greek? Hey slow down. Pick anything. Stick with it.</p>
+</li>
+<li>
+<p>40 million — the number of Github users as of 2020.[<a href="https://expandedramblings.com/index.php/github-statistics/">Report</a>]. You are just one of them. Do not try to be all. You can’t. Unless you are Tony Stark. And even he can only be more than 3000. (Avengers pun sorry)</p>
+</li>
+<li>
+<p>Seek to learn. But realize your limits.</p>
+</li>
+<li>
+<p>Declutter. I cannot stress enough on the importance of this. It is just as easy to be distracted by research as it is by cat memes. Stick to what you came for.</p>
+</li>
+<li>
+<p>Stop comparing!! It takes people years to get where they are. The only thing which happens overnight is sleep.</p>
+</li>
+<li>
+<p>You. Are. Enough.</p>
+</li>
+</ol>
+<h2 id="console">Console</h2>
+<p>I am not one of the “greats”. I feel overwhelmed and scared too. I have nights where I sit and wonder if I should give up and find something easier. But then there are times when I make something I wanted to. Like a deep learning library(on the way)[<a href="https://subhadityamukherjee.github.io/deconstructingdl.html">Link</a>]. Or an exhibition [<a href="https://subhadityamukherjee.github.io/endangered.html">Link</a>] of endangered species powered by DL. Or even something as simple as an image restorer. These are times when I realize what I came for. I came to leave the world brighter than I found it. In my own way. I may not pick the perfect door. Or get a million likes on my posts. Or even get up every day with a smile.</p>
+<p>But. I do go on. And I try to see that I am who I am. And I think the moment we all see that and stop losing ourselves in the huge stream of data we are force-fed, this community will be a nicer place.</p>
+<p><strong>Thank you,</strong></p>
+<p><strong>Someone with huge dreams</strong></p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: Google Keyboard Federated Learning(Notes only. refer to [35] for code)
-date: 2020-06-19 16:53:45 +0400
+date: 2020-06-19
 categories: paper
+summary: paper notes
 ---
 Paper notes for the paper
 

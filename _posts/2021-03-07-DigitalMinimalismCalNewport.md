@@ -1,9 +1,10 @@
 ---
 layout: post
 title: Digital Minimalism Cal Newport
-date: 2021-03-07T16:24+04:00
+date: 2021-03-07
 tags: 
 categories: book
+summary: Notes on the book
 ---
 
 Notes on the book.

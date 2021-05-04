@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 89</h4>
+          <div id="search-container">
+            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
+          </div><br>
+          <ul id="results-container"></ul>
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+  <p>In this post we will try to implement SGD and read a bit about what it is.</p>
+<p>Before that. Let us review what we have so far.
+1. A way to read images and identify classes
+2. A generator go give us this data in batches
+3. A dense layer
+4. A bunch of activation functions
+5. A basic backprop loop.</p>
+<p>So what is SGD? Well it is a tiny addition to the loop in which we calculate the gradient and update the weight matrix batch wise instead of doing it for the whole data at once. Thats about it.</p>
+<p>Why? Because we have a limited memory. And we are "streaming" the data so to speak. SGD is one of the older technqiues. It works. It works pretty well and it is the first step towards making a proper DL pipeline.</p>
+<p>So in the case of gradient descent, SGD just takes random values instead aka Stochastic.</p>
+<p>How do we implement it? Let us modify our training loop a bit now and add what we had discussed for "Linear Model". Lets see if it works. Also as a note. I am using xtest/ytest because it is smaller and we are not using a GPU right now.</p>
+<p>To be honest I actually gave up on this for a few days. For some reason it felt like I could not do this. But now I am back after 5 days and I will try it again. It is a bottleneck I think. Once this is done I can actually do a lot more directly. 
+Ugh. I am probably doing something horribly wrong..</p>
+<p>Its been hours and I am still trying to understand how to do this. Wow. I have no idea why I wanted to do this. It is way harder than I thought. But anyway, the show will go on. Fingers crossed.</p>
+<p>I think it worked :)
+It is not perfect and we will get back to it later but anyway. Before I write the code for SGD, let us modify our dataloader to normalize the images while loading them. This is a way to reduce the variation and scale the pixels between values and make our model run quicker.
+Normalization is defined as  pixels = (pixels.-μ./σ).</p>
+<p>Basically we add this bit.</p>
+<pre><code class="language-julia">        img = convert(Array{Float64}, img)
+        μ, σ = mean(img), std(img)
+        img = (img.-μ./σ)
+</code></pre>
+<p>Now for our SGD.
+We first repurpose our loss MSE loss function from before.</p>
+<pre><code class="language-julia">Dense(x) = W.* x .+ b
+function loss(x, y)
+    ŷ = Dense(x)
+    lo =  sum((y .- ŷ).^2 )
+    global loss_pl
+    loss_pl*= string(lo)*&quot; &quot;
+    @show(lo)
+    return lo
+end
+</code></pre>
+<p>We compute the MSE loss and save the values to a string. Why string? I tried saving it in an array but because im using Automatic Differentiation, mutation an array while the compute is going on is not allowed. So I just saved them to a string and wrote a tiny function to convert it into an array of floats after the training is done. (To plot the losses).</p>
+<pre><code class="language-julia">bs = 64
+rep_len = length(ytest)
+
+W = rand(he_uniform(64),64,64 )
+b = rand(he_uniform(64), 64)
+loss_pl = &quot;&quot;
+n_epochs = 2
+
+
+for epoch in collect(1:n_epochs)
+    bunchData = Channel(datagen);
+    @info &quot;Epoch &quot;,epoch
+    for i in collect(1:round(rep_len/bs)+1)
+        current_index = take!(bunchData)
+        try
+            x_batch,y_batch = Xtest[:, :, :, current_index:current_index+bs-1],ytest[current_index:current_index+bs-1]
+#             @info size(x_batch),size(y_batch)
+            catch e 
+            x_batch,y_batch = Xtest[:, :, :, rep_len-bs:rep_len-1],ytest[rep_len-bs:rep_len-1]
+#             @info size(x_batch),size(y_batch)
+        end
+        global x_batch, y_batch
+          gs = gradient(() -&gt; loss(x_batch, y_batch), Params([W, b]))
+
+        W̄ = gs[W]
+        W.= α.*W̄
+    end
+end
+</code></pre>
+<p>Let us take a batch size of 64. (Repurposing the previous batching code.)
+The biggest challenge were the dimensions of the Weights and biases matrices. This is because Julias image array is not like pythons ): and I could not just modify the code directly to reflect my python implementation of the same. Which is sad.</p>
+<p>Anyway, I also added He initialization to the weights and biases (which is coooool). Now the gradient is computed for batches and not the whole array together. I also added the epochs loop! The rest of the code is modified from the linear reg example.</p>
+<blockquote>
+<p>This code works but I feel like there is something wrong here and I will probably fix it when I realize what.</p>
+</blockquote>
+<p>The last thing in this segment is a tiny function to plot the losses. (Well its MSE and it probably isnt a good idea to plot it but anyway)</p>
+<pre><code class="language-julia">loss_pl = split(loss_pl,&quot; &quot;);
+Plots.plot([parse(Float32,x) for x in loss_pl[collect(1:length(loss_pl)-1)]])
+</code></pre>
+<p>Since I saved them to a string with spaces, I just split them and then convert them into float32. I tried float16 but it is MSE after all and it was out of bounds. Then just a simple plot function using the Plots library. I guess I will have to move this inside the loop if I want it to show me the loss every epoch. (Or atleast modify the loop itself) But well. Baby steps right?</p>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->
