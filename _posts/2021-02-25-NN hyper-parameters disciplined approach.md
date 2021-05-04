@@ -5,7 +5,8 @@ date: 2020-06-19
 categories: paper
 summary: paper notes
 ---
-Paper notes for the paper
+
+[title]
 
 **[14]** A disciplined approach to neural network hyper-parameters
 - Smith, L. N. (2018). A disciplined approach to neural network hyper-parameters: Part 1--learning rate, batch size, momentum, and weight decay. arXiv preprint arXiv:1803.09820.

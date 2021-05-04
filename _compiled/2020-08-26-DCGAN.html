@@ -22,11 +22,11 @@
           Format : 
           Date | Title<br>
           &emsp;&emsp;TL; DR<br>
-          <h4>Total posts : 89</h4>
-          <div id="search-container">
-            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
-          </div><br>
-          <ul id="results-container"></ul>
+          <h4>Total posts : 78</h4>
+          <!-- <div id="search-container"> -->
+          <!--   Search for something in the blog <input type="text" id="search-input" placeholder="search..."> -->
+          <!-- </div><br> -->
+          <!-- <ul id="results-container"></ul> -->
         </p>
         
         
@@ -48,7 +48,13 @@
     </div>
 <section>
         <div class=col-md-5>
-  <p>Here we will talk about Generative Networks and implement a simple version of DC GAN.</p>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p><h1>DCGAN</h1>
+
+</p>
+<p>Here we will talk about Generative Networks and implement a simple version of DC GAN.</p>
 <h1 id="introduction">Introduction</h1>
 <p>GAN? -&gt; Generative Adversarial Network. This came about as an attempt to have a neural network create something new from images instead of just using them to perform supervised tasks.</p>
 <p>Why? -&gt; Many reasons. Art being one of them. The second being the ability to have an almost infinte supply of data. Finally, this is one step closer to having an AI system that can build things beyond what it was taught. Beyond infact, what we can do as humans too.</p>
@@ -58,23 +64,23 @@
 <ul>
 <li>The first was an attempt at creating Art. This was trained on a lot of art by various old artists. (zoom in a bit)</li>
 </ul>
-<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/dcgan1.png" alt="drawing"/></p>
+<p><img src="../assets/img/deconstrucImages/dcgan1.png" alt="drawing"/></p>
 <ul>
 <li>This is trying to generate art from one of my closest friend's work. Do check him out <a href="https://www.instagram.com/cinemcraft?igshid=fxzbanf9e8xq">here</a></li>
 </ul>
-<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/dcgan2.png" alt="drawing" width =400/></p>
+<p><img src="../assets/img/deconstrucImages/dcgan2.png" alt="drawing" width =400/></p>
 <ul>
 <li>
 <p>This is trying to generate faces.</p>
 </li>
 <li>
-<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/face.png" alt="drawing" width = 300/></p>
+<p><img src="../assets/img/deconstrucImages/face.png" alt="drawing" width = 300/></p>
 </li>
 <li>
 <p>This is what we want to generate today (I know.. what even right?). Okay so I did cheat a bit, this animation was generated in Python a long time back when I first did DCGans there. But I get a bit of a waiver for this cool animation right?? </p>
 </li>
 </ul>
-<p><img src="{{site.baseurl}}/assets/img/deconstrucImages/dcganmnist.gif" alt="drawing"/></p>
+<p><img src="../assets/img/deconstrucImages/dcganmnist.gif" alt="drawing"/></p>
 <h1 id="code">Code</h1>
 <p>So let us get to making it? Hey! You did not explain how it works. 
 Well I am a boring person by nature. xD. I will explain by code. 

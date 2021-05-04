@@ -5,7 +5,8 @@ date: 2020-06-19
 categories: paper
 summary: paper notes
 ---
-Paper notes for the paper
+
+[title]
 
 **[17]** Semantic segmentation DeepLab
 - Chen, L. C., Papandreou, G., Kokkinos, I., Murphy, K., & Yuille, A. L. (2017). Deeplab: Semantic image segmentation with deep convolutional nets, atrous convolution, and fully connected crfs. IEEE transactions on pattern analysis and machine intelligence, 40(4), 834-848. [Paper](https://arxiv.org/pdf/1606.00915)

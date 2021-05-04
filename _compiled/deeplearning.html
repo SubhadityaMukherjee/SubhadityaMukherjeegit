@@ -22,11 +22,11 @@
           Format : 
           Date | Title<br>
           &emsp;&emsp;TL; DR<br>
-          <h4>Total posts : 89</h4>
-          <div id="search-container">
-            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
-          </div><br>
-          <ul id="results-container"></ul>
+          <h4>Total posts : 78</h4>
+          <!-- <div id="search-container"> -->
+          <!--   Search for something in the blog <input type="text" id="search-input" placeholder="search..."> -->
+          <!-- </div><br> -->
+          <!-- <ul id="results-container"></ul> -->
         </p>
         
         
@@ -48,39 +48,35 @@
     </div>
 <section>
         <div class=col-md-5>
-  <p>Notes on the book.</p>
+                                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p>{% for tag in site.categories  %}
+  {% assign t = tag | first %}
+  {% assign posts = tag | last %}</p>
+<p><a href = "#top">Go Up</a></p>
+<h2 id={{ t|upcase }}> {{ t | upcase }} </h2>
+
+<ul>
+{% for post in posts %}
+  {% if post.categories contains t %}
+  <li>
+  {% if post.categories[0] == "paper" %}
+        <h3><a href="{{ post.url }}"> {{ post.title | capitalize}}</a></h3>
+    {% elsif post.categories[0] == "article" %}
+        <h3><a href="{{ post.url }}"> {{ post.title | capitalize}} : {{ post.date | date: '%b %Y' }} </a></h3>
+    {{ post.excerpt }}
+    {% elsif post.categories[0] == "space" %}
+        <h3><a href="{{ post.url }}"> {{ post.title | capitalize}} : {{ post.date | date: '%b %Y' }} </a></h3>
+    {{ post.excerpt }}
+    {% elsif post.categories[0] == "book" %}
+        <h3><a href="{{ post.url }}"> {{ post.title | capitalize}} : {{ post.date | date: '%b %Y' }} </a></h3>
+    {% endif %}
+  </li>
+  {% endif %}
+{% endfor %}
+</ul>
+<p>{% endfor %}</p>
         </div>
   </body>
 </html>
-
-
-<!-- --- -->
-<!-- layout: default -->
-<!-- --- -->
-<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
-<!--  -->
-<!--  -->
-<!-- <h1>{{ page.title }}</h1> -->
-<!--  -->
-<!-- <span class="reading-time" title="Estimated read time"> -->
-<!--   {% assign words = content | number_of_words %} -->
-<!--   {% if words < 360 %} -->
-<!--     <h3>Reading time : ~1 min</h3> -->
-<!--   {% else %} -->
-<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
-<!--   {% endif %} -->
-<!-- </span> -->
-<!--  -->
-<!--  -->
-<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
-<!-- {% include toc.html html=content %} -->
-<!-- {{ content }} -->
-<!--  -->
-<!-- <section> -->
-<!-- Related posts:&emsp; -->
-<!-- {% for p in site.related_posts %} -->
-<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
-<!-- {% endfor %} -->
-<!--  -->
-<!-- </section> -->
-<!--  -->

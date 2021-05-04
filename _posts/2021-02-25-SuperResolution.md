@@ -5,7 +5,8 @@ date: 2020-06-19
 categories: paper
 summary: paper notes
 ---
-Paper notes for the paper
+
+[title]
 
 **[33]** Super Resolution using Sub Pixel Convolutions
 - Shi, W., Caballero, J., Huszár, F., Totz, J., Aitken, A. P., Bishop, R., ... & Wang, Z. (2016). Real-time single image and video super-resolution using an efficient sub-pixel convolutional neural network. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 1874-1883).  [Paper](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Shi_Real-Time_Single_Image_CVPR_2016_paper.pdf)

@@ -5,7 +5,8 @@ date: 2020-06-19
 categories: paper
 summary: paper notes
 ---
-Paper notes for the paper
+
+[title]
 
 **[20]** Thinking machines - Turing (Just notes)
 - A. M. TURING, I.—COMPUTING MACHINERY AND INTELLIGENCE, Mind, Volume LIX, Issue 236, October 1950, Pages 433–460, https://doi.org/10.1093/mind/LIX.236.433. [Paper](https://oup.silverchair-cdn.com/UI/app/svg/pdf.svg)

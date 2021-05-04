@@ -22,11 +22,11 @@
           Format : 
           Date | Title<br>
           &emsp;&emsp;TL; DR<br>
-          <h4>Total posts : 89</h4>
-          <div id="search-container">
-            Search for something in the blog <input type="text" id="search-input" placeholder="search...">
-          </div><br>
-          <ul id="results-container"></ul>
+          <h4>Total posts : 78</h4>
+          <!-- <div id="search-container"> -->
+          <!--   Search for something in the blog <input type="text" id="search-input" placeholder="search..."> -->
+          <!-- </div><br> -->
+          <!-- <ul id="results-container"></ul> -->
         </p>
         
         
@@ -48,7 +48,13 @@
     </div>
 <section>
         <div class=col-md-5>
-  <p>Let us start the fun with a simple model which will be extended to fit complex needs.</p>
+                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <p><h1>Linear Model</h1>
+
+</p>
+<p>Let us start the fun with a simple model which will be extended to fit complex needs.</p>
 <p>The first and easiest model we can think of to start with is the Dense or fully connected Linear layer model. Once we have this working, this can be extended further. So what is this layer? Simply put, W*x.+b where W and b are the initialized weights and biases. For now these are random. Later we will check out Kaiming/glorot initialization instead.</p>
 <p>Let us make W and b first. And let us also take a random x, y array so we can perform the task at hand.</p>
 <pre><code class="language-julia">W = rand(2,5)

@@ -1,4 +1,681 @@
 {
+    "2020-06-19-dataloader.md": [
+        "post",
+        "article",
+        [
+            "start",
+            "dataloader"
+        ],
+        "Dataloader",
+        "2020-06-19",
+        "A start [Archived]"
+    ],
+    "2020-06-19-notebook2script.md": [
+        "post",
+        "article",
+        [
+            "notebook",
+            "script",
+            "convert",
+            "helper"
+        ],
+        "notebook2script",
+        "2020-06-19",
+        "Notebook2script in Julia"
+    ],
+    "2020-06-19-trainTest.md": [
+        "post",
+        "article",
+        [
+            "split",
+            "tutorial",
+            "dataset",
+            "distribution",
+            "split",
+            "oversample"
+        ],
+        "Oversample and Split",
+        "2020-06-19",
+        "Oversampling in Julia [Archived]"
+    ],
+    "2020-06-20-activationFunctions.md": [
+        "post",
+        "article",
+        [
+            "activation",
+            "leaky",
+            "swish",
+            "sigmoid",
+            "soft",
+            "elu"
+        ],
+        "Activation functions",
+        "2020-06-20",
+        "In Julia"
+    ],
+    "2020-06-20-layers.md": [
+        "post",
+        "article",
+        [
+            "linear",
+            "regression",
+            "basic",
+            "start",
+            "dense"
+        ],
+        "Linear Model",
+        "2020-06-20",
+        "In Julia"
+    ],
+    "2020-06-21-initialization.md": [
+        "post",
+        "article",
+        [
+            "inititialize",
+            "xavier",
+            "he",
+            "glorot",
+            "kaiming",
+            "normal",
+            "random",
+            "uniform",
+            "zeros",
+            "lsuv"
+        ],
+        "Initialization",
+        "2020-06-21",
+        "Intialization techniques"
+    ],
+    "2020-06-23-batching.md": [
+        "post",
+        "article",
+        [
+            "batch",
+            "one",
+            "hot",
+            "loop",
+            "dictionary",
+            "ide",
+            "editor",
+            "iteration",
+            "loader",
+            "data",
+            "dataloader",
+            "encoding",
+            "cold"
+        ],
+        "Batching",
+        "2020-06-23",
+        "Batching in Julia"
+    ],
+    "2020-06-24-SGD.md": [
+        "post",
+        "article",
+        [
+            "stochastic",
+            "gradient",
+            "descent",
+            "optimize",
+            "sgd",
+            "gd"
+        ],
+        "SGD",
+        "2020-06-24",
+        "SGD in Julia"
+    ],
+    "2020-06-27-100PageMlbook.md": [
+        "post",
+        "article",
+        "",
+        "100PageMlblook",
+        "2020-06-27",
+        "Summary of the book"
+    ],
+    "2020-06-27-Implementing Papers.md": [
+        "post",
+        "article",
+        [
+            "papers",
+            "github",
+            "link",
+            "repository",
+            "implement"
+        ],
+        "Implementing Papers",
+        "2020-06-27",
+        "A repository for papers"
+    ],
+    "2020-06-30-latex from code.md": [
+        "post",
+        "article",
+        [
+            "latex",
+            "code",
+            "convert"
+        ],
+        "latex from code",
+        "2020-06-30",
+        "Using Julia and Latexify"
+    ],
+    "2020-06-30-loss functions.md": [
+        "post",
+        "article",
+        [
+            "loss",
+            "functions",
+            "log",
+            "softmax",
+            "bce",
+            "logits",
+            "margin",
+            "ranking",
+            "huber",
+            "smooth",
+            "l1",
+            "mean",
+            "absolute",
+            "negative",
+            "log",
+            "binary",
+            "cross",
+            "entropy",
+            "cosine",
+            "similarity",
+            "kl",
+            "divergence",
+            "log",
+            "cosh",
+            "mae",
+            "percentage",
+            "root",
+            "poisson",
+            "sparce",
+            "hinge",
+            "squared",
+            "triplet",
+            "margin",
+            "ctc",
+            "multi",
+            "label",
+            "soft"
+        ],
+        "Loss Functions",
+        "2020-06-30",
+        "In Julia"
+    ],
+    "2020-07-01-time.md": [
+        "post",
+        "article",
+        [
+            "time",
+            "clari",
+            "question",
+            "research",
+            "imposter"
+        ],
+        "Imposter Syndrome in the research community",
+        "2020-07-01",
+        "Imposter syndrome"
+    ],
+    "2020-07-02-convolution.md": [
+        "post",
+        "article",
+        [
+            "conv",
+            "scratch",
+            "2d",
+            "array",
+            "basic",
+            "oper",
+            "image",
+            "mandrill"
+        ],
+        "Basic Convolution",
+        "2020-07-02",
+        "Basic conv in julia"
+    ],
+    "2020-07-02-kernels.md": [
+        "post",
+        "article",
+        [
+            "kernel",
+            "image",
+            "filter",
+            "blur",
+            "sobel",
+            "emboss",
+            "identity",
+            "outline"
+        ],
+        "Image kernels",
+        "2020-07-02",
+        "In Julia"
+    ],
+    "2020-07-03-fasterConv.md": [
+        "post",
+        "article",
+        [
+            "fast",
+            "conv",
+            "gpu",
+            "fftw",
+            "fourier",
+            "transform",
+            "2d",
+            "cuda",
+            "limits"
+        ],
+        "Faster and more general conv",
+        "2020-07-03 17:13:46 +0400",
+        "[Archived]"
+    ],
+    "2020-07-04-padding.md": [
+        "post",
+        "article",
+        [
+            "pad",
+            "image",
+            "view",
+            "constant",
+            "copy",
+            "symm",
+            "max",
+            "min",
+            "aver",
+            "mode",
+            "med"
+        ],
+        "Padding",
+        "2020-07-04 11:25:39 +0400",
+        "[Archived]"
+    ],
+    "2020-07-06-Endangered Species.md": [
+        "post",
+        "",
+        [
+            "art",
+            "awareness",
+            "species",
+            "endangered",
+            "style",
+            "transfer",
+            "neural",
+            "web",
+            "page",
+            "wildlife",
+            "site"
+        ],
+        "Endangered Species",
+        "2020-07-06",
+        "Style transfer tutorial"
+    ],
+    "2020-07-06-Video Classification.md": [
+        "post",
+        "",
+        [
+            "video",
+            "recognition",
+            "tutorial",
+            "pytorch",
+            "data",
+            "format",
+            "linear",
+            "max",
+            "pool",
+            "3d",
+            "conv",
+            "drop"
+        ],
+        "Action recognition part 1",
+        "2020-07-06",
+        "Action recognition using pytorch P1"
+    ],
+    "2020-07-07-adopt.md": [
+        "post",
+        "space",
+        [
+            ""
+        ],
+        "Adopt dont shop",
+        "2020-07-07",
+        "Why you should adopt and not shop animals"
+    ],
+    "2020-07-09-mandelbrot.md": [
+        "post",
+        "article",
+        [
+            "mandelbrot",
+            "julia",
+            "pattern",
+            "infinity",
+            "set",
+            "math",
+            "equations",
+            "beauty",
+            "pretty"
+        ],
+        "Mandelbrot set",
+        "2020-07-09",
+        "Using Julia"
+    ],
+    "2020-07-10-evenFasterConv.md": [
+        "post",
+        "article",
+        [
+            "corre",
+            "conv",
+            "ope",
+            "faster",
+            "cairo",
+            "gtk",
+            "image",
+            "fft",
+            "fast",
+            "four",
+            "col",
+            "im2",
+            "im"
+        ],
+        "My life is a lie + Even faster conv",
+        "2020-07-10",
+        "CorrNet"
+    ],
+    "2020-07-11-pooling.md": [
+        "post",
+        "article",
+        [
+            ""
+        ],
+        "Pooling layers",
+        "2020-07-11",
+        "This is not accurate and a post will be made later[Archived]"
+    ],
+    "2020-07-12-fastai Book.md": [
+        "post",
+        "article",
+        [
+            ""
+        ],
+        "fastai Book",
+        "2020-07-12",
+        "What I liked in the book"
+    ],
+    "2020-07-17-preprocessing.md": [
+        "post",
+        "article",
+        [
+            "random",
+            "crop",
+            "proces",
+            "image",
+            "mixup",
+            "bright",
+            "contr",
+            "sat",
+            "flip",
+            "gray"
+        ],
+        "Image Preprocessing",
+        "2020-07-17",
+        "IP in Julia"
+    ],
+    "2020-07-18-Universal Approximation theorem.md": [
+        "post",
+        "article",
+        [
+            "uat",
+            "tick",
+            "theorem",
+            "feed",
+            "forwa",
+            "real",
+            "activation",
+            "complex",
+            "non",
+            "linear"
+        ],
+        "Universal Approximation theorem",
+        "2020-07-18",
+        "UAT"
+    ],
+    "2020-07-21-Low Poly.md": [
+        "post",
+        "article",
+        "",
+        "Low Poly",
+        "2020-07-21",
+        "convert a video to low poly using Julia"
+    ],
+    "2020-07-24-backprop.md": [
+        "post",
+        "article",
+        [
+            "backprop",
+            "back",
+            "propag",
+            "data",
+            "mnist",
+            "scratch"
+        ],
+        "Backprop",
+        "2020-07-24",
+        "[Archived]"
+    ],
+    "2020-07-25-VAE.md": [
+        "post",
+        "article",
+        [
+            "variational",
+            "auto",
+            "encoder",
+            "generative",
+            "image",
+            "compression",
+            "encoder",
+            "decoder"
+        ],
+        "VAE",
+        "2020-07-25",
+        "VAE in Julia"
+    ],
+    "2020-07-25-convFlux.md": [
+        "post",
+        "article",
+        [
+            "flux",
+            "conv",
+            "librar",
+            "mnist",
+            "conv",
+            "arch"
+        ],
+        "Simple conv with Flux",
+        "2020-07-25",
+        "[Archived]"
+    ],
+    "2020-07-29-Optimizers.md": [
+        "post",
+        "article",
+        [
+            "grad",
+            "descent",
+            "ada",
+            "sgd",
+            "momen"
+        ],
+        "Optimizers",
+        "2020-07-29",
+        "Optimizers using Julia"
+    ],
+    "2020-08-11-VGG.md": [
+        "post",
+        "article",
+        [
+            "vgg",
+            "deep",
+            "network",
+            "paper"
+        ],
+        "VGG",
+        "2020-08-11",
+        "In flux"
+    ],
+    "2020-08-12-Compositional Pattern Producing Networks.md": [
+        "post",
+        "article",
+        [
+            "cppn",
+            "generative",
+            "color",
+            "abstract",
+            "art"
+        ],
+        "Compositional Pattern Producing Networks",
+        "2020-08-12",
+        "CPPNs in Flux"
+    ],
+    "2020-08-13-Differentiable Programming.md": [
+        "post",
+        "article",
+        [
+            "deep",
+            "learning",
+            "dead",
+            "physics",
+            "math",
+            "simulation",
+            "gap",
+            "ode"
+        ],
+        "Differentiable Programming",
+        "2020-08-13",
+        "A summary"
+    ],
+    "2020-08-26-DCGAN.md": [
+        "post",
+        "article",
+        [
+            "generative",
+            "color",
+            "abstract",
+            "art",
+            "gan",
+            "dc",
+            "create",
+            "mnist"
+        ],
+        "DCGAN",
+        "2020-08-26",
+        "GANs using Flux"
+    ],
+    "2020-09-02-DatasetBindings.md": [
+        "post",
+        "article",
+        [
+            "dataset",
+            "binding",
+            "web",
+            "download"
+        ],
+        "Dataset Bindings",
+        "2020-09-02",
+        "Creating bindings [Archived]"
+    ],
+    "2020-09-05-Documentation.md": [
+        "post",
+        "article",
+        [
+            "document",
+            "automation",
+            "string"
+        ],
+        "Documentation using Documenter.jl",
+        "2020-09-05",
+        "How to use it. [Note this is probably outdated]"
+    ],
+    "2020-09-25-Pruning.md": [
+        "post",
+        "article",
+        [
+            "prune",
+            "approach",
+            "global",
+            "layer",
+            "size",
+            "compute"
+        ],
+        "Pruning",
+        "2020-09-25",
+        "pruning"
+    ],
+    "2020-09-26-An.md": [
+        "post",
+        "article",
+        [
+            "blog",
+            "medium",
+            "update"
+        ],
+        "Thank you and a rain check",
+        "2020-09-26",
+        "medium page!"
+    ],
+    "2020-09-28-AdversarialAttack.md": [
+        "post",
+        "article",
+        [
+            ""
+        ],
+        "A murder mystery and Adversarial attack",
+        "2020-09-28",
+        "adversarial attack on networks"
+    ],
+    "2020-10-03-TakingBatchnormForGranted.md": [
+        "post",
+        "article",
+        [
+            "batch",
+            "norm",
+            "plots",
+            "learning",
+            "params",
+            "black",
+            "box",
+            "digging",
+            "in"
+        ],
+        "Taking Batchnorm For Granted",
+        "2020-10-03",
+        "not taking batchnorm for granted"
+    ],
+    "2020-10-07-FederatedLearning.md": [
+        "post",
+        "article",
+        [
+            "federated",
+            "syft",
+            "clusters",
+            "secure"
+        ],
+        "Federated Learning",
+        "2020-10-07",
+        "federated learning blog"
+    ],
+    "2020-10-09-SuperRes.md": [
+        "post",
+        "article",
+        [
+            "Super",
+            "Resolution",
+            "photoshop",
+            "pytorch",
+            "upsample",
+            "upscale"
+        ],
+        "Super resolution",
+        "2020-10-09",
+        "Super Resolution"
+    ],
     "2021-02-25-AlexNet.md": [
         "post",
         "paper",
@@ -266,5 +943,21 @@
         "Digital Minimalism Cal Newport",
         "2021-03-07",
         "Notes on the book"
+    ],
+    "deeplearning.md": [
+        "default",
+        "post",
+        "",
+        "",
+        "",
+        ""
+    ],
+    "index.md": [
+        "landing",
+        "post",
+        "",
+        "",
+        "",
+        ""
     ]
 }

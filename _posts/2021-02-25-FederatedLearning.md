@@ -5,7 +5,8 @@ date: 2020-06-19
 categories: paper
 summary: paper notes
 ---
-Paper notes for the paper
+
+[title]
 
 **[35]** Federated Learning (original paper)
 - Konečný, J., McMahan, H. B., Yu, F. X., Richtárik, P., Suresh, A. T., & Bacon, D. (2016). Federated learning: Strategies for improving communication efficiency. arXiv preprint arXiv:1610.05492.  [Paper](https://arxiv.org/pdf/1610.05492)

@@ -5,7 +5,8 @@ date: 2020-06-19
 categories: paper
 summary: paper notes
 ---
-Paper notes for the paper
+
+[title]
 
 **[31]** Computational Limits (Just notes)
 - Thompson, N. C., Greenewald, K., Lee, K., & Manso, G. F. (2020). The Computational Limits of Deep Learning. arXiv preprint arXiv:2007.05558. [Paper](https://arxiv.org/pdf/2007.05558)

@@ -5,7 +5,8 @@ date: 2020-06-19
 categories: paper
 summary: paper notes
 ---
-Paper notes for the paper
+
+[title]
 
 **[6]** Inceptionism (Google Deep Dream)
 [Link](https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html)

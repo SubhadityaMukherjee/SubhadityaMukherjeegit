@@ -7,6 +7,8 @@ categories: article
 summary: Guide to make DL less messy
 ---
 
+[title]
+
 This is a guide to make deep learning less messy and hopefully give you a way to use less tissues next time you code.
 
 # Who is this article for? A checklist

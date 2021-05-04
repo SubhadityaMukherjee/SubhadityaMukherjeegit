@@ -5,7 +5,8 @@ date: 2020-06-19
 categories: paper
 summary: paper notes
 ---
-Paper notes for the paper
+
+[title]
 
 **[34]** Google Keyboard Federated Learning(Notes only. refer to [35] for code)
 - Chen, M., Mathews, R., Ouyang, T., & Beaufays, F. (2019). Federated learning of out-of-vocabulary words. arXiv preprint arXiv:1903.10635.  [Paper](https://arxiv.org/pdf/1903.10635)
