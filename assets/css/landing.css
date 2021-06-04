@@ -141,7 +141,7 @@ select,
 textarea {
 	margin: 0;
 	font: inherit;
-	color: inherit
+	color: black;
 }
 
 button {
@@ -1153,7 +1153,8 @@ select,
 textarea {
 	font-family: inherit;
 	font-size: inherit;
-	line-height: inherit
+	line-height: inherit;
+    color:black;
 }
 
 a {
@@ -7705,7 +7706,8 @@ button.close {
 	.uneditable-input,
 	input,
 	textarea {
-		margin-left: 0
+		margin-left: 0;
+        color:black;
 	}
 	.controls-row [class*=span]+[class*=span] {
 		margin-left: 30px

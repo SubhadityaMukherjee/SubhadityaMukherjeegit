@@ -6,7 +6,9 @@ date: 2021-05-04
 
 # ARTICLES
 
+<ul id="myUL">
 [index]
+</ul>
 
 <!-- {% for tag in site.categories  %} -->
 <!--   {% assign t = tag | first %} -->

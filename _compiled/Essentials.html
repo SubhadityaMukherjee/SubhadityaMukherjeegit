@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script>
+function searcher() {
+  // Declare variables
+  var input, filter, ul, li, a, i, txtValue;
+  input = document.getElementById('myInput');
+  filter = input.value.toUpperCase();
+  ul = document.getElementById("myUL");
+  li = ul.getElementsByTagName('li');
+
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < li.length; i++) {
+    a = li[i].getElementsByTagName("a")[0];
+    txtValue = a.textContent || a.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
+}
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 79</h4>
+          <input type="text" id="myInput" onkeyup="searcher()" placeholder="Search for blog..">
+          <!-- <div id="search-container"> -->
+          <!--   Search for something in the blog <input type="text" id="search-input" placeholder="search..."> -->
+          <!-- </div><br> -->
+          <!-- <ul id="results-container"></ul> -->
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+    </div>
+<section>
+        <div class=col-md-5>
+                                <a href = "../deeplearning.html">Index page</a>
+                <br>
+
+  <h1 id="a-little-rant">A little rant</h1>
+<p>What do I consider essential. Hmm. I need to think. Not entirely sure myself, because there are so many things that I do, and so many things that are there to do. What exactly is essential hmmmm. I know that I really love writing. Expressing my ideas, I absolutely love making things. Like say art for example. And music too although that is so much of a part of my life that I literally can't ignore it.</p>
+<p>I do have to focus a bit more on cleaning up the space that is around me. Especially my table. Somehow due to the lack of any actually personal space it keeps getting cluttered so much. I realize that most of the things that are on the table aren't even mine. But a lot of it is, and I should actually start working for it to make it much nicer and cleaner. I should sleep properly. I have been trying to fix that. Even more than that, I should meditate more. I know I should. I am the kind of person that relies on meditating for peace. Because my heart rate is normally really high. Which is not particularly very great. So that is there too.</p>
+<p>I also need to focus on my coding skills. I do that a lot anyway. Somehow or the other it always crops up that I need to code. For example, I recently made a web server app that would let me send/receive files/clipboard images and screenshots from any device on the same network provided the server is running. It was not particularly a complex endeavor but I enjoyed it and it thoroughly helped.</p>
+<p>Another thing that I want to keep up is my reading and exercise. Of course, it is certain that I always end up reading something every day. Exercise probably not the same but I am getting there.</p>
+<p>The funny part is deep learning somehow came towards the end of my priorities. Isn’t that weird. Maybe not. These days I realize that I liked DL because it's a better tool than what I had before this. And that even more than the fact that I enjoy DL, I actually just enjoy making tools. I like that. DL is just a means to an end. That’s the biggest difference in terms of what I understand about myself. And.. it really is a very huge difference. </p>
+<p>This leads me to the question, what exactly is absolutely essential to me. </p>
+<p>Let’s actually go in order because why not.</p>
+<h2 id="my-desk">My desk.</h2>
+<p>What all do I actually need on my desk. I need my laptop + stand + cables. I need a notepad and a pen. (Maybe two pens). I need my headphones, phone and kindle. Although the Kindle could be placed elsewhere. I do need my ukulele. And a water bottle. The ukulele could be s##fted to a chair instead. I would shift it to the floor but it won't be safe while cleaning.
+That’s about it. </p>
+<h2 id="drawer-and-cupboard">Drawer and cupboard</h2>
+<p>Can’t change anything for now because I am at home. But I do wish to rearrange my clothes in my own way.  I do of course need to reduce my clothes but even that is in feasible with mom around so maybe later.</p>
+<h2 id="deep-learning">Deep learning</h2>
+<p>What do I actually not know in deep learning. Most of the basic things. And I do have a lack of experience in actually implementing end to end systems. That is my biggest weakness that could potentially hurt me. Somehow I had never thought of this before. 
+So in effect, I need to look at and become better at MLOps. Interesting. Okay I will atleast find out what that entails today.
+Apart from that I keep thinking I need to understand the very premise of deep learning better. I don’t really understand how it truly works yet. Im not entirely sure how or why it does what it does. I think that would actually require me to learn the math properly. I will aim to atleast look at the handy summary/ article Jeremy was talking about in his videos. Maybe it would be of help in understanding what’s actually happening. That is pretty much the only required things I have unless project ideas crop up.</p>
+<h2 id="art">Art</h2>
+<p>In art I basically need to focus on my fundamentals. Considering it has not even been a proper year that I started, I do need to make sure things like perspective, color theory etc are things that I focus on. I will start with perspective as it is the most effective corner stone to start with. As for color theory, I already have some idea, so it would actually not be a good idea to start with there if you take timing into account.</p>
+<h2 id="ipad">iPad</h2>
+<p>What do I actually need in my iPad?
+- Notes/writing : Simplenote + this app
+- email 
+- Movie editing capabilities 
+- Art stuff : Pinterest, procreate, VizRef, instagram just for posting 
+- The files app
+- A browser
+- Study stuff : GoodNotes
+- Games : maybe one or two
+0- Telegram
+That’s about it really. I can't think of anything else I actually directly need.</p>
+<h2 id="phone">Phone</h2>
+<ul>
+<li>Calls etc</li>
+<li>Email. Why again do I have it in two places? Hmm. Specific emails?</li>
+<li>Music + ambient noise</li>
+<li>Instagram / LinkedIn / Whatasapp/ Telegram
+Technically nothing else is truly required. Maybe I will have a second look?</li>
+</ul>
+<h2 id="laptop">Laptop</h2>
+<p>I don’t think this matters all that much considering Arch only shows what I ask it to show and absolutely nothing else. At all. Ever. So, i'ts fine. Although I do think I should clean up things. And actually choose things. 
+I only need to code on my laptop and do things that the iPad is not very great for. That would entail a proper setup, but that’s it. I already have everything possibly required.</p>
+<h2 id="kindle">Kindle</h2>
+<p>Only books are possibly anyway.
+In effect, I actually only need these applications  on each device<br />
+I do need to check my devices to see what’s changed or if there is something I have missed.</p>
+<p>As an update, I went ahead with everything that I decided in this article. Hopefully I will continue this journey of reduction and simplification.</p>
+        </div>
+  </body>
+</html>

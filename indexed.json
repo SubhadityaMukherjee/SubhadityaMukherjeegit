@@ -944,6 +944,18 @@
         "2021-03-07",
         "Notes on the book"
     ],
+    "Essentials.md": [
+        "default",
+        "post",
+        [
+            "essential,",
+            "minimalism,digital",
+            "minimalism"
+        ],
+        "Essentials",
+        "2021-06-05",
+        "A way to clear my head and find out what is truly essential"
+    ],
     "deeplearning.md": [
         "default",
         "post",
