@@ -68,15 +68,17 @@
 <li>Your code-base is in Python.</li>
 <li>You are using Linux/Mac/WSL</li>
 </ul>
-<p>Here are the steps:
-- Install pandoc (pip install pandoc)
-- Since you made a library, the folder structure should be similar to this
+<h1 id="here-are-the-steps">Here are the steps:</h1>
+<ul>
+<li>Install pandoc (pip install pandoc)</li>
+<li>Since you made a library, the folder structure should be similar to this
         - libraryname
                 - <strong>init</strong>.py
                 - module1.py
-                - module2.py and so on
-- Now in each of the files, add documentation to your functions/classes. Just go to the first line after the function/class definition and add a multiline comment with whatever you wish to say.
-- Go to the parent directory and run</p>
+                - module2.py and so on</li>
+<li>Now in each of the files, add documentation to your functions/classes. Just go to the first line after the function/class definition and add a multiline comment with whatever you wish to say.</li>
+<li>Go to the parent directory and run</li>
+</ul>
 <pre><code class="language-sh">pdoc --force --html -o docs libraryname
 </code></pre>
 <p>This should generate the required files.

@@ -22,7 +22,7 @@ Note that this only works for python so far. I have tested it on Linux. Which me
 - Your code-base is in Python.
 - You are using Linux/Mac/WSL
 
-Here are the steps:
+# Here are the steps:
 - Install pandoc (pip install pandoc)
 - Since you made a library, the folder structure should be similar to this
         - libraryname
