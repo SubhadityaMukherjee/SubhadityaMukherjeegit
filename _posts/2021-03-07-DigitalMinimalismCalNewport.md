@@ -1,6 +1,6 @@
 ---
-layout: post
-title: Digital Minimalism Cal Newport
+layout: post2
+title: Digital Minimalism Cal Newport ; others
 date: 2021-03-07
 tags: 
 categories: book

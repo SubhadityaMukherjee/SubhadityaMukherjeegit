@@ -1,7 +1,7 @@
 ---
-layout: default
-title: Essentials
-categories: post
+layout: post2
+title: Essentials ;others
+categories: article
 date: 2021-06-05
 tags: essential, minimalism,digital minimalism
 summary: A way to clear my head and find out what is truly essential 

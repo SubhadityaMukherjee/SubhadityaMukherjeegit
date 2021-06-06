@@ -6,6 +6,7 @@ date: 2021-04-05
 
 <br>
 ### [Deep Learning](deeplearning.html)
+### [Other articles](others.html)
 ### [Medium](https://msubhaditya.medium.com/)
 ### [Github](https://github.com/SubhadityaMukherjee/)
 ### [Linkedin](https://www.linkedin.com/in/subhaditya-mukherjee-a36883100/)

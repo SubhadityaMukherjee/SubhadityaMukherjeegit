@@ -10,5 +10,6 @@
     "title": "Deconstructing Deep learning",
     "description": "Digging into deep learning books, papers and code", 
     "date_format" : "%B %Y",
-    "index_format" : "<li><a href = 'link'>title: date</a><br>summary</li>"
+    "index_format" : "<li><a href = 'link'>title: date</a><br>summary</li>",
+    "index2" : "others"
 }
