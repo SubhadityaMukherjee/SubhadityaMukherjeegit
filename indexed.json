@@ -956,6 +956,16 @@
         "2021-06-05",
         "A way to clear my head and find out what is truly essential"
     ],
+    "autoDocumentationWebsite.md": [
+        "post2",
+        "article",
+        [
+            "website,documentation,automation,python,pandoc"
+        ],
+        "Automatic Documentation Website Generator ;others",
+        "2021-06-06",
+        "Write a library with comments -> Get auto generated github pages website for documentation"
+    ],
     "deeplearning.md": [
         "default",
         "post",

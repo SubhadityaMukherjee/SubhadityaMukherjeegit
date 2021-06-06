@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <link rel="stylesheet" href ="/assets/css/landing.css">
+  </head>
+  <body>
+    <div class="col-md-5">
+      <header>
+        <h2><a id = "imp" href="../index.html">Home page</a></h2>
+       
+        <p>Deconstructing Deep Learning +  δeviations</p>
+        
+        <p>
+          Drop me an <a href = "mailto: msubhaditya@gmail.com">email</a>
+          | RSS feed link : <a href ="https://subhadityamukherjee.github.io/feed.xml">Click</a><br>
+          Format : 
+          Date | Title<br>
+          &emsp;&emsp;TL; DR<br>
+          <h4>Total posts : 80</h4>
+          <!-- <div id="search-container"> -->
+          <!--   Search for something in the blog <input type="text" id="search-input" placeholder="search..."> -->
+          <!-- </div><br> -->
+          <!-- <ul id="results-container"></ul> -->
+        </p>
+        
+        
+        <p class="view">
+        <a href="https://www.github.com/SubhadityaMukherjee">View My GitHub Profile </a>
+        </p>
+      </header>
+      
+      <hr>
+      <script src="/assets/js/search-script.js" type="text/javascript"></script>
+      
+      <script>
+        SimpleJekyllSearch({
+          searchInput: document.getElementById('search-input'),
+          resultsContainer: document.getElementById('results-container'),
+          json: '/assets/search.json'
+        })
+        </script>
+    </div>
+<section>
+        <div class=col-md-5>
+                <a href = "../others.html">Index page</a>
+                <br>
+
+  <p><h1>Automatic Documentation Website Generator ;others</h1>
+
+</p>
+<p>Ever made a library, added documentation and then thought "ugh I need to make this into a website. Why is it so much work?". Here is the solution to your problems. Actually making a library not included. (oops)</p>
+<p>Note that this only works for python so far. I have tested it on Linux. Which means it should work on Linux/mac/WSL with no issues. Windows.. you might need to change the shell commands.</p>
+<h1 id="examples">Examples</h1>
+<ul>
+<li><a href="https://subhadityamukherjee.github.io/airJugaad/">Site1</a></li>
+<li><a href="https://subhadityamukherjee.github.io/selket/">Site2</a></li>
+</ul>
+<h1 id="prerequisites">Prerequisites</h1>
+<ul>
+<li>You are using Github. Since we are using Github pages, you need to store your repository on Github. (Of course you could do it some other way but that is too much work and we are lazy.)
+        - If you are not sure how to go about doing that, I suggest you have a look at <a href="https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners">this article</a></li>
+<li>Your code-base is in Python.</li>
+<li>You are using Linux/Mac/WSL</li>
+</ul>
+<p>Here are the steps:
+- Install pandoc (pip install pandoc)
+- Since you made a library, the folder structure should be similar to this
+        - libraryname
+                - <strong>init</strong>.py
+                - module1.py
+                - module2.py and so on
+- Now in each of the files, add documentation to your functions/classes. Just go to the first line after the function/class definition and add a multiline comment with whatever you wish to say.
+- Go to the parent directory and run</p>
+<pre><code class="language-sh">pdoc --force --html -o docs libraryname
+</code></pre>
+<p>This should generate the required files.
+- Now for the hacky part of it. (It works trust me)</p>
+<pre><code class="language-sh">mv docs/libraryname/index.html docs/index.md
+mv docs/libraryname/* docs/
+</code></pre>
+<ul>
+<li>Now go to your github repository</li>
+<li>Click settings and open the "Pages" pane (to the left)</li>
+<li>Click source -&gt; master for branch and select /docs in the folder option. (These were auto generated)</li>
+<li>Click change theme and choose a theme you like. (This is important!! Do not skip it)</li>
+<li>Then hit publish! And you are done :)</li>
+<li>You will get a link to your own website. </li>
+<li>Sit and admire how beautiful it looks and cry you didn't know how to do this before</li>
+</ul>
+<h1 id="some-tips">Some tips</h1>
+<ul>
+<li>You can always customize your page using Jekyll. </li>
+<li>If you want documentation for an entire module, add a comment right after the imports/ at the start of the file</li>
+<li>You can even change the domain to be on your custom one (if you own any)</li>
+<li>Make a shell script!! We are lazy. Why bother doing the same things a billion times.
+        - Create a file called pusher.sh (Or anything you want)</li>
+</ul>
+<pre><code class="language-sh">chmod +x pusher.sh
+</code></pre>
+<ul>
+<li>In the file just pop the above commands. If you want add code formatting with black/isort as well. I have also added a little shell command which lets me push to github easily</li>
+</ul>
+<pre><code class="language-sh">pdoc --force --html -o docs libraryname
+mv docs/libraryname/index.html docs/index.md
+mv docs/libraryname/* docs/
+</code></pre>
+        </div>
+  </body>
+</html>
+
+
+<!-- --- -->
+<!-- layout: default -->
+<!-- --- -->
+<!-- <a href = "/deeplearning.html">Go to index</a><br><br> -->
+<!--  -->
+<!--  -->
+<!-- <h1>{{ page.title }}</h1> -->
+<!--  -->
+<!-- <span class="reading-time" title="Estimated read time"> -->
+<!--   {% assign words = content | number_of_words %} -->
+<!--   {% if words < 360 %} -->
+<!--     <h3>Reading time : ~1 min</h3> -->
+<!--   {% else %} -->
+<!--     <h3>Reading time : ~{{ words | divided_by:100 }} mins</h3> -->
+<!--   {% endif %} -->
+<!-- </span> -->
+<!--  -->
+<!--  -->
+<!-- <p class="view">by {{ page.author | default: site.author }}</p> -->
+<!-- {% include toc.html html=content %} -->
+<!-- {{ content }} -->
+<!--  -->
+<!-- <section> -->
+<!-- Related posts:&emsp; -->
+<!-- {% for p in site.related_posts %} -->
+<!--   <a href={{ p.url }}> {{ p.title }}&emsp; </a> -->
+<!-- {% endfor %} -->
+<!--  -->
+<!-- </section> -->
+<!--  -->
