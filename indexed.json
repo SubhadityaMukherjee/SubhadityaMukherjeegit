@@ -944,6 +944,16 @@
         "2021-03-07",
         "Notes on the book"
     ],
+    "Easy Python reqs.md": [
+        "post",
+        "article",
+        [
+            "python,tricks,requirements,easy"
+        ],
+        "Easy Python reqs",
+        "2021-08-23",
+        "quickly generate python requirements"
+    ],
     "Essentials.md": [
         "post2",
         "article",
@@ -981,5 +991,15 @@
         "",
         "",
         ""
+    ],
+    "readingPapers.md": [
+        "post",
+        "article",
+        [
+            "howto,read,papers,tutorial"
+        ],
+        "readingPapers",
+        "2021-08-23",
+        "how to read a deep learning paper easily"
     ]
 }
