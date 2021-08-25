@@ -1,6 +1,6 @@
 ---
 layout: default
-categories: post
+categories: post3
 date: 2021-05-04
 ---
 
