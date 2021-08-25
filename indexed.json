@@ -976,22 +976,6 @@
         "2021-06-06",
         "Write a library with comments -> Get auto generated github pages website for documentation"
     ],
-    "deeplearning.md": [
-        "default",
-        "post",
-        "",
-        "",
-        "",
-        ""
-    ],
-    "index.md": [
-        "landing",
-        "post",
-        "",
-        "",
-        "",
-        ""
-    ],
     "readingPapers.md": [
         "post",
         "article",
