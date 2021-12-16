@@ -944,6 +944,19 @@
         "2021-03-07",
         "Notes on the book"
     ],
+    "DataAugment.md": [
+        "post2",
+        "article",
+        [
+            "data,",
+            "augmentation,",
+            "computer",
+            "vision"
+        ],
+        "Data Augmentation",
+        "2021-09-16",
+        "Data Augmentation techniques for computer vision"
+    ],
     "Easy Python reqs.md": [
         "post",
         "article",
@@ -965,6 +978,18 @@
         "Essentials ;others",
         "2021-06-05",
         "A way to clear my head and find out what is truly essential"
+    ],
+    "ParalellStuff.md": [
+        "post2",
+        "article",
+        [
+            "data,",
+            "functions,",
+            "parallel"
+        ],
+        "Parallelizing functions in Python explained",
+        "2021-12-15",
+        "Take any function operating on inputs -> Parallelize it"
     ],
     "autoDocumentationWebsite.md": [
         "post2",
