@@ -997,7 +997,7 @@
         [
             "website,documentation,automation,python,pandoc"
         ],
-        "Automatic Documentation Website Generator ;others",
+        "Automatic Documentation Website Generator ; others",
         "2021-06-06",
         "Write a library with comments -> Get auto generated github pages website for documentation"
     ],

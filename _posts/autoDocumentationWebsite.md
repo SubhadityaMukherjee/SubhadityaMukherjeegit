@@ -1,6 +1,6 @@
 ---
 layout: post2
-title: Automatic Documentation Website Generator ;others
+title: Automatic Documentation Website Generator ; others
 categories: article
 date: 2021-06-06
 tags: website,documentation,automation,python,pandoc
