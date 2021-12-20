@@ -57,7 +57,7 @@ function imageJitter(im)
 end
 ```
 
-![](/img/jit.png)
+![](../assets/img/jit.png)
 
 Here we get an image with high brightness and low contrast. 
 
