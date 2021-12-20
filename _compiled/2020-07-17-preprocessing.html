@@ -77,7 +77,7 @@ We then just return the image.</p>
 end
 imageret(randomCrop(im2))
 </code></pre>
-<p><img alt="" src="/img/crop.png" /></p>
+<p><img alt="" src="../assets/img/crop.png" /></p>
 <p>As you can see, part of the image is gone. This does lead to a loss in the image content.</p>
 <h2 id="random-change-in-brightness-and-contrast">Random change in brightness and contrast</h2>
 <p>We use the formula $$\alpha \cdot x + \beta$$ where $$\alpha$$ and $$\beta$$ are values between 0 and 1 which represent the brightness and contrast in the image. 
@@ -97,7 +97,7 @@ We also keep 3 cases and then just output a single choice between them.</p>
     rand([x,x[:,end:-1:1,:],x[:,:,end:-1:1]])
 end
 </code></pre>
-<p><img alt="" src="/img/flip.png" /></p>
+<p><img alt="" src="../assets/img/flip.png" /></p>
 <p>In this case it was flipped upside down.</p>
 <h2 id="gray-scale">Gray scale</h2>
 <p>We have done this many times before but for the sake of consistency.</p>
@@ -122,7 +122,7 @@ end
 
 tem  = mixup(image1,image2);
 </code></pre>
-<p><img alt="" src="/img/mixup.png" /></p>
+<p><img alt="" src="../assets/img/mixup.png" /></p>
 <h2 id="multiple-transforms">Multiple transforms</h2>
 <p>The last thing we will see for now is how to chain multiple transforms for an image. Honestly, I could do more but I am so tired I just want to sleep. Anywayy.
 This is stupidly simple in Julia. All we have to do is use the |&gt; operation. 
@@ -130,7 +130,7 @@ This is called a pipe and basically passes an output to another function or an i
 <p>So to call all the functions so far, and display the image.</p>
 <pre><code class="language-julia">imageret(im2 |&gt; randomCrop |&gt; randomflip |&gt; imageJitter )
 </code></pre>
-<p><img alt="" src="/img/multiput.png" /></p>
+<p><img alt="" src="../assets/img/multiput.png" /></p>
 <p>If you look closely, you can see random cropping, vertical flipping and obviously changed brightness and contrast values. Yay!</p>
 <blockquote>
 <p>There are other functions like warp/ affine transform. I tried making those but it seemed really complicated so I will leave that for a future blog post.</p>

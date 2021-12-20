@@ -60,7 +60,7 @@
 <p>Okay so what is that? it is a neural network which is used for things like Image compression, Image generation etc etc. It is cool because it is pretty cheap computationally.</p>
 <p>So what do we need to build it? </p>
 <h2 id="architecture">Architecture</h2>
-<p>-<img alt="" src="/img/vae.png" /></p>
+<p>-<img alt="" src="../assets/img/vae.png" /></p>
 <ul>
 <li>This is the what makes the VAE special. If you notice, the conv sizes first start off huge (Encoder), then reduce to a really small point and then go back up huge again(Decoder).</li>
 <li>So the thing is, the Encoder is responsible for taking the input data and encoding it so to speak into what is called the latent space representation. In human terms it means that it tries to find a very high dimensional representation of the images. Aka it tries to "learn" what the image is so it can recreate it. </li>
@@ -153,7 +153,7 @@ img(x) = Gray.(reshape(x, 28, 28))
 sample = hcat(img.([modelsample() for i = 1:10])...)
 save(&quot;sample.png&quot;, sample)
 </code></pre>
-<p>-<img alt="" src="/img/vaeo.png" /></p>
+<p>-<img alt="" src="../assets/img/vaeo.png" /></p>
 <blockquote>
 <p>Finis</p>
 </blockquote>

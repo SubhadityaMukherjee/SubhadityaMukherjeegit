@@ -36,7 +36,7 @@ Um. Can these guys speak normally. -.- Lets break it down a bit.
 ## How does it work?
 
 Well here is an image. See if you can understand whats happening.
- ![](/img/uat.png)
+ ![](../assets/img/uat.png)
 
 Makes sense right? Every curve at an infinitely small point can be a collection of lines (approximately).
 Oh and as a form of citation, [here](https://medium.com/hackernoon/illustrative-proof-of-universal-approximation-theorem-5845c02822f6) is where I got this image from. Its a great blog you should really check it out.

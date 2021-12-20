@@ -102,7 +102,7 @@ u0 = [1.0,1.0]
 prob = ODEProblem(lotka_volterra,u0,(0.0,10.0),p)
 </code></pre>
 <p>Our current plot looks something like this.
-- <img alt="im" src="/img/dif1.png" /></p>
+- <img alt="im" src="../assets/img/dif1.png" /></p>
 <p>So we write a tiny function to return an array with the solutions for that current timestep. We are also using the Tsit5(Tsitorous) solver. This seems to be part of something called Runge-Kutta. 
 A google says "Runge–Kutta method is an effective and widely used method for solving the initial-value problems of differential equations and can be used to construct high order accurate numerical method by functions' self without needing the high order derivatives of functions.".</p>
 <p>I guess that roughly translates to -&gt; Solve a higher order differential equation without much overhead?</p>
@@ -131,7 +131,7 @@ end
 - <img alt="im" src="/assets/img/dif3.png" /></p>
 <p>And finally.</p>
 <ul>
-<li><img alt="im" src="/img/dif4.png" /></li>
+<li><img alt="im" src="../assets/img/dif4.png" /></li>
 </ul>
 <p>Yay! We have successfully modelled an equation using a neural network with barely any data. This is a first step duh. Long way to go before I get anywhere substantial. But baby steps right?</p>
         </div>

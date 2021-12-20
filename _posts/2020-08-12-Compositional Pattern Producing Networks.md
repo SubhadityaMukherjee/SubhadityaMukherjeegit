@@ -116,4 +116,4 @@ I extended the print command to show us 10 images instead of one just to see the
 [saveImg(rand(z_dim)) for _ in 1:10]
 ```
 
-![](/img/cppn.png)
+![](../assets/img/cppn.png)

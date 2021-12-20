@@ -40,7 +40,7 @@ function randomCrop(im)
 end
 imageret(randomCrop(im2))
 ```
-![](/img/crop.png)
+![](../assets/img/crop.png)
 
 As you can see, part of the image is gone. This does lead to a loss in the image content.
 
@@ -72,7 +72,7 @@ function randomflip(x)
 end
 ```
 
-![](/img/flip.png)
+![](../assets/img/flip.png)
 
 In this case it was flipped upside down.
 
@@ -108,7 +108,7 @@ end
 tem  = mixup(image1,image2);
 ```
 
-![](/img/mixup.png)
+![](../assets/img/mixup.png)
 
 ## Multiple transforms
 
@@ -122,7 +122,7 @@ So to call all the functions so far, and display the image.
 imageret(im2 |> randomCrop |> randomflip |> imageJitter )
 ```
 
-![](/img/multiput.png)
+![](../assets/img/multiput.png)
 
 If you look closely, you can see random cropping, vertical flipping and obviously changed brightness and contrast values. Yay!
 
