@@ -24,7 +24,7 @@ Just doing these sequentially might take long so we split the task up into "n" p
 We do not need to do this manually of course. Your system already has many algorithms which use this kind of parallelism. Python allows us to access it directly.
 
 # Why didn't you just share a code snippet?
-Simply put, this article is not for the advanced programmers out there. If you are one of them, you could find this on the fast.ai codebase and be done with it. But it is an interesting function to pose to the more intermediate programmers who are looking to improve their skills.
+Simply put, this article is not for the advanced programmers out there. If you are one of them, you could find this on the fast.ai code base and be done with it. But it is an interesting function to pose to the more intermediate programmers who are looking to improve their skills.
 I also wanted this to be a learning exercise and not a blind copy paste. 
 Onward!
 

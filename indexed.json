@@ -991,6 +991,16 @@
         "2021-12-15",
         "Take any function operating on inputs -> Parallelize it"
     ],
+    "Smart Speakers and digital minimalism.md": [
+        "post",
+        "article",
+        [
+            "minimalism,other,digital"
+        ],
+        "Smart Speakers and digital minimalism",
+        "2022-01-29",
+        "How smart speakers can help in digital minimalism"
+    ],
     "autoDocumentationWebsite.md": [
         "post2",
         "article",
@@ -1000,6 +1010,29 @@
         "Automatic Documentation Website Generator ; others",
         "2021-06-06",
         "Write a library with comments -> Get auto generated github pages website for documentation"
+    ],
+    "covid_times.md": [
+        "post2",
+        "",
+        [
+            ""
+        ],
+        "covid_hope ;others",
+        "2021-12-20",
+        ""
+    ],
+    "disappoint_ai.md": [
+        "post2",
+        "article",
+        [
+            "rant,",
+            "ai,",
+            "satire,",
+            "illusion"
+        ],
+        "I have disappointed you, AI ;others",
+        "2022-1-05",
+        "How I came with enthusiasm and am in the gray area now"
     ],
     "readingPapers.md": [
         "post",
