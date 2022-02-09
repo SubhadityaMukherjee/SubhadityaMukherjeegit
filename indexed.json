@@ -944,6 +944,16 @@
         "2021-03-07",
         "Notes on the book"
     ],
+    "CleanGithub.md": [
+        "post",
+        "post",
+        [
+            "github,cleaner,helpers"
+        ],
+        "CleanGithub",
+        "2022-02-09",
+        "Magically organize many repositories"
+    ],
     "DataAugment.md": [
         "post2",
         "article",
