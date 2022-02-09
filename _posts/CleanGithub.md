@@ -1,7 +1,7 @@
 ---
 layout: post
 title: CleanGithub
-categories: post
+categories: article
 date: 2022-02-09
 tags: github,cleaner,helpers
 summary: Magically organize many repositories
